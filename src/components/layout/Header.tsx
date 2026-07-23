@@ -71,10 +71,10 @@ export function Header({ brandName, items, bookingUrl }: Props) {
           boxSizing: "border-box",
           width: vw(designTokens.size.ctaWidth),
           height: vw(designTokens.size.ctaHeight),
-          minWidth: 168,
-          minHeight: 42,
-          paddingLeft: vw(22),
-          paddingRight: vw(18),
+          minWidth: 148,
+          minHeight: 36,
+          paddingLeft: vw(18),
+          paddingRight: vw(14),
           backgroundColor: designTokens.color.ctaBg,
           color: designTokens.color.ctaText,
           fontFamily: fontFamilies.sans,
@@ -88,7 +88,7 @@ export function Header({ brandName, items, bookingUrl }: Props) {
         <span
           aria-hidden
           style={{
-            fontSize: fluidFont(22),
+            fontSize: fluidFont(18),
             fontWeight: 400,
             lineHeight: 1,
             transform: "translateY(-1px)",

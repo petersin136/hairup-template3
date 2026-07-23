@@ -230,10 +230,11 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           }}
         >
           <div
-            className="flex items-center justify-between"
+            className="ml-auto flex items-center"
             style={{
               marginBottom: vw(10),
               height: vw(size.servicesNavSize),
+              columnGap: vw(6),
             }}
           >
             <button
@@ -242,7 +243,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
               onClick={() => go(-1)}
               className="flex items-center justify-center transition-opacity hover:opacity-60"
               style={{
-                width: vw(size.servicesNavSize),
+                width: vw(32),
                 height: vw(size.servicesNavSize),
                 color: color.aboutTitle,
                 background: "transparent",
@@ -251,7 +252,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
                 padding: 0,
               }}
             >
-              <span style={{ width: vw(22), height: vw(22), display: "block" }}>
+              <span style={{ width: vw(20), height: vw(20), display: "block" }}>
                 <Chevron dir="left" />
               </span>
             </button>
@@ -262,7 +263,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
               onClick={() => go(1)}
               className="flex items-center justify-center transition-opacity hover:opacity-60"
               style={{
-                width: vw(size.servicesNavSize),
+                width: vw(32),
                 height: vw(size.servicesNavSize),
                 color: color.aboutTitle,
                 background: "transparent",
@@ -271,7 +272,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
                 padding: 0,
               }}
             >
-              <span style={{ width: vw(22), height: vw(22), display: "block" }}>
+              <span style={{ width: vw(20), height: vw(20), display: "block" }}>
                 <Chevron dir="right" />
               </span>
             </button>

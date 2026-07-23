@@ -36,8 +36,8 @@ export const designTokens = {
     heroHeight: 700,
     /** 시안: 약하게 보이되 확실히 곡선 (4는 부족, 40은 과함) */
     heroRadius: 12,
-    ctaWidth: 200,
-    ctaHeight: 49,
+    ctaWidth: 176,
+    ctaHeight: 42,
     ctaRadius: 4,
     heroTextPadX: 48,
     heroTextPadBottom: 48,
@@ -111,7 +111,7 @@ export const designTokens = {
     /** 시안 cap-height ≈22.5px → Medium 24 */
     logo: 24,
     nav: 13,
-    cta: 14,
+    cta: 13,
     heroEyebrow: 13,
     heroTitle: 52,
     heroRightHeadline: 24,
