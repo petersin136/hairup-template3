@@ -83,22 +83,17 @@ export function ReviewsSection({ data }: Props) {
   if (!data.items.length) return null;
 
   return (
-    <section
-      id="review"
-      className="w-full bg-white"
-      style={{
-        paddingTop: vw(size.reviewsPadTop),
-        paddingBottom: vw(size.reviewsPadBottom),
-        fontFamily: fontFamilies.sans,
-      }}
-    >
+    <>
+      {/* 상단 이미지 — 내비 #review 대상에서 제외 */}
       <div
-        className="relative w-full overflow-hidden"
+        className="w-full bg-white"
         style={{
+          paddingTop: vw(size.reviewsPadTop),
           paddingLeft: vw(size.reviewsImageSidePadding),
           paddingRight: vw(size.reviewsImageSidePadding),
-          marginBottom: vw(size.reviewsImageToTitle),
+          paddingBottom: vw(size.reviewsImageToTitle),
         }}
+        aria-hidden
       >
         <div
           className="relative w-full overflow-hidden"
@@ -118,34 +113,43 @@ export function ReviewsSection({ data }: Props) {
         </div>
       </div>
 
-      <h2
-        className="text-center"
+      <section
+        id="review"
+        className="w-full bg-white"
         style={{
-          color: color.aboutTitle,
-          fontSize: fluidFont(font.reviewsTitle),
-          fontWeight: weight.reviewsTitle,
-          letterSpacing: "-0.02em",
-          lineHeight: 1.2,
-          marginBottom: vw(size.reviewsTitleToGrid),
-          paddingLeft: vw(size.reviewsSidePadding),
-          paddingRight: vw(size.reviewsSidePadding),
+          paddingBottom: vw(size.reviewsPadBottom),
+          fontFamily: fontFamilies.sans,
         }}
       >
-        {data.title}
-      </h2>
+        <h2
+          className="text-center"
+          style={{
+            color: color.aboutTitle,
+            fontSize: fluidFont(font.reviewsTitle),
+            fontWeight: weight.reviewsTitle,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.2,
+            marginBottom: vw(size.reviewsTitleToGrid),
+            paddingLeft: vw(size.reviewsSidePadding),
+            paddingRight: vw(size.reviewsSidePadding),
+          }}
+        >
+          {data.title}
+        </h2>
 
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        style={{
-          gap: vw(size.reviewsGridGap),
-          paddingLeft: vw(size.reviewsSidePadding),
-          paddingRight: vw(size.reviewsSidePadding),
-        }}
-      >
-        {data.items.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
-    </section>
+        <div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          style={{
+            gap: vw(size.reviewsGridGap),
+            paddingLeft: vw(size.reviewsSidePadding),
+            paddingRight: vw(size.reviewsSidePadding),
+          }}
+        >
+          {data.items.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
