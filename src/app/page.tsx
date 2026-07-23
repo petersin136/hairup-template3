@@ -1,14 +1,22 @@
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
+import { AboutSection } from "@/components/sections/AboutSection";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { getHomeHeaderData } from "@/lib/content/home";
+import { getHomePageData } from "@/lib/content/home";
 import { designTokens } from "@/lib/design-tokens";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const { settings, announcement, navItems, hero, leftImageUrl, rightImageUrl } =
-    await getHomeHeaderData();
+  const {
+    settings,
+    announcement,
+    navItems,
+    hero,
+    leftImageUrl,
+    rightImageUrl,
+    about,
+  } = await getHomePageData();
 
   return (
     <main
@@ -36,6 +44,8 @@ export default async function HomePage() {
           rightImageUrl={rightImageUrl}
         />
       ) : null}
+
+      {about ? <AboutSection data={about} /> : null}
     </main>
   );
 }

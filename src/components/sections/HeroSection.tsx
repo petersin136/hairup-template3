@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
+import { fontFamilies } from "@/styles/fonts";
 import type { HeroSection as HeroSectionData } from "@/types/content";
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 };
 
 export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
-  const { size, font, color } = designTokens;
+  const { size, font, weight, color } = designTokens;
 
   return (
     <section
@@ -20,6 +21,7 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
         paddingRight: size.pageSidePadding,
         paddingTop: size.headerToHeroGap,
         paddingBottom: size.pageSidePadding,
+        fontFamily: fontFamilies.display,
       }}
     >
       <div
@@ -52,7 +54,7 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
               className="uppercase text-white"
               style={{
                 fontSize: font.heroEyebrow,
-                fontWeight: 400,
+                fontWeight: weight.heroEyebrow,
                 letterSpacing: "0.14em",
                 lineHeight: 1.2,
                 marginBottom: 18,
@@ -64,9 +66,9 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
               className="text-white"
               style={{
                 fontSize: font.heroTitle,
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.12,
+                fontWeight: weight.heroTitle,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.15,
               }}
             >
               {data.left_title_line1}
@@ -99,9 +101,9 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             <h2
               style={{
                 fontSize: font.heroRightHeadline,
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.35,
+                fontWeight: weight.heroRightHeadline,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.4,
                 marginBottom: 14,
               }}
             >
@@ -110,9 +112,9 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             <p
               style={{
                 fontSize: font.heroRightBody,
-                fontWeight: 400,
+                fontWeight: weight.heroRightBody,
                 letterSpacing: "-0.01em",
-                lineHeight: 1.6,
+                lineHeight: 1.65,
               }}
             >
               {data.right_body_line1}

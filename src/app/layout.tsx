@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { pretendardStylesheet, fontFamilies } from "@/styles/fonts";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "HAIR UP",
@@ -20,7 +13,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${inter.variable} h-full antialiased`}>
+    <html lang="ko" className="h-full antialiased">
       <head>
         <link rel="stylesheet" href={pretendardStylesheet} />
       </head>

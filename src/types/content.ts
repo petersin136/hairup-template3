@@ -31,3 +31,55 @@ export type HeroSection = {
   right_body_line1: string;
   right_body_line2: string;
 };
+
+export type AboutBodyPayload = {
+  subtitle: string;
+  title_line1: string;
+  title_line2: string;
+  paragraphs: string[];
+};
+
+export type AboutSectionRow = {
+  id: number;
+  eyebrow: string | null;
+  title: string | null;
+  body: string | null;
+  subtitle?: string | null;
+  title_line1?: string | null;
+  title_line2?: string | null;
+};
+
+export type AboutStatRow = {
+  id: number;
+  about_id?: number;
+  value: string;
+  label: string;
+  description?: string | null;
+  sort_order: number;
+};
+
+export type AboutMediaRow = {
+  id: number;
+  image_path: string;
+  sort_order: number;
+};
+
+export type AboutStat = {
+  id: number;
+  value: string;
+  label: string;
+  description: string;
+  sort_order: number;
+};
+
+export type AboutContent = {
+  id: number;
+  eyebrow: string;
+  titleLine1: string;
+  titleLine2: string;
+  subtitle: string;
+  paragraphs: string[];
+  stats: AboutStat[];
+  interiorUrl: string;
+  portraitUrl: string;
+};

@@ -1,4 +1,5 @@
 import { designTokens } from "@/lib/design-tokens";
+import { fontFamilies } from "@/styles/fonts";
 import type { NavigationItem } from "@/types/content";
 
 type Props = {
@@ -21,10 +22,13 @@ export function Header({ brandName, items, bookingUrl }: Props) {
     >
       <a
         href="#home"
-        className="shrink-0 font-semibold uppercase tracking-[0.08em]"
+        className="shrink-0 uppercase"
         style={{
           color: designTokens.color.black,
+          fontFamily: fontFamilies.logo,
           fontSize: designTokens.font.logo,
+          fontWeight: designTokens.weight.logo,
+          letterSpacing: designTokens.tracking.logo,
           lineHeight: 1,
         }}
       >
