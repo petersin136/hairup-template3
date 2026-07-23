@@ -4,41 +4,83 @@ export const dynamic = "force-dynamic";
 
 /** Production diagnostics — no secrets returned */
 export async function GET() {
-  const hasUrl = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  const hasUrl = Boolean(rawUrl);
   const hasAnon = Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
   const hasBucket = Boolean(process.env.NEXT_PUBLIC_STORAGE_BUCKET);
   const node = process.version;
   const hasWebSocket = typeof WebSocket !== "undefined";
 
+  let urlHost: string | null = null;
+  let urlLooksValid = false;
+  try {
+    const u = new URL(rawUrl);
+    urlHost = u.host;
+    urlLooksValid =
+      u.protocol === "https:" &&
+      u.hostname.endsWith(".supabase.co") &&
+      (u.pathname === "/" || u.pathname === "");
+  } catch {
+    urlLooksValid = false;
+  }
+
   let supabaseOk = false;
   let supabaseError: string | null = null;
+  let supabaseStatus: number | null = null;
 
   if (hasUrl && hasAnon) {
     try {
-      const { createSupabaseServerClient } = await import(
-        "@/lib/supabase/server"
+      const base = rawUrl.replace(/\/$/, "");
+      const res = await fetch(
+        `${base}/rest/v1/site_settings?select=id&limit=1`,
+        {
+          headers: {
+            apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
+          },
+        },
       );
-      const supabase = createSupabaseServerClient();
-      const { error } = await supabase
-        .from("site_settings")
-        .select("id")
-        .limit(1);
-      if (error) {
-        supabaseError = error.message;
+      supabaseStatus = res.status;
+      const text = await res.text();
+      if (!res.ok) {
+        supabaseError = text.slice(0, 240);
       } else {
         supabaseOk = true;
       }
     } catch (e) {
       supabaseError = e instanceof Error ? e.message : String(e);
     }
+
+    if (supabaseOk) {
+      try {
+        const { createSupabaseServerClient } = await import(
+          "@/lib/supabase/server"
+        );
+        const supabase = createSupabaseServerClient();
+        const { error } = await supabase
+          .from("site_settings")
+          .select("id")
+          .limit(1);
+        if (error) {
+          supabaseOk = false;
+          supabaseError = `js-client: ${error.message}`;
+        }
+      } catch (e) {
+        supabaseOk = false;
+        supabaseError = `js-client: ${
+          e instanceof Error ? e.message : String(e)
+        }`;
+      }
+    }
   }
 
   return NextResponse.json({
-    ok: hasUrl && hasAnon && supabaseOk,
+    ok: hasUrl && hasAnon && urlLooksValid && supabaseOk,
     node,
     hasWebSocket,
-    env: { hasUrl, hasAnon, hasBucket },
+    env: { hasUrl, hasAnon, hasBucket, urlHost, urlLooksValid },
     supabaseOk,
+    supabaseStatus,
     supabaseError,
   });
 }
