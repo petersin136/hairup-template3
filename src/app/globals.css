@@ -28,6 +28,42 @@ body {
   background-color: var(--color-cta-hover) !important;
 }
 
+/* Footer ADMIN — 시안: muted → white */
+.footer-admin-link {
+  color: #716c68;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-admin-link:hover {
+  color: #ffffff;
+}
+
+.nav-link {
+  color: #a9a9a9;
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    font-weight 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #151515;
+  font-weight: 500;
+}
+
+.nav-link.is-active {
+  color: #151515;
+  font-weight: 600;
+}
+
+.nav-link.is-active:hover {
+  color: #151515;
+  font-weight: 600;
+}
+
 /* Brand ticker — seamless RTL infinite scroll */
 @keyframes brand-marquee-rtl {
   from {

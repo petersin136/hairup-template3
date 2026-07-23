@@ -75,10 +75,19 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
         fontFamily: fontFamilies.sans,
       }}
     >
-      <div className="flex w-full items-stretch justify-between">
+      <div
+        className="mx-auto flex items-stretch justify-center"
+        style={{
+          width: "100%",
+          maxWidth: vw(
+            size.servicesTextW + size.servicesGap + size.servicesImageW,
+          ),
+          columnGap: vw(size.servicesGap),
+        }}
+      >
         {/* Left copy */}
         <div
-          className="flex shrink-0 flex-col"
+          className="flex shrink-0 flex-col self-stretch"
           style={{
             width: vw(size.servicesTextW),
             minWidth: 280,
@@ -101,7 +110,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <h2
             style={{
               margin: 0,
-              marginTop: vw(18),
+              marginTop: vw(size.servicesEyebrowToTitle),
               color: color.aboutTitle,
               fontSize: fluidFont(font.servicesTitle),
               fontWeight: weight.servicesTitle,
@@ -115,7 +124,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <p
             style={{
               margin: 0,
-              marginTop: vw(16),
+              marginTop: vw(size.servicesTitleToSubtitle),
               color: color.aboutTitle,
               fontSize: fluidFont(font.servicesSubtitle),
               fontWeight: weight.servicesSubtitle,
@@ -129,12 +138,12 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <p
             style={{
               margin: 0,
-              marginTop: vw(12),
-              color: color.servicesMuted,
+              marginTop: vw(size.servicesSubtitleToBody),
+              color: color.aboutTitle,
               fontSize: fluidFont(font.servicesBody),
               fontWeight: weight.servicesBody,
               letterSpacing: "-0.01em",
-              lineHeight: 1.6,
+              lineHeight: 1.65,
             }}
           >
             {active.body}
@@ -144,28 +153,36 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             className="list-none"
             style={{
               margin: 0,
-              marginTop: vw(36),
+              marginTop: vw(size.servicesBodyToList),
               padding: 0,
-              display: "flex",
-              flexDirection: "column",
-              rowGap: vw(14),
+              display: "grid",
+              gridTemplateColumns: `minmax(0, 1fr) ${vw(size.servicesPriceColW)}`,
+              columnGap: vw(24),
+              rowGap: vw(size.servicesListItemGap),
+              width: vw(size.servicesListW),
+              maxWidth: "100%",
             }}
           >
             {active.items.map((item) => (
               <li
                 key={item.id}
-                className="flex items-baseline justify-between"
+                className="contents"
                 style={{
                   color: color.aboutTitle,
                   fontSize: fluidFont(font.servicesItem),
                   fontWeight: weight.servicesItem,
                   letterSpacing: "-0.01em",
-                  lineHeight: 1.4,
-                  columnGap: vw(16),
+                  lineHeight: 1.5,
                 }}
               >
-                <span>{item.name}</span>
-                <span style={{ flexShrink: 0, fontVariantNumeric: "tabular-nums" }}>
+                <span style={{ minWidth: 0 }}>{item.name}</span>
+                <span
+                  style={{
+                    fontVariantNumeric: "tabular-nums",
+                    textAlign: "right",
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {item.priceLabel}
                 </span>
               </li>
@@ -175,7 +192,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <p
             style={{
               margin: 0,
-              marginTop: vw(18),
+              marginTop: vw(size.servicesListToNote),
               color: color.servicesNote,
               fontSize: fluidFont(font.servicesNote),
               fontWeight: 400,
@@ -188,10 +205,10 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
 
           <a
             href={href}
-            className="cta-btn mt-auto inline-flex items-center justify-between text-white transition-colors"
+            className="cta-btn inline-flex items-center justify-between text-white transition-colors"
             style={{
               boxSizing: "border-box",
-              marginTop: vw(40),
+              marginTop: "auto",
               width: vw(size.servicesCtaW),
               height: vw(size.servicesCtaH),
               minWidth: 240,
@@ -211,8 +228,9 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             <span
               aria-hidden
               style={{
-                fontSize: fluidFont(20),
+                fontSize: fluidFont(32),
                 lineHeight: 1,
+                fontWeight: 400,
                 transform: "translateY(-1px)",
               }}
             >

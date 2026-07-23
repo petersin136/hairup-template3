@@ -47,13 +47,9 @@ export function Header({ brandName, items, bookingUrl }: Props) {
             <a
               key={item.id}
               href={item.href}
-              className="uppercase transition-colors hover:text-[#151515]"
+              className={`nav-link uppercase ${active ? "is-active" : ""}`}
               style={{
-                color: active
-                  ? designTokens.color.black
-                  : designTokens.color.navInactive,
                 fontSize: fluidFont(designTokens.font.nav),
-                fontWeight: active ? 600 : 400,
                 letterSpacing: "0.06em",
                 lineHeight: 1,
               }}
@@ -88,7 +84,7 @@ export function Header({ brandName, items, bookingUrl }: Props) {
         <span
           aria-hidden
           style={{
-            fontSize: fluidFont(18),
+            fontSize: fluidFont(28),
             fontWeight: 400,
             lineHeight: 1,
             transform: "translateY(-1px)",

@@ -175,23 +175,17 @@ export function TeamSection({ members }: Props) {
                   >
                     {member.name}
                   </p>
-                  {member.instagramUrl ? (
-                    <a
-                      href={member.instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-white"
-                      aria-label={`${member.name} Instagram`}
-                      style={{ lineHeight: 0 }}
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <InstagramIcon size={18} />
-                    </a>
-                  ) : (
-                    <span className="text-white" style={{ lineHeight: 0 }}>
-                      <InstagramIcon size={18} />
-                    </span>
-                  )}
+                  <a
+                    href={member.instagramUrl ?? "https://www.instagram.com/"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white transition-opacity hover:opacity-70"
+                    aria-label={`${member.name} Instagram`}
+                    style={{ lineHeight: 0 }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <InstagramIcon size={18} />
+                  </a>
                 </div>
               </div>
             </article>

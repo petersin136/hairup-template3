@@ -161,3 +161,66 @@ export type ServiceCategory = {
   ctaHref: string | null;
   items: ServiceMenuItem[];
 };
+
+export type ReviewRow = {
+  id: number;
+  body: string;
+  author_name: string;
+  service_label: string | null;
+  variant: string;
+  sort_order: number;
+  is_visible: boolean;
+};
+
+export type Review = {
+  id: number;
+  quote: string;
+  artistName: string;
+  serviceLabel: string;
+  handle: string;
+  date: string;
+  variant: "light" | "dark";
+  sort_order: number;
+};
+
+export type ReviewsContent = {
+  title: string;
+  imageUrl: string;
+  items: Review[];
+};
+
+export type FooterSettingsRow = {
+  id: number;
+  address: string | null;
+  hours: string | null;
+  phone: string | null;
+  email: string | null;
+  copyright_text: string | null;
+};
+
+export type SocialLinkRow = {
+  id: number;
+  platform: string;
+  url: string;
+  sort_order: number;
+  is_visible: boolean;
+};
+
+export type FooterHourRow = {
+  days: string;
+  time: string;
+};
+
+export type FooterContent = {
+  brandName: string;
+  hours: FooterHourRow[];
+  address: string;
+  phone: string;
+  email: string;
+  socials: { id: number; label: string; href: string }[];
+  businessLine: string;
+  creditLine: string;
+  adminLabel: string;
+  adminHref: string;
+};
+

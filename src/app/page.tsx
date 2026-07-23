@@ -1,8 +1,11 @@
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { BrandTickerSection } from "@/components/sections/BrandTickerSection";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { ReservationSection } from "@/components/sections/ReservationSection";
+import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { TeamSection } from "@/components/sections/TeamSection";
 import { getHomePageData } from "@/lib/content/home";
@@ -21,6 +24,8 @@ export default async function HomePage() {
     brands,
     teamMembers,
     services,
+    reviews,
+    footer,
   } = await getHomePageData();
 
   return (
@@ -59,6 +64,12 @@ export default async function HomePage() {
           bookingUrl={settings?.booking_url}
         />
       ) : null}
+
+      {reviews ? <ReviewsSection data={reviews} /> : null}
+
+      <ReservationSection />
+
+      <SiteFooter data={footer} />
     </main>
   );
 }

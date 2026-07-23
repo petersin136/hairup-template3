@@ -13,12 +13,19 @@ import type {
   BrandLogoRow,
   HeroSection,
   NavigationItem,
+  Review,
+  ReviewRow,
+  ReviewsContent,
   ServiceCategory,
   ServiceCategoryRow,
   ServiceMenuItemRow,
   SiteSettings,
+  SocialLinkRow,
   TeamMember,
   TeamMemberRow,
+  FooterContent,
+  FooterHourRow,
+  FooterSettingsRow,
 } from "@/types/content";
 
 const ABOUT_FALLBACK = {
@@ -197,6 +204,157 @@ function resolveServices(
   });
 }
 
+const REVIEWS_IMAGE_PATH = "260716_HU_TEMPLATE.png";
+
+function parseReviewBody(raw: string): {
+  quote: string;
+  handle: string;
+  date: string;
+} {
+  try {
+    const parsed = JSON.parse(raw) as {
+      quote?: string;
+      handle?: string;
+      date?: string;
+    };
+    if (parsed && typeof parsed === "object" && parsed.quote) {
+      return {
+        quote: parsed.quote,
+        handle: parsed.handle ?? "",
+        date: parsed.date ?? "",
+      };
+    }
+  } catch {
+    // plain text quote
+  }
+  return { quote: raw, handle: "", date: "" };
+}
+
+function resolveReviews(rows: ReviewRow[]): Review[] {
+  return rows.map((row) => {
+    const { quote, handle, date } = parseReviewBody(row.body);
+    return {
+      id: row.id,
+      quote,
+      artistName: row.author_name,
+      serviceLabel: row.service_label ?? "",
+      handle,
+      date,
+      variant: row.variant === "dark" ? "dark" : "light",
+      sort_order: row.sort_order,
+    };
+  });
+}
+
+const FOOTER_HOURS_FALLBACK: FooterHourRow[] = [
+  { days: "MON - FRI", time: "10:00 AM – 08:00 PM" },
+  { days: "SAT", time: "10:00 AM – 09:00 PM" },
+  { days: "SUN", time: "10:00 AM – 07:00 PM" },
+];
+
+const FOOTER_FALLBACK = {
+  address: "서울특별시 강남구 청담동 123-4, 2층",
+  phone: "02. 1234. 5678",
+  email: "info@hairup.com",
+  business:
+    "(주)헤어업 | 대표자 홍길동 | 사업자등록번호 123-45-67890 | 주소 서울특별시 강남구 청담동 123-4, 2층",
+  credit: "© 2026 COPYRIGHT BY HAIR UP | DESIGNED BY MARANATHA STUDIO",
+  adminLabel: "ADMIN",
+  adminHref: "/admin",
+};
+
+function parseFooterHours(raw: string | null): FooterHourRow[] {
+  if (!raw) return FOOTER_HOURS_FALLBACK;
+  try {
+    const parsed = JSON.parse(raw) as FooterHourRow[];
+    if (Array.isArray(parsed) && parsed.length) {
+      return parsed.map((row) => ({
+        days: row.days ?? "",
+        time: row.time ?? "",
+      }));
+    }
+  } catch {
+    // plain multiline: "DAYS: TIME"
+  }
+  const lines = raw
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (!lines.length) return FOOTER_HOURS_FALLBACK;
+  return lines.map((line) => {
+    const [days, ...rest] = line.split(":");
+    return {
+      days: (days ?? "").trim(),
+      time: rest.join(":").trim(),
+    };
+  });
+}
+
+function parseFooterCopyright(raw: string | null): {
+  business: string;
+  credit: string;
+  adminLabel: string;
+  adminHref: string;
+} {
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw) as {
+        business?: string;
+        credit?: string;
+        adminLabel?: string;
+        adminHref?: string;
+      };
+      if (parsed && typeof parsed === "object") {
+        return {
+          business: parsed.business ?? FOOTER_FALLBACK.business,
+          credit: parsed.credit ?? FOOTER_FALLBACK.credit,
+          adminLabel: parsed.adminLabel ?? FOOTER_FALLBACK.adminLabel,
+          adminHref: parsed.adminHref ?? FOOTER_FALLBACK.adminHref,
+        };
+      }
+    } catch {
+      // plain copyright string
+      return {
+        ...FOOTER_FALLBACK,
+        credit: raw,
+      };
+    }
+  }
+  return { ...FOOTER_FALLBACK };
+}
+
+function resolveFooter(
+  brandName: string,
+  row: FooterSettingsRow | null,
+  socials: SocialLinkRow[],
+): FooterContent {
+  const legal = parseFooterCopyright(row?.copyright_text ?? null);
+  const socialItems = socials.length
+    ? socials.map((s) => ({
+        id: s.id,
+        label: s.platform,
+        href: s.url,
+      }))
+    : [
+        { id: 1, label: "FACEBOOK", href: "https://facebook.com" },
+        { id: 2, label: "INSTAGRAM", href: "https://instagram.com" },
+        { id: 3, label: "YOUTUBE", href: "https://youtube.com" },
+      ];
+
+  return {
+    brandName,
+    hours: parseFooterHours(row?.hours ?? null),
+    address: row?.address || FOOTER_FALLBACK.address,
+    phone: row?.phone || FOOTER_FALLBACK.phone,
+    email: row?.email || FOOTER_FALLBACK.email,
+    socials: socialItems,
+    businessLine: legal.business,
+    creditLine: legal.credit,
+    adminLabel: legal.adminLabel,
+    adminHref: legal.adminHref,
+  };
+}
+
 export async function getHomePageData() {
   const supabase = createSupabaseServerClient();
 
@@ -210,6 +368,9 @@ export async function getHomePageData() {
     teamRes,
     serviceCatsRes,
     serviceItemsRes,
+    reviewsRes,
+    footerRes,
+    socialRes,
   ] = await Promise.all([
     supabase.from("site_settings").select("*").limit(1).maybeSingle(),
     supabase
@@ -257,6 +418,17 @@ export async function getHomePageData() {
       .select("*")
       .eq("is_visible", true)
       .order("sort_order", { ascending: true }),
+    supabase
+      .from("reviews")
+      .select("*")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
+    supabase.from("footer_settings").select("*").limit(1).maybeSingle(),
+    supabase
+      .from("social_links")
+      .select("*")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
   ]);
 
   if (settingsRes.error) throw settingsRes.error;
@@ -264,7 +436,7 @@ export async function getHomePageData() {
   if (navRes.error) throw navRes.error;
   if (heroRes.error) throw heroRes.error;
   if (aboutRes.error) throw aboutRes.error;
-  // brands / team / services — optional; missing columns/tables must not 500 the whole page
+  // brands / team / services / reviews / footer — optional
   if (brandsRes.error) {
     console.error("[home] brand_logos:", brandsRes.error.message);
   }
@@ -276,6 +448,15 @@ export async function getHomePageData() {
   }
   if (serviceItemsRes.error) {
     console.error("[home] service_menu_items:", serviceItemsRes.error.message);
+  }
+  if (reviewsRes.error) {
+    console.error("[home] reviews:", reviewsRes.error.message);
+  }
+  if (footerRes.error) {
+    console.error("[home] footer_settings:", footerRes.error.message);
+  }
+  if (socialRes.error) {
+    console.error("[home] social_links:", socialRes.error.message);
   }
 
   const settings = settingsRes.data as SiteSettings | null;
@@ -349,6 +530,26 @@ export async function getHomePageData() {
       : [],
   );
 
+  const reviewItems = resolveReviews(
+    !reviewsRes.error ? ((reviewsRes.data ?? []) as ReviewRow[]) : [],
+  );
+
+  const reviews: ReviewsContent | null = reviewItems.length
+    ? {
+        title: "Reviews From Customers",
+        imageUrl: getPublicStorageUrl(REVIEWS_IMAGE_PATH),
+        items: reviewItems,
+      }
+    : null;
+
+  const footer = resolveFooter(
+    settings?.brand_name ?? "HAIR UP",
+    !footerRes.error
+      ? ((footerRes.data as FooterSettingsRow | null) ?? null)
+      : null,
+    !socialRes.error ? ((socialRes.data ?? []) as SocialLinkRow[]) : [],
+  );
+
   return {
     settings,
     announcement,
@@ -360,6 +561,8 @@ export async function getHomePageData() {
     brands: resolveBrandLogos(brandRows),
     teamMembers,
     services,
+    reviews,
+    footer,
   };
 }
 
