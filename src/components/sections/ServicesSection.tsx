@@ -221,69 +221,84 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           </a>
         </div>
 
-        {/* Right media + nav chevrons */}
+        {/* Right: nav above image (outside) */}
         <div
-          className="relative shrink-0 overflow-hidden"
+          className="flex shrink-0 flex-col"
           style={{
             width: vw(size.servicesImageW),
-            height: vw(size.servicesImageH),
             minWidth: 280,
-            minHeight: 360,
-            borderRadius: vw(size.servicesImageRadius),
-            backgroundColor: "#000000",
           }}
         >
-          {active.imageUrl ? (
-            <Image
-              key={active.id}
-              src={active.imageUrl}
-              alt={active.title}
-              fill
-              unoptimized
-              sizes="40vw"
-              className="object-cover object-center"
-            />
-          ) : null}
-
-          <button
-            type="button"
-            aria-label="이전 서비스"
-            onClick={() => go(-1)}
-            className="absolute top-1/2 flex -translate-y-1/2 items-center justify-center text-white/85 transition-opacity hover:text-white"
+          <div
+            className="flex items-center justify-between"
             style={{
-              left: vw(12),
-              width: vw(size.servicesNavSize),
+              marginBottom: vw(10),
               height: vw(size.servicesNavSize),
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
             }}
           >
-            <span style={{ width: vw(22), height: vw(22), display: "block" }}>
-              <Chevron dir="left" />
-            </span>
-          </button>
+            <button
+              type="button"
+              aria-label="이전 서비스"
+              onClick={() => go(-1)}
+              className="flex items-center justify-center transition-opacity hover:opacity-60"
+              style={{
+                width: vw(size.servicesNavSize),
+                height: vw(size.servicesNavSize),
+                color: color.aboutTitle,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span style={{ width: vw(22), height: vw(22), display: "block" }}>
+                <Chevron dir="left" />
+              </span>
+            </button>
 
-          <button
-            type="button"
-            aria-label="다음 서비스"
-            onClick={() => go(1)}
-            className="absolute top-1/2 flex -translate-y-1/2 items-center justify-center text-white/85 transition-opacity hover:text-white"
+            <button
+              type="button"
+              aria-label="다음 서비스"
+              onClick={() => go(1)}
+              className="flex items-center justify-center transition-opacity hover:opacity-60"
+              style={{
+                width: vw(size.servicesNavSize),
+                height: vw(size.servicesNavSize),
+                color: color.aboutTitle,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <span style={{ width: vw(22), height: vw(22), display: "block" }}>
+                <Chevron dir="right" />
+              </span>
+            </button>
+          </div>
+
+          <div
+            className="relative overflow-hidden"
             style={{
-              right: vw(12),
-              width: vw(size.servicesNavSize),
-              height: vw(size.servicesNavSize),
-              background: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
+              width: "100%",
+              height: vw(size.servicesImageH),
+              minHeight: 360,
+              borderRadius: vw(size.servicesImageRadius),
+              backgroundColor: "#000000",
             }}
           >
-            <span style={{ width: vw(22), height: vw(22), display: "block" }}>
-              <Chevron dir="right" />
-            </span>
-          </button>
+            {active.imageUrl ? (
+              <Image
+                key={active.id}
+                src={active.imageUrl}
+                alt={active.title}
+                fill
+                unoptimized
+                sizes="40vw"
+                className="object-cover object-center"
+              />
+            ) : null}
+          </div>
         </div>
       </div>
     </section>
