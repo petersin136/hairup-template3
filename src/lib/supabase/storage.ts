@@ -1,11 +1,15 @@
+import { normalizeSupabaseUrl } from "@/lib/supabase/url";
+
 const bucket = () => process.env.NEXT_PUBLIC_STORAGE_BUCKET ?? "site-assets";
 
 /** Storage object path → public URL */
 export function getPublicStorageUrl(path: string): string {
-  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (!base) {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!raw) {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
   }
+
+  const base = normalizeSupabaseUrl(raw);
 
   const encoded = path
     .split("/")

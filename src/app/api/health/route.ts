@@ -12,14 +12,14 @@ export async function GET() {
   const hasWebSocket = typeof WebSocket !== "undefined";
 
   let urlHost: string | null = null;
+  let urlPath: string | null = null;
   let urlLooksValid = false;
   try {
     const u = new URL(rawUrl);
     urlHost = u.host;
+    urlPath = u.pathname;
     urlLooksValid =
-      u.protocol === "https:" &&
-      u.hostname.endsWith(".supabase.co") &&
-      (u.pathname === "/" || u.pathname === "");
+      u.protocol === "https:" && u.hostname.endsWith(".supabase.co");
   } catch {
     urlLooksValid = false;
   }
@@ -30,9 +30,15 @@ export async function GET() {
 
   if (hasUrl && hasAnon) {
     try {
-      const base = rawUrl.replace(/\/$/, "");
+      const base = rawUrl.trim();
+      let origin: string;
+      try {
+        origin = new URL(base).origin;
+      } catch {
+        origin = base.replace(/\/$/, "");
+      }
       const res = await fetch(
-        `${base}/rest/v1/site_settings?select=id&limit=1`,
+        `${origin}/rest/v1/site_settings?select=id&limit=1`,
         {
           headers: {
             apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -78,7 +84,7 @@ export async function GET() {
     ok: hasUrl && hasAnon && urlLooksValid && supabaseOk,
     node,
     hasWebSocket,
-    env: { hasUrl, hasAnon, hasBucket, urlHost, urlLooksValid },
+    env: { hasUrl, hasAnon, hasBucket, urlHost, urlPath, urlLooksValid },
     supabaseOk,
     supabaseStatus,
     supabaseError,
