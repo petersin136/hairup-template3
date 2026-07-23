@@ -21,6 +21,11 @@ export const designTokens = {
     aboutLine: "#BDBDBD",
     /** Brand ticker — 시안 크림 배경 */
     brandTickerBg: "#F5F2EE",
+    /** Services — 시안 크림 배경 */
+    servicesBg: "#F7F4EF",
+    servicesEyebrow: "#9D9D9D",
+    servicesMuted: "#8A8A8A",
+    servicesNote: "#A3A3A3",
   },
   size: {
     announcementHeight: 45,
@@ -56,6 +61,30 @@ export const designTokens = {
     brandTickerHeight: 120,
     brandLogoHeight: 22,
     brandLogoGap: 110,
+    // Team — 시안 04 실측 (1440 ← 1024 mock × 1.406)
+    teamSidePadding: 24,
+    teamPadTop: 100,
+    teamPadBottom: 100,
+    teamTitleGap: 28,
+    teamCollageH: 523,
+    teamFeaturedW: 581,
+    teamStripW: 191,
+    teamGap: 12,
+    teamRadius: 12,
+    teamOverlayPadX: 28,
+    teamOverlayPadY: 28,
+    // Services — 시안 05 실측 (1440 ← 1024 mock × 1.406)
+    servicesSidePadding: 120,
+    servicesPadTop: 100,
+    servicesPadBottom: 100,
+    servicesTextW: 470,
+    servicesImageW: 483,
+    servicesImageH: 596,
+    servicesImageRadius: 12,
+    servicesGap: 246,
+    servicesCtaW: 320,
+    servicesCtaH: 52,
+    servicesNavSize: 44,
   },
   /** 시안 실측 광학 비율 — Kérastase(+PARIS) ≈ 1.7× */
   brandLogoScale: {
@@ -64,6 +93,18 @@ export const designTokens = {
     shiseido: 1.12,
     olaplex: 1,
     moroccanoil: 1,
+  },
+  /**
+   * Team collage — 이미지는 정수리 상단 크롭본(team/*.jpg) 기준
+   * object-position은 top으로 고정해 펼침/축소 시 얼굴 높이 유지
+   */
+  teamObjectPosition: {
+    featured: "50% 0%",
+    1: "50% 0%",
+    2: "50% 0%",
+    3: "50% 0%",
+    4: "50% 0%",
+    5: "50% 0%",
   },
   font: {
     announcement: 13,
@@ -82,10 +123,23 @@ export const designTokens = {
     aboutStatLabel: 15,
     aboutStatDesc: 13,
     aboutBody: 15,
+    /** 시안 04 실측 ≈46 — 32는 너무 작음 */
+    teamTitle: 48,
+    teamRole: 12,
+    teamName: 22,
+    servicesEyebrow: 12,
+    servicesTitle: 42,
+    servicesSubtitle: 16,
+    servicesBody: 14,
+    servicesItem: 14,
+    servicesNote: 12,
+    servicesCta: 14,
   },
   tracking: {
     /** 시안 로고: 살짝만 벌림 (0.12는 찐빵처럼 납작해 보임) */
     logo: "0.04em",
+    teamRole: "0.08em",
+    teamTitle: "-0.015em",
   },
   weight: {
     logo: 500,
@@ -101,6 +155,16 @@ export const designTokens = {
     aboutStatLabel: 500,
     aboutStatDesc: 400,
     aboutBody: 400,
+    /** Regular — Medium(500)보다 부드럽게 */
+    teamTitle: 400,
+    teamRole: 400,
+    teamName: 700,
+    servicesEyebrow: 400,
+    servicesTitle: 600,
+    servicesSubtitle: 500,
+    servicesBody: 400,
+    servicesItem: 400,
+    servicesCta: 500,
   },
 } as const;
 

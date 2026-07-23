@@ -1,5 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getPublicStorageUrl } from "@/lib/supabase/storage";
+import { designTokens } from "@/lib/design-tokens";
 import type {
   AboutBodyPayload,
   AboutContent,
@@ -12,7 +13,12 @@ import type {
   BrandLogoRow,
   HeroSection,
   NavigationItem,
+  ServiceCategory,
+  ServiceCategoryRow,
+  ServiceMenuItemRow,
   SiteSettings,
+  TeamMember,
+  TeamMemberRow,
 } from "@/types/content";
 
 const ABOUT_FALLBACK = {
@@ -27,12 +33,12 @@ const ABOUT_FALLBACK = {
 };
 
 /** Storage에 올린 시안 로고 순서 (Aveda → … → Moroccanoil) */
-const BRAND_LOGO_FALLBACK: Omit<BrandLogoRow, "id" | "is_active">[] = [
-  { name: "Aveda", image_path: "brands/aveda.png", sort_order: 1 },
-  { name: "Kérastase", image_path: "brands/kerastase.png", sort_order: 2 },
-  { name: "Shiseido", image_path: "brands/shiseido.png", sort_order: 3 },
-  { name: "Olaplex", image_path: "brands/olaplex.png", sort_order: 4 },
-  { name: "Moroccanoil", image_path: "brands/moroccanoil.png", sort_order: 5 },
+const BRAND_LOGO_FALLBACK: Omit<BrandLogoRow, "id" | "is_visible">[] = [
+  { name: "Aveda", image_path: "brands/aveda.svg", sort_order: 1 },
+  { name: "Kérastase", image_path: "brands/kerastase.svg", sort_order: 2 },
+  { name: "Shiseido", image_path: "brands/shiseido.svg", sort_order: 3 },
+  { name: "Olaplex", image_path: "brands/olaplex.svg", sort_order: 4 },
+  { name: "Moroccanoil", image_path: "brands/moroccanoil.svg", sort_order: 5 },
 ];
 
 function parseAboutBody(row: AboutSectionRow): AboutBodyPayload {
@@ -48,10 +54,9 @@ function parseAboutBody(row: AboutSectionRow): AboutBodyPayload {
             json.title_line1 || row.title_line1 || ABOUT_FALLBACK.title_line1,
           title_line2:
             json.title_line2 || row.title_line2 || ABOUT_FALLBACK.title_line2,
-          paragraphs:
-            json.paragraphs?.length
-              ? json.paragraphs
-              : ABOUT_FALLBACK.paragraphs,
+          paragraphs: json.paragraphs?.length
+            ? json.paragraphs
+            : ABOUT_FALLBACK.paragraphs,
         };
       }
     } catch {
@@ -87,7 +92,6 @@ function resolveStat(s: AboutStatRow): AboutStat {
   let label = s.label ?? "";
   let description = s.description ?? "";
 
-  // legacy: "Title||description" packed into label
   if (!description && label.includes("||")) {
     const [title, ...rest] = label.split("||");
     label = title ?? "";
@@ -108,13 +112,89 @@ function resolveStat(s: AboutStatRow): AboutStat {
 }
 
 function resolveBrandLogos(rows: BrandLogoRow[]): BrandLogo[] {
-  return rows.map((row) => ({
-    id: row.id,
-    name: row.name,
-    // cache-bust after logo asset re-upload
-    imageUrl: `${getPublicStorageUrl(row.image_path)}?v=2`,
-    sort_order: row.sort_order,
-  }));
+  return rows.map((row) => {
+    const imagePath = row.image_path.replace(/\.png$/i, ".svg");
+    return {
+      id: row.id,
+      name: row.name,
+      imageUrl: `${getPublicStorageUrl(imagePath)}?v=3`,
+      sort_order: row.sort_order,
+    };
+  });
+}
+
+function parseInstagramUrl(bio: string | null): string | null {
+  if (!bio) return null;
+  const m = bio.match(/instagram:(https?:\/\/\S+)/i);
+  return m?.[1] ?? null;
+}
+
+function resolveTeamMembers(rows: TeamMemberRow[]): TeamMember[] {
+  const positions = designTokens.teamObjectPosition;
+
+  return rows.map((row) => {
+    const byOrder = String(row.sort_order) as keyof typeof positions;
+    const objectPosition =
+      positions[byOrder] ??
+      (row.is_featured ? positions.featured : "50% 5%");
+
+    return {
+      id: row.id,
+      name: row.name,
+      roleTitle: row.role_title ?? "",
+      imageUrl: getPublicStorageUrl(row.image_path),
+      sort_order: row.sort_order,
+      isFeatured: row.is_featured,
+      instagramUrl: parseInstagramUrl(row.bio),
+      objectPosition,
+    };
+  });
+}
+
+function parseServiceDescription(raw: string | null): {
+  subtitle: string;
+  body: string;
+} {
+  if (!raw) return { subtitle: "", body: "" };
+  try {
+    const parsed = JSON.parse(raw) as { subtitle?: string; body?: string };
+    if (parsed && typeof parsed === "object") {
+      return {
+        subtitle: parsed.subtitle ?? "",
+        body: parsed.body ?? "",
+      };
+    }
+  } catch {
+    // plain text
+  }
+  return { subtitle: "", body: raw };
+}
+
+function resolveServices(
+  categories: ServiceCategoryRow[],
+  items: ServiceMenuItemRow[],
+): ServiceCategory[] {
+  return categories.map((cat) => {
+    const { subtitle, body } = parseServiceDescription(cat.description);
+    return {
+      id: cat.id,
+      slug: cat.slug,
+      eyebrow: cat.eyebrow ?? "",
+      title: cat.title,
+      subtitle,
+      body,
+      imageUrl: cat.media_path ? getPublicStorageUrl(cat.media_path) : null,
+      ctaLabel: cat.cta_label ?? "원하는 시술로 바로 예약하기",
+      ctaHref: cat.cta_href,
+      items: items
+        .filter((it) => it.category_id === cat.id)
+        .map((it) => ({
+          id: it.id,
+          name: it.name,
+          priceLabel: it.price_label,
+        })),
+    };
+  });
 }
 
 export async function getHomePageData() {
@@ -127,6 +207,9 @@ export async function getHomePageData() {
     heroRes,
     aboutRes,
     brandsRes,
+    teamRes,
+    serviceCatsRes,
+    serviceItemsRes,
   ] = await Promise.all([
     supabase.from("site_settings").select("*").limit(1).maybeSingle(),
     supabase
@@ -157,7 +240,22 @@ export async function getHomePageData() {
     supabase
       .from("brand_logos")
       .select("*")
-      .eq("is_active", true)
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("team_members")
+      .select("*")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("service_categories")
+      .select("*")
+      .eq("is_visible", true)
+      .order("sort_order", { ascending: true }),
+    supabase
+      .from("service_menu_items")
+      .select("*")
+      .eq("is_visible", true)
       .order("sort_order", { ascending: true }),
   ]);
 
@@ -166,6 +264,19 @@ export async function getHomePageData() {
   if (navRes.error) throw navRes.error;
   if (heroRes.error) throw heroRes.error;
   if (aboutRes.error) throw aboutRes.error;
+  // brands / team / services — optional; missing columns/tables must not 500 the whole page
+  if (brandsRes.error) {
+    console.error("[home] brand_logos:", brandsRes.error.message);
+  }
+  if (teamRes.error) {
+    console.error("[home] team_members:", teamRes.error.message);
+  }
+  if (serviceCatsRes.error) {
+    console.error("[home] service_categories:", serviceCatsRes.error.message);
+  }
+  if (serviceItemsRes.error) {
+    console.error("[home] service_menu_items:", serviceItemsRes.error.message);
+  }
 
   const settings = settingsRes.data as SiteSettings | null;
   const announcement = announcementRes.data as AnnouncementBar | null;
@@ -220,10 +331,23 @@ export async function getHomePageData() {
     !brandsRes.error && brandsRes.data?.length
       ? (brandsRes.data as BrandLogoRow[])
       : BRAND_LOGO_FALLBACK.map((row, i) => ({
-          id: i + 1,
-          is_active: true,
           ...row,
+          id: i + 1,
+          is_visible: true,
         }));
+
+  const teamMembers = resolveTeamMembers(
+    !teamRes.error ? ((teamRes.data ?? []) as TeamMemberRow[]) : [],
+  );
+
+  const services = resolveServices(
+    !serviceCatsRes.error
+      ? ((serviceCatsRes.data ?? []) as ServiceCategoryRow[])
+      : [],
+    !serviceItemsRes.error
+      ? ((serviceItemsRes.data ?? []) as ServiceMenuItemRow[])
+      : [],
+  );
 
   return {
     settings,
@@ -234,6 +358,8 @@ export async function getHomePageData() {
     rightImageUrl: hero ? getPublicStorageUrl(hero.right_image_path) : null,
     about,
     brands: resolveBrandLogos(brandRows),
+    teamMembers,
+    services,
   };
 }
 

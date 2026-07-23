@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
 import { vw } from "@/lib/fluid";
 import type { BrandLogo } from "@/types/content";
@@ -39,14 +38,14 @@ function LogoTrack({ logos, ariaHidden }: { logos: BrandLogo[]; ariaHidden?: boo
             key={`${ariaHidden ? "b" : "a"}-${logo.id}`}
             className="flex shrink-0 list-none items-center"
           >
-            <Image
+            {/* SVG: native img keeps vectors crisp (next/image rasterizes) */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={logo.imageUrl}
               alt={ariaHidden ? "" : logo.name}
-              width={Math.round(180 * scale)}
-              height={Math.round(40 * scale)}
-              unoptimized
               className="block w-auto object-contain object-center"
               style={{ height: vw(heightPx) }}
+              draggable={false}
             />
           </li>
         );

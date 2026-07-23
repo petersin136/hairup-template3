@@ -3,6 +3,8 @@ import { Header } from "@/components/layout/Header";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { BrandTickerSection } from "@/components/sections/BrandTickerSection";
 import { HeroSection } from "@/components/sections/HeroSection";
+import { ServicesSection } from "@/components/sections/ServicesSection";
+import { TeamSection } from "@/components/sections/TeamSection";
 import { getHomePageData } from "@/lib/content/home";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +19,8 @@ export default async function HomePage() {
     rightImageUrl,
     about,
     brands,
+    teamMembers,
+    services,
   } = await getHomePageData();
 
   return (
@@ -46,6 +50,15 @@ export default async function HomePage() {
       {about ? <AboutSection data={about} /> : null}
 
       {brands.length ? <BrandTickerSection logos={brands} /> : null}
+
+      {teamMembers.length ? <TeamSection members={teamMembers} /> : null}
+
+      {services.length ? (
+        <ServicesSection
+          categories={services}
+          bookingUrl={settings?.booking_url}
+        />
+      ) : null}
     </main>
   );
 }

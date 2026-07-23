@@ -89,7 +89,7 @@ export type BrandLogoRow = {
   name: string;
   image_path: string;
   sort_order: number;
-  is_active: boolean;
+  is_visible: boolean;
 };
 
 export type BrandLogo = {
@@ -97,4 +97,67 @@ export type BrandLogo = {
   name: string;
   imageUrl: string;
   sort_order: number;
+};
+
+export type TeamMemberRow = {
+  id: number;
+  name: string;
+  role_title: string | null;
+  bio: string | null;
+  image_path: string;
+  sort_order: number;
+  is_featured: boolean;
+  is_visible: boolean;
+};
+
+export type TeamMember = {
+  id: number;
+  name: string;
+  roleTitle: string;
+  imageUrl: string;
+  sort_order: number;
+  isFeatured: boolean;
+  instagramUrl: string | null;
+  objectPosition: string;
+};
+
+export type ServiceCategoryRow = {
+  id: number;
+  slug: string;
+  eyebrow: string | null;
+  title: string;
+  description: string | null;
+  media_path: string | null;
+  cta_label: string | null;
+  cta_href: string | null;
+  sort_order: number;
+  is_visible: boolean;
+};
+
+export type ServiceMenuItemRow = {
+  id: number;
+  category_id: number;
+  name: string;
+  price_label: string;
+  sort_order: number;
+  is_visible: boolean;
+};
+
+export type ServiceMenuItem = {
+  id: number;
+  name: string;
+  priceLabel: string;
+};
+
+export type ServiceCategory = {
+  id: number;
+  slug: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  body: string;
+  imageUrl: string | null;
+  ctaLabel: string;
+  ctaHref: string | null;
+  items: ServiceMenuItem[];
 };
