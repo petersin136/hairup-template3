@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
+import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { HeroSection as HeroSectionData } from "@/types/content";
 
@@ -17,21 +18,21 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
       id="home"
       className="w-full"
       style={{
-        paddingLeft: size.pageSidePadding,
-        paddingRight: size.pageSidePadding,
+        paddingLeft: vw(size.pageSidePadding),
+        paddingRight: vw(size.pageSidePadding),
         paddingTop: size.headerToHeroGap,
-        paddingBottom: size.pageSidePadding,
+        paddingBottom: vw(size.pageSidePadding),
         fontFamily: fontFamilies.display,
       }}
     >
       <div
         className="relative grid w-full grid-cols-2 overflow-hidden"
         style={{
-          height: size.heroHeight,
-          borderRadius: size.heroRadius,
+          height: vw(size.heroHeight),
+          minHeight: 420,
+          borderRadius: vw(size.heroRadius),
         }}
       >
-        {/* Left: woman portrait + EN copy */}
         <div className="relative h-full w-full overflow-hidden">
           <Image
             src={leftImageUrl}
@@ -39,25 +40,25 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             fill
             priority
             unoptimized
-            sizes="720px"
+            sizes="50vw"
             className="object-cover object-[center_22%]"
           />
           <div
             className="absolute inset-x-0 bottom-0 z-10"
             style={{
-              paddingLeft: size.heroTextPadX,
-              paddingRight: size.heroTextPadX,
-              paddingBottom: size.heroTextPadBottom,
+              paddingLeft: vw(size.heroTextPadX),
+              paddingRight: vw(size.heroTextPadX),
+              paddingBottom: vw(size.heroTextPadBottom),
             }}
           >
             <p
               className="uppercase text-white"
               style={{
-                fontSize: font.heroEyebrow,
+                fontSize: fluidFont(font.heroEyebrow),
                 fontWeight: weight.heroEyebrow,
                 letterSpacing: "0.14em",
                 lineHeight: 1.2,
-                marginBottom: 18,
+                marginBottom: vw(18),
               }}
             >
               {data.left_eyebrow}
@@ -65,7 +66,7 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             <h1
               className="text-white"
               style={{
-                fontSize: font.heroTitle,
+                fontSize: fluidFont(font.heroTitle),
                 fontWeight: weight.heroTitle,
                 letterSpacing: "-0.02em",
                 lineHeight: 1.15,
@@ -78,7 +79,6 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
           </div>
         </div>
 
-        {/* Right: hands + KO copy */}
         <div className="relative h-full w-full overflow-hidden">
           <Image
             src={rightImageUrl}
@@ -86,32 +86,32 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             fill
             priority
             unoptimized
-            sizes="720px"
+            sizes="50vw"
             className="object-cover object-center"
           />
           <div
             className="absolute inset-x-0 bottom-0 z-10 text-right"
             style={{
-              paddingLeft: size.heroTextPadX,
-              paddingRight: size.heroTextPadX,
-              paddingBottom: size.heroTextPadBottom,
+              paddingLeft: vw(size.heroTextPadX),
+              paddingRight: vw(size.heroTextPadX),
+              paddingBottom: vw(size.heroTextPadBottom),
               color: color.white,
             }}
           >
             <h2
               style={{
-                fontSize: font.heroRightHeadline,
+                fontSize: fluidFont(font.heroRightHeadline),
                 fontWeight: weight.heroRightHeadline,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.4,
-                marginBottom: 14,
+                marginBottom: vw(14),
               }}
             >
               {data.right_headline}
             </h2>
             <p
               style={{
-                fontSize: font.heroRightBody,
+                fontSize: fluidFont(font.heroRightBody),
                 fontWeight: weight.heroRightBody,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.65,

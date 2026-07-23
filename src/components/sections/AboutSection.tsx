@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
+import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { AboutContent } from "@/types/content";
 
@@ -8,43 +9,42 @@ type Props = {
 };
 
 export function AboutSection({ data }: Props) {
-  const pad = designTokens.size.aboutSidePadding;
+  const { size, font, weight, color } = designTokens;
 
   return (
     <section
       id="about"
       className="w-full bg-white"
       style={{
-        paddingLeft: pad,
-        paddingRight: pad,
-        paddingTop: designTokens.size.aboutPadTop,
-        paddingBottom: designTokens.size.aboutPadBottom,
+        paddingLeft: vw(size.aboutSidePadding),
+        paddingRight: vw(size.aboutSidePadding),
+        paddingTop: vw(size.aboutPadTop),
+        paddingBottom: vw(size.aboutPadBottom),
         fontFamily: fontFamilies.sans,
       }}
     >
-      {/* Header */}
-      <div className="max-w-[720px]">
+      <div style={{ maxWidth: vw(720) }}>
         <p
           className="uppercase"
           style={{
-            color: designTokens.color.aboutEyebrow,
-            fontSize: designTokens.font.aboutEyebrow,
-            fontWeight: designTokens.weight.aboutEyebrow,
+            color: color.aboutEyebrow,
+            fontSize: fluidFont(font.aboutEyebrow),
+            fontWeight: weight.aboutEyebrow,
             letterSpacing: "0.16em",
             lineHeight: 1.2,
-            marginBottom: 20,
+            marginBottom: vw(20),
           }}
         >
           {data.eyebrow}
         </p>
         <h2
           style={{
-            color: designTokens.color.aboutTitle,
-            fontSize: designTokens.font.aboutTitle,
-            fontWeight: designTokens.weight.aboutTitle,
+            color: color.aboutTitle,
+            fontSize: fluidFont(font.aboutTitle),
+            fontWeight: weight.aboutTitle,
             letterSpacing: "-0.025em",
             lineHeight: 1.2,
-            marginBottom: 18,
+            marginBottom: vw(18),
           }}
         >
           {data.titleLine1}
@@ -53,9 +53,9 @@ export function AboutSection({ data }: Props) {
         </h2>
         <p
           style={{
-            color: designTokens.color.aboutBody,
-            fontSize: designTokens.font.aboutSubtitle,
-            fontWeight: designTokens.weight.aboutSubtitle,
+            color: color.aboutBody,
+            fontSize: fluidFont(font.aboutSubtitle),
+            fontWeight: weight.aboutSubtitle,
             letterSpacing: "-0.01em",
             lineHeight: 1.5,
           }}
@@ -64,25 +64,24 @@ export function AboutSection({ data }: Props) {
         </p>
       </div>
 
-      {/* Stats */}
       <div
         className="grid grid-cols-4"
         style={{
-          marginTop: designTokens.size.aboutStatsGapTop,
-          marginBottom: designTokens.size.aboutStatsGapBottom,
-          columnGap: designTokens.size.aboutStatsColGap,
+          marginTop: vw(size.aboutStatsGapTop),
+          marginBottom: vw(size.aboutStatsGapBottom),
+          columnGap: vw(size.aboutStatsColGap),
         }}
       >
         {data.stats.map((stat) => (
           <div key={stat.id}>
             <p
               style={{
-                color: designTokens.color.aboutTitle,
-                fontSize: designTokens.font.aboutStatValue,
-                fontWeight: designTokens.weight.aboutStatValue,
+                color: color.aboutTitle,
+                fontSize: fluidFont(font.aboutStatValue),
+                fontWeight: weight.aboutStatValue,
                 letterSpacing: "-0.03em",
                 lineHeight: 1.1,
-                marginBottom: 14,
+                marginBottom: vw(14),
               }}
             >
               {stat.value}
@@ -90,27 +89,27 @@ export function AboutSection({ data }: Props) {
             <div
               style={{
                 height: 2,
-                backgroundColor: designTokens.color.aboutLine,
-                marginBottom: 14,
+                backgroundColor: color.aboutLine,
+                marginBottom: vw(14),
               }}
             />
             <p
               style={{
-                color: designTokens.color.aboutTitle,
-                fontSize: designTokens.font.aboutStatLabel,
-                fontWeight: designTokens.weight.aboutStatLabel,
+                color: color.aboutTitle,
+                fontSize: fluidFont(font.aboutStatLabel),
+                fontWeight: weight.aboutStatLabel,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.3,
-                marginBottom: 10,
+                marginBottom: vw(10),
               }}
             >
               {stat.label}
             </p>
             <p
               style={{
-                color: designTokens.color.aboutMuted,
-                fontSize: designTokens.font.aboutStatDesc,
-                fontWeight: designTokens.weight.aboutStatDesc,
+                color: color.aboutMuted,
+                fontSize: fluidFont(font.aboutStatDesc),
+                fontWeight: weight.aboutStatDesc,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.55,
                 whiteSpace: "pre-line",
@@ -124,16 +123,15 @@ export function AboutSection({ data }: Props) {
         ))}
       </div>
 
-      {/* Content grid: text | gap | interior | gap | portrait */}
-      <div className="flex items-start">
+      <div className="flex w-full items-start">
         <div
           style={{
-            width: designTokens.size.aboutTextCol,
-            minWidth: designTokens.size.aboutTextCol,
-            marginRight: designTokens.size.aboutTextMediaGap,
-            color: designTokens.color.aboutBody,
-            fontSize: designTokens.font.aboutBody,
-            fontWeight: designTokens.weight.aboutBody,
+            width: vw(size.aboutTextCol),
+            flexShrink: 0,
+            marginRight: vw(size.aboutTextMediaGap),
+            color: color.aboutBody,
+            fontSize: fluidFont(font.aboutBody),
+            fontWeight: weight.aboutBody,
             letterSpacing: "-0.01em",
             lineHeight: 1.75,
             wordBreak: "keep-all",
@@ -146,7 +144,8 @@ export function AboutSection({ data }: Props) {
             <p
               key={i}
               style={{
-                marginBottom: i === data.paragraphs.length - 1 ? 0 : 28,
+                marginBottom:
+                  i === data.paragraphs.length - 1 ? 0 : vw(28),
               }}
             >
               {p.split("\n").map((line, j) => (
@@ -162,9 +161,9 @@ export function AboutSection({ data }: Props) {
         <div
           className="relative shrink-0 overflow-hidden"
           style={{
-            width: designTokens.size.aboutInteriorW,
-            height: designTokens.size.aboutInteriorH,
-            borderRadius: designTokens.size.aboutImageRadius,
+            width: vw(size.aboutInteriorW),
+            height: vw(size.aboutInteriorH),
+            borderRadius: vw(size.aboutImageRadius),
           }}
         >
           {data.interiorUrl ? (
@@ -173,8 +172,8 @@ export function AboutSection({ data }: Props) {
               alt=""
               fill
               unoptimized
-              sizes="586px"
-              className="object-cover object-[center_45%]"
+              sizes="45vw"
+              className="object-cover object-center"
             />
           ) : null}
         </div>
@@ -182,10 +181,10 @@ export function AboutSection({ data }: Props) {
         <div
           className="relative shrink-0 overflow-hidden"
           style={{
-            width: designTokens.size.aboutPortraitW,
-            height: designTokens.size.aboutPortraitH,
-            borderRadius: designTokens.size.aboutImageRadius,
-            marginLeft: designTokens.size.aboutMediaGap,
+            width: vw(size.aboutPortraitW),
+            height: vw(size.aboutPortraitH),
+            borderRadius: vw(size.aboutImageRadius),
+            marginLeft: vw(size.aboutMediaGap),
           }}
         >
           {data.portraitUrl ? (
@@ -194,7 +193,7 @@ export function AboutSection({ data }: Props) {
               alt=""
               fill
               unoptimized
-              sizes="276px"
+              sizes="20vw"
               className="object-cover object-[center_18%]"
             />
           ) : null}

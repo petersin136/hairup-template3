@@ -11,14 +11,16 @@ export const designTokens = {
     black: "#151515",
     announcementBg: "#3D3630",
     navInactive: "#A9A9A9",
-    ctaBg: "#202020",
-    ctaHover: "#424242",
+    ctaBg: "#000000",
+    ctaHover: "#222222",
     ctaText: "#FFFFFF",
     aboutEyebrow: "#9D9D9D",
     aboutTitle: "#111111",
     aboutBody: "#3A3A3A",
     aboutMuted: "#4A4A4A",
     aboutLine: "#BDBDBD",
+    /** Brand ticker — 시안 크림 배경 */
+    brandTickerBg: "#F5F2EE",
   },
   size: {
     announcementHeight: 45,
@@ -50,6 +52,18 @@ export const designTokens = {
     aboutPortraitH: 373,
     aboutMediaGap: 32,
     aboutImageRadius: 12,
+    // Brand ticker — 시안 03 (단일 라인 기준 높이; Kérastase는 scale로 보정)
+    brandTickerHeight: 120,
+    brandLogoHeight: 22,
+    brandLogoGap: 110,
+  },
+  /** 시안 실측 광학 비율 — Kérastase(+PARIS) ≈ 1.7× */
+  brandLogoScale: {
+    aveda: 0.95,
+    kerastase: 1.7,
+    shiseido: 1.12,
+    olaplex: 1,
+    moroccanoil: 1,
   },
   font: {
     announcement: 13,
@@ -80,11 +94,12 @@ export const designTokens = {
     heroRightHeadline: 500,
     heroRightBody: 300,
     aboutEyebrow: 400,
-    aboutTitle: 600,
+    /** 시안: Regular~Medium — 600은 영문이 두껍게 보임 */
+    aboutTitle: 500,
     aboutSubtitle: 400,
-    aboutStatValue: 700,
-    aboutStatLabel: 700,
-    aboutStatDesc: 500,
+    aboutStatValue: 500,
+    aboutStatLabel: 500,
+    aboutStatDesc: 400,
     aboutBody: 400,
   },
 } as const;

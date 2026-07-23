@@ -42,6 +42,6 @@ insert into about_media (about_id, image_path, sort_order)
 select a.id, v.path, v.sort_order
 from a,
 (values
-  ('about/interior.jpg', 1),
+  ('about/interior-v3.jpg', 1),
   ('about/portrait.jpg', 2)
 ) as v(path, sort_order);

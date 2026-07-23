@@ -83,3 +83,18 @@ export type AboutContent = {
   interiorUrl: string;
   portraitUrl: string;
 };
+
+export type BrandLogoRow = {
+  id: number;
+  name: string;
+  image_path: string;
+  sort_order: number;
+  is_active: boolean;
+};
+
+export type BrandLogo = {
+  id: number;
+  name: string;
+  imageUrl: string;
+  sort_order: number;
+};

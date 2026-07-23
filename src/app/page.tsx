@@ -1,9 +1,9 @@
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { AboutSection } from "@/components/sections/AboutSection";
+import { BrandTickerSection } from "@/components/sections/BrandTickerSection";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { getHomePageData } from "@/lib/content/home";
-import { designTokens } from "@/lib/design-tokens";
 
 export const dynamic = "force-dynamic";
 
@@ -16,13 +16,11 @@ export default async function HomePage() {
     leftImageUrl,
     rightImageUrl,
     about,
+    brands,
   } = await getHomePageData();
 
   return (
-    <main
-      className="mx-auto w-full bg-white"
-      style={{ maxWidth: designTokens.canvas.width }}
-    >
+    <main className="site-shell mx-auto w-full bg-white">
       {announcement ? (
         <AnnouncementBar
           message={announcement.message}
@@ -46,6 +44,8 @@ export default async function HomePage() {
       ) : null}
 
       {about ? <AboutSection data={about} /> : null}
+
+      {brands.length ? <BrandTickerSection logos={brands} /> : null}
     </main>
   );
 }

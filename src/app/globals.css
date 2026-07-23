@@ -3,8 +3,9 @@
 :root {
   --background: #ffffff;
   --foreground: #151515;
-  --color-cta: #202020;
-  --color-cta-hover: #424242;
+  --color-cta: #000000;
+  --color-cta-hover: #222222;
+  --design-width: 1440;
 }
 
 @theme inline {
@@ -12,12 +13,53 @@
   --color-foreground: var(--foreground);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   margin: 0;
+  min-width: 0;
 }
 
 .cta-btn:hover {
   background-color: var(--color-cta-hover) !important;
+}
+
+/* Brand ticker — seamless RTL infinite scroll */
+@keyframes brand-marquee-rtl {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.brand-marquee__rail {
+  animation: brand-marquee-rtl 40s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-marquee__rail {
+    animation: none;
+  }
+}
+
+/* Desktop fluid: 시안 비율 유지하며 전폭 사용 */
+@media (min-width: 1024px) {
+  .site-shell {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Tablet / small desktop: 기본 패딩 유지 */
+@media (max-width: 1023px) {
+  .site-shell {
+    width: 100%;
+  }
 }

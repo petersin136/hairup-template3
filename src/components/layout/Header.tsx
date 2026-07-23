@@ -1,4 +1,5 @@
 import { designTokens } from "@/lib/design-tokens";
+import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { NavigationItem } from "@/types/content";
 
@@ -15,9 +16,10 @@ export function Header({ brandName, items, bookingUrl }: Props) {
     <header
       className="relative flex w-full items-center bg-white"
       style={{
-        height: designTokens.size.headerHeight,
-        paddingLeft: designTokens.size.pageSidePadding,
-        paddingRight: designTokens.size.pageSidePadding,
+        height: vw(designTokens.size.headerHeight),
+        minHeight: 64,
+        paddingLeft: vw(designTokens.size.pageSidePadding),
+        paddingRight: vw(designTokens.size.pageSidePadding),
       }}
     >
       <a
@@ -26,7 +28,7 @@ export function Header({ brandName, items, bookingUrl }: Props) {
         style={{
           color: designTokens.color.black,
           fontFamily: fontFamilies.logo,
-          fontSize: designTokens.font.logo,
+          fontSize: fluidFont(designTokens.font.logo),
           fontWeight: designTokens.weight.logo,
           letterSpacing: designTokens.tracking.logo,
           lineHeight: 1,
@@ -35,7 +37,10 @@ export function Header({ brandName, items, bookingUrl }: Props) {
         {brandName}
       </a>
 
-      <nav className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-10">
+      <nav
+        className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center"
+        style={{ gap: vw(40) }}
+      >
         {items.map((item) => {
           const active = item.is_active_state;
           return (
@@ -47,7 +52,7 @@ export function Header({ brandName, items, bookingUrl }: Props) {
                 color: active
                   ? designTokens.color.black
                   : designTokens.color.navInactive,
-                fontSize: designTokens.font.nav,
+                fontSize: fluidFont(designTokens.font.nav),
                 fontWeight: active ? 600 : 400,
                 letterSpacing: "0.06em",
                 lineHeight: 1,
@@ -61,19 +66,34 @@ export function Header({ brandName, items, bookingUrl }: Props) {
 
       <a
         href={href}
-        className="cta-btn ml-auto inline-flex shrink-0 items-center justify-center gap-2 text-white transition-colors"
+        className="cta-btn ml-auto inline-flex shrink-0 items-center justify-between text-white transition-colors"
         style={{
-          width: designTokens.size.ctaWidth,
-          height: designTokens.size.ctaHeight,
+          boxSizing: "border-box",
+          width: vw(designTokens.size.ctaWidth),
+          height: vw(designTokens.size.ctaHeight),
+          minWidth: 168,
+          minHeight: 42,
+          paddingLeft: vw(22),
+          paddingRight: vw(18),
           backgroundColor: designTokens.color.ctaBg,
-          fontSize: designTokens.font.cta,
+          color: designTokens.color.ctaText,
+          fontFamily: fontFamilies.sans,
+          fontSize: fluidFont(designTokens.font.cta),
           fontWeight: 500,
           letterSpacing: "-0.01em",
           borderRadius: designTokens.size.ctaRadius,
         }}
       >
         <span>실시간 예약하기</span>
-        <span aria-hidden className="text-[12px] leading-none">
+        <span
+          aria-hidden
+          style={{
+            fontSize: fluidFont(22),
+            fontWeight: 400,
+            lineHeight: 1,
+            transform: "translateY(-1px)",
+          }}
+        >
           ›
         </span>
       </a>

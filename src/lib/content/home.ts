@@ -8,6 +8,8 @@ import type {
   AboutStat,
   AboutStatRow,
   AnnouncementBar,
+  BrandLogo,
+  BrandLogoRow,
   HeroSection,
   NavigationItem,
   SiteSettings,
@@ -23,6 +25,15 @@ const ABOUT_FALLBACK = {
     "아늑하고 감각적인 인테리어 속에서\n일상의 피로를 잠시 내려놓으세요.\n헤어업을 나서는 순간, 한층 더 빛나는\n나를 마주하게 될 것입니다.\n당신의 소중한 일상에 특별한 변화의\n가치를 더해드립니다.",
   ],
 };
+
+/** Storage에 올린 시안 로고 순서 (Aveda → … → Moroccanoil) */
+const BRAND_LOGO_FALLBACK: Omit<BrandLogoRow, "id" | "is_active">[] = [
+  { name: "Aveda", image_path: "brands/aveda.png", sort_order: 1 },
+  { name: "Kérastase", image_path: "brands/kerastase.png", sort_order: 2 },
+  { name: "Shiseido", image_path: "brands/shiseido.png", sort_order: 3 },
+  { name: "Olaplex", image_path: "brands/olaplex.png", sort_order: 4 },
+  { name: "Moroccanoil", image_path: "brands/moroccanoil.png", sort_order: 5 },
+];
 
 function parseAboutBody(row: AboutSectionRow): AboutBodyPayload {
   const raw = row.body;
@@ -96,6 +107,16 @@ function resolveStat(s: AboutStatRow): AboutStat {
   };
 }
 
+function resolveBrandLogos(rows: BrandLogoRow[]): BrandLogo[] {
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    // cache-bust after logo asset re-upload
+    imageUrl: `${getPublicStorageUrl(row.image_path)}?v=2`,
+    sort_order: row.sort_order,
+  }));
+}
+
 export async function getHomePageData() {
   const supabase = createSupabaseServerClient();
 
@@ -105,6 +126,7 @@ export async function getHomePageData() {
     navRes,
     heroRes,
     aboutRes,
+    brandsRes,
   ] = await Promise.all([
     supabase.from("site_settings").select("*").limit(1).maybeSingle(),
     supabase
@@ -132,6 +154,11 @@ export async function getHomePageData() {
       .eq("status", "published")
       .limit(1)
       .maybeSingle(),
+    supabase
+      .from("brand_logos")
+      .select("*")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true }),
   ]);
 
   if (settingsRes.error) throw settingsRes.error;
@@ -189,6 +216,15 @@ export async function getHomePageData() {
     };
   }
 
+  const brandRows =
+    !brandsRes.error && brandsRes.data?.length
+      ? (brandsRes.data as BrandLogoRow[])
+      : BRAND_LOGO_FALLBACK.map((row, i) => ({
+          id: i + 1,
+          is_active: true,
+          ...row,
+        }));
+
   return {
     settings,
     announcement,
@@ -197,6 +233,7 @@ export async function getHomePageData() {
     leftImageUrl: hero ? getPublicStorageUrl(hero.left_image_path) : null,
     rightImageUrl: hero ? getPublicStorageUrl(hero.right_image_path) : null,
     about,
+    brands: resolveBrandLogos(brandRows),
   };
 }
 
