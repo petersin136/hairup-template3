@@ -9,6 +9,7 @@ import { ReviewsSection } from "@/components/sections/ReviewsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { TeamSection } from "@/components/sections/TeamSection";
 import { getHomePageData } from "@/lib/content/home";
+import { getPublicStorageUrl } from "@/lib/supabase/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,16 @@ export default async function HomePage() {
     reviews,
     footer,
   } = await getHomePageData();
+
+  const bookingBgUrl = getPublicStorageUrl(
+    "marius-dumitrascu-xmExDmDklKI-unsplash (1).jpg",
+  );
+  /** 시안 07 디자이너 목록 (미나 / 소라 / 준우) */
+  const bookingDesigners = [
+    { id: "mina", name: "미나" },
+    { id: "sora", name: "소라" },
+    { id: "junwoo", name: "준우" },
+  ];
 
   return (
     <main className="site-shell mx-auto w-full bg-white">
@@ -67,7 +78,11 @@ export default async function HomePage() {
 
       {reviews ? <ReviewsSection data={reviews} /> : null}
 
-      <ReservationSection />
+      <ReservationSection
+        bgUrl={bookingBgUrl}
+        designers={bookingDesigners}
+        categories={services}
+      />
 
       <SiteFooter data={footer} />
     </main>

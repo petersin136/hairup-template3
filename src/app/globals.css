@@ -30,13 +30,38 @@ body {
 
 /* Footer ADMIN — 시안: muted → white */
 .footer-admin-link {
-  color: #716c68;
+  color: #8a8a8a;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-admin-link:hover {
   color: #ffffff;
+}
+
+/* Reservation dropdown — 시안1 실측:
+   비활성 #7A7875 Regular / 활성·호버 #FFF SemiBold + #27221E 바 */
+.reservation-dd-menu:hover .reservation-dd-item[data-active="true"]:not(:hover) {
+  color: #7a7875;
+  background: transparent;
+  font-weight: 400;
+}
+
+.reservation-dd-item {
+  color: #7a7875;
+  background: transparent;
+  font-weight: 400;
+  transition:
+    background-color 0.12s ease,
+    color 0.12s ease,
+    font-weight 0.12s ease;
+}
+
+.reservation-dd-item:hover,
+.reservation-dd-item[data-active="true"] {
+  color: #ffffff !important;
+  background: #27221e !important;
+  font-weight: 600 !important;
 }
 
 .nav-link {

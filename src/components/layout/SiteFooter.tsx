@@ -12,7 +12,7 @@ export function SiteFooter({ data }: Props) {
 
   return (
     <footer
-      className="w-full"
+      className="relative w-full"
       style={{
         backgroundColor: color.footerBg,
         color: color.footerText,
@@ -21,11 +21,15 @@ export function SiteFooter({ data }: Props) {
         paddingTop: vw(size.footerPadTop),
         paddingBottom: vw(size.footerPadBottom),
         fontFamily: fontFamilies.sans,
+        zIndex: 0,
       }}
     >
       <div
-        className="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-0"
-        style={{ marginBottom: vw(size.footerMainToDivider) }}
+        className="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4"
+        style={{
+          marginBottom: vw(size.footerMainToDivider),
+          columnGap: vw(40),
+        }}
       >
         {/* Brand */}
         <div>
@@ -45,42 +49,70 @@ export function SiteFooter({ data }: Props) {
           </a>
         </div>
 
-        {/* Opening Hours */}
+        {/* Opening Hours — 시안: 요일↔시간 타이트, 블록 간격 넓게 */}
         <div>
           <h3
             style={{
+              margin: 0,
+              marginBottom: vw(size.footerHoursTitleGap),
               fontSize: fluidFont(font.footerHeading),
               fontWeight: weight.footerHeading,
-              marginBottom: vw(size.footerHoursGap),
-              lineHeight: 1.3,
+              lineHeight: 1.2,
             }}
           >
             Opening Hours
           </h3>
-          <ul className="flex flex-col" style={{ gap: vw(size.footerHoursGap) }}>
+          <ul
+            className="list-none"
+            style={{
+              margin: 0,
+              padding: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: vw(size.footerHoursGap),
+            }}
+          >
             {data.hours.map((row) => (
-              <li
-                key={row.days}
-                style={{
-                  fontSize: fluidFont(font.footerBody),
-                  fontWeight: weight.footerBody,
-                  lineHeight: 1.45,
-                }}
-              >
-                {row.days}: {row.time}
+              <li key={row.days}>
+                <p
+                  style={{
+                    margin: 0,
+                    marginBottom: vw(size.footerHoursDayToTime),
+                    fontSize: fluidFont(font.footerBody),
+                    fontWeight: 600,
+                    lineHeight: 1.15,
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {row.days}
+                </p>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: fluidFont(font.footerBody),
+                    fontWeight: weight.footerBody,
+                    lineHeight: 1.15,
+                  }}
+                >
+                  {row.time}
+                </p>
               </li>
             ))}
           </ul>
         </div>
 
         {/* Contact */}
-        <div className="flex flex-col" style={{ gap: vw(size.footerContactBlockGap) }}>
+        <div
+          className="flex flex-col"
+          style={{ gap: vw(size.footerContactBlockGap) }}
+        >
           <div>
             <h3
               style={{
+                margin: 0,
+                marginBottom: vw(size.footerContactLabelToValue),
                 fontSize: fluidFont(font.footerHeading),
                 fontWeight: weight.footerHeading,
-                marginBottom: vw(10),
                 lineHeight: 1.3,
               }}
             >
@@ -88,6 +120,7 @@ export function SiteFooter({ data }: Props) {
             </h3>
             <p
               style={{
+                margin: 0,
                 fontSize: fluidFont(font.footerBody),
                 fontWeight: weight.footerBody,
                 lineHeight: 1.5,
@@ -99,9 +132,10 @@ export function SiteFooter({ data }: Props) {
           <div>
             <h3
               style={{
+                margin: 0,
+                marginBottom: vw(size.footerContactLabelToValue),
                 fontSize: fluidFont(font.footerHeading),
                 fontWeight: weight.footerHeading,
-                marginBottom: vw(10),
                 lineHeight: 1.3,
               }}
             >
@@ -114,6 +148,7 @@ export function SiteFooter({ data }: Props) {
                 fontWeight: weight.footerBody,
                 lineHeight: 1.5,
                 color: color.footerText,
+                textDecoration: "none",
               }}
             >
               {data.phone}
@@ -122,9 +157,10 @@ export function SiteFooter({ data }: Props) {
           <div>
             <h3
               style={{
+                margin: 0,
+                marginBottom: vw(size.footerContactLabelToValue),
                 fontSize: fluidFont(font.footerHeading),
                 fontWeight: weight.footerHeading,
-                marginBottom: vw(10),
                 lineHeight: 1.3,
               }}
             >
@@ -137,6 +173,7 @@ export function SiteFooter({ data }: Props) {
                 fontWeight: weight.footerBody,
                 lineHeight: 1.5,
                 color: color.footerText,
+                textDecoration: "none",
               }}
             >
               {data.email}
@@ -148,15 +185,25 @@ export function SiteFooter({ data }: Props) {
         <div>
           <h3
             style={{
+              margin: 0,
+              marginBottom: vw(size.footerSocialGap),
               fontSize: fluidFont(font.footerHeading),
               fontWeight: weight.footerHeading,
-              marginBottom: vw(size.footerSocialGap),
               lineHeight: 1.3,
             }}
           >
             Follow Us
           </h3>
-          <ul className="flex flex-col" style={{ gap: vw(size.footerSocialGap) }}>
+          <ul
+            className="list-none"
+            style={{
+              margin: 0,
+              padding: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: vw(size.footerSocialGap),
+            }}
+          >
             {data.socials.map((s) => (
               <li key={s.id}>
                 <a
@@ -170,6 +217,7 @@ export function SiteFooter({ data }: Props) {
                     letterSpacing: "0.04em",
                     lineHeight: 1.4,
                     color: color.footerText,
+                    textDecoration: "none",
                   }}
                 >
                   {s.label}
@@ -186,9 +234,10 @@ export function SiteFooter({ data }: Props) {
           paddingTop: vw(size.footerDividerToBottom),
         }}
       >
-        <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <p
             style={{
+              margin: 0,
               color: color.footerMuted,
               fontSize: fluidFont(font.footerLegal),
               fontWeight: weight.footerLegal,
@@ -200,6 +249,7 @@ export function SiteFooter({ data }: Props) {
           <p
             className="lg:text-right"
             style={{
+              margin: 0,
               color: color.footerMuted,
               fontSize: fluidFont(font.footerLegal),
               fontWeight: weight.footerLegal,
