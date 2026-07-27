@@ -8,6 +8,13 @@ type Props = {
   data: AboutContent;
 };
 
+/** 시안: 숫자 Regular 48 · 기호(+/%) Light 34 */
+function splitStatValue(value: string): { num: string; suffix: string } {
+  const m = value.trim().match(/^([\d.]+)(.*)$/);
+  if (!m) return { num: value, suffix: "" };
+  return { num: m[1], suffix: m[2] };
+}
+
 export function AboutSection({ data }: Props) {
   const { size, font, weight, color } = designTokens;
 
@@ -23,16 +30,18 @@ export function AboutSection({ data }: Props) {
         fontFamily: fontFamilies.sans,
       }}
     >
-      <div style={{ maxWidth: vw(720) }}>
+      {/* Header block */}
+      <div>
         <p
           className="uppercase"
           style={{
             color: color.aboutEyebrow,
+            fontFamily: fontFamilies.logo,
             fontSize: fluidFont(font.aboutEyebrow),
             fontWeight: weight.aboutEyebrow,
-            letterSpacing: "0.16em",
+            letterSpacing: "0.12em",
             lineHeight: 1.2,
-            marginBottom: vw(20),
+            marginBottom: vw(size.aboutEyebrowToTitle),
           }}
         >
           {data.eyebrow}
@@ -40,11 +49,12 @@ export function AboutSection({ data }: Props) {
         <h2
           style={{
             color: color.aboutTitle,
+            fontFamily: fontFamilies.logo,
             fontSize: fluidFont(font.aboutTitle),
             fontWeight: weight.aboutTitle,
             letterSpacing: "-0.025em",
-            lineHeight: 1.2,
-            marginBottom: vw(18),
+            lineHeight: vw(size.aboutTitleLineHeight),
+            marginBottom: vw(size.aboutTitleToSubtitle),
           }}
         >
           {data.titleLine1}
@@ -53,7 +63,7 @@ export function AboutSection({ data }: Props) {
         </h2>
         <p
           style={{
-            color: color.aboutBody,
+            color: color.aboutTitle,
             fontSize: fluidFont(font.aboutSubtitle),
             fontWeight: weight.aboutSubtitle,
             letterSpacing: "-0.01em",
@@ -64,65 +74,100 @@ export function AboutSection({ data }: Props) {
         </p>
       </div>
 
+      {/* Stats — 4 columns · 숫자→32→라인→32→라벨→20→설명 */}
       <div
-        className="grid grid-cols-4"
+        className="flex w-full"
         style={{
           marginTop: vw(size.aboutStatsGapTop),
           marginBottom: vw(size.aboutStatsGapBottom),
-          columnGap: vw(size.aboutStatsColGap),
         }}
       >
-        {data.stats.map((stat) => (
-          <div key={stat.id}>
-            <p
-              style={{
-                color: color.aboutTitle,
-                fontSize: fluidFont(font.aboutStatValue),
-                fontWeight: weight.aboutStatValue,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.1,
-                marginBottom: vw(14),
-              }}
-            >
-              {stat.value}
-            </p>
+        {data.stats.map((stat, index) => {
+          const { num, suffix } = splitStatValue(stat.value);
+          const gapAfter =
+            index === data.stats.length - 1
+              ? 0
+              : index === 0
+                ? size.aboutStatsGapFirst
+                : size.aboutStatsColGap;
+
+          return (
             <div
+              key={stat.id}
               style={{
-                height: 2,
-                backgroundColor: color.aboutLine,
-                marginBottom: vw(14),
-              }}
-            />
-            <p
-              style={{
-                color: color.aboutTitle,
-                fontSize: fluidFont(font.aboutStatLabel),
-                fontWeight: weight.aboutStatLabel,
-                letterSpacing: "-0.01em",
-                lineHeight: 1.3,
-                marginBottom: vw(10),
+                flex: 1,
+                minWidth: 0,
+                marginRight: gapAfter ? vw(gapAfter) : 0,
               }}
             >
-              {stat.label}
-            </p>
-            <p
-              style={{
-                color: color.aboutMuted,
-                fontSize: fluidFont(font.aboutStatDesc),
-                fontWeight: weight.aboutStatDesc,
-                letterSpacing: "-0.01em",
-                lineHeight: 1.55,
-                whiteSpace: "pre-line",
-                WebkitFontSmoothing: "antialiased",
-                MozOsxFontSmoothing: "grayscale",
-              }}
-            >
-              {stat.description}
-            </p>
-          </div>
-        ))}
+              <p
+                style={{
+                  color: color.aboutTitle,
+                  fontFamily: fontFamilies.logo,
+                  letterSpacing: "-0.03em",
+                  lineHeight: 1,
+                  marginBottom: vw(size.aboutStatNumberToLine),
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: fluidFont(font.aboutStatValue),
+                    fontWeight: weight.aboutStatValue,
+                  }}
+                >
+                  {num}
+                </span>
+                {suffix ? (
+                  <span
+                    style={{
+                      fontSize: fluidFont(font.aboutStatSuffix),
+                      fontWeight: weight.aboutStatSuffix,
+                    }}
+                  >
+                    {suffix}
+                  </span>
+                ) : null}
+              </p>
+              <div
+                style={{
+                  height: 1,
+                  backgroundColor: color.aboutLine,
+                  marginBottom: vw(size.aboutStatLineToLabel),
+                }}
+              />
+              <p
+                style={{
+                  color: color.aboutTitle,
+                  fontFamily: fontFamilies.logo,
+                  fontSize: fluidFont(font.aboutStatLabel),
+                  fontWeight: weight.aboutStatLabel,
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.3,
+                  marginBottom: vw(size.aboutStatLabelToDesc),
+                }}
+              >
+                {stat.label}
+              </p>
+              <p
+                style={{
+                  color: color.aboutMuted,
+                  fontSize: fluidFont(font.aboutStatDesc),
+                  fontWeight: weight.aboutStatDesc,
+                  letterSpacing: "-0.01em",
+                  lineHeight: vw(size.aboutStatDescLineHeight),
+                  whiteSpace: "pre-line",
+                  WebkitFontSmoothing: "antialiased",
+                  MozOsxFontSmoothing: "grayscale",
+                }}
+              >
+                {stat.description}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
+      {/* Text + images */}
       <div className="flex w-full items-start">
         <div
           style={{
@@ -133,7 +178,7 @@ export function AboutSection({ data }: Props) {
             fontSize: fluidFont(font.aboutBody),
             fontWeight: weight.aboutBody,
             letterSpacing: "-0.01em",
-            lineHeight: 1.75,
+            lineHeight: vw(size.aboutBodyLineHeight),
             wordBreak: "keep-all",
             overflowWrap: "normal",
             WebkitFontSmoothing: "antialiased",
@@ -145,7 +190,9 @@ export function AboutSection({ data }: Props) {
               key={i}
               style={{
                 marginBottom:
-                  i === data.paragraphs.length - 1 ? 0 : vw(28),
+                  i === data.paragraphs.length - 1
+                    ? 0
+                    : vw(size.aboutParagraphGap),
               }}
             >
               {p.split("\n").map((line, j) => (

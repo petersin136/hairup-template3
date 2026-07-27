@@ -3,8 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #151515;
-  --color-cta: #000000;
-  --color-cta-hover: #222222;
+  --color-cta: #111111;
+  --color-cta-hover: #363636;
   --design-width: 1440;
 }
 
@@ -28,65 +28,81 @@ body {
   background-color: var(--color-cta-hover) !important;
 }
 
-/* Footer ADMIN — 시안: muted → white */
+/* Footer ADMIN — 시안: #7D7D7D → hover #FFFFFF · underline 없음 */
 .footer-admin-link {
-  color: #8a8a8a;
+  color: #7d7d7d;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .footer-admin-link:hover {
   color: #ffffff;
+  text-decoration: none;
 }
 
-/* Reservation dropdown — 시안1 실측:
-   비활성 #7A7875 Regular / 활성·호버 #FFF SemiBold + #27221E 바 */
+/* Reservation dropdown — 시안:
+   기본 #808080 Regular / 활성·호버 #D6D6D6 + #25201C 바 */
 .reservation-dd-menu:hover .reservation-dd-item[data-active="true"]:not(:hover) {
-  color: #7a7875;
+  color: #808080;
   background: transparent;
   font-weight: 400;
 }
 
 .reservation-dd-item {
-  color: #7a7875;
+  color: #808080;
   background: transparent;
   font-weight: 400;
   transition:
     background-color 0.12s ease,
-    color 0.12s ease,
-    font-weight 0.12s ease;
+    color 0.12s ease;
 }
 
 .reservation-dd-item:hover,
 .reservation-dd-item[data-active="true"] {
-  color: #ffffff !important;
-  background: #27221e !important;
-  font-weight: 600 !important;
+  color: #d6d6d6 !important;
+  background: #25201c !important;
+  font-weight: 400 !important;
+}
+
+/* Booking step02 — placeholder #919191 */
+.reservation-underline-input::placeholder {
+  color: #919191;
+  opacity: 1;
+}
+
+/* 요청사항: 비어 있을 때 placeholder 한 줄 유지 */
+.reservation-request-input:placeholder-shown {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.reservation-request-input:not(:placeholder-shown) {
+  white-space: pre-wrap;
+  overflow: auto;
+  min-height: calc(52 / 1440 * 100vw);
 }
 
 .nav-link {
-  color: #a9a9a9;
+  color: #919191;
   font-weight: 400;
   text-decoration: none;
   transition:
     color 0.2s ease,
-    font-weight 0.2s ease,
-    opacity 0.2s ease;
+    font-weight 0.2s ease;
 }
 
 .nav-link:hover {
-  color: #151515;
-  font-weight: 500;
+  color: #000000;
 }
 
 .nav-link.is-active {
-  color: #151515;
-  font-weight: 600;
+  color: #000000;
+  font-weight: 400;
 }
 
 .nav-link.is-active:hover {
-  color: #151515;
-  font-weight: 600;
+  color: #000000;
+  font-weight: 400;
 }
 
 /* Brand ticker — seamless RTL infinite scroll */
@@ -102,6 +118,11 @@ body {
 .brand-marquee__rail {
   animation: brand-marquee-rtl 40s linear infinite;
   will-change: transform;
+}
+
+/* 시안: 호버 시 무한 롤링 일시정지 */
+.brand-marquee:hover .brand-marquee__rail {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -123,4 +144,8 @@ body {
   .site-shell {
     width: 100%;
   }
+}
+
+.team-gallery-scroll::-webkit-scrollbar {
+  display: none;
 }

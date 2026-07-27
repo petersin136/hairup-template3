@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { CtaChevron } from "@/components/icons/CtaChevron";
 import { designTokens } from "@/lib/design-tokens";
 import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
@@ -11,35 +13,39 @@ type Props = {
 
 export function Header({ brandName, items, bookingUrl }: Props) {
   const href = bookingUrl || "#reservation";
+  const { size, font, color } = designTokens;
 
   return (
     <header
       className="relative flex w-full items-center bg-white"
       style={{
-        height: vw(designTokens.size.headerHeight),
-        minHeight: 64,
-        paddingLeft: vw(designTokens.size.pageSidePadding),
-        paddingRight: vw(designTokens.size.pageSidePadding),
+        height: vw(size.headerHeight),
+        paddingLeft: vw(size.pageSidePadding),
+        paddingRight: vw(size.pageSidePadding),
       }}
     >
       <a
         href="#home"
-        className="shrink-0 uppercase"
+        className="relative inline-flex shrink-0 items-center"
         style={{
-          color: designTokens.color.black,
-          fontFamily: fontFamilies.logo,
-          fontSize: fluidFont(designTokens.font.logo),
-          fontWeight: designTokens.weight.logo,
-          letterSpacing: designTokens.tracking.logo,
-          lineHeight: 1,
+          width: vw(size.logoW),
+          height: vw(size.logoH),
         }}
+        aria-label={brandName}
       >
-        {brandName}
+        <Image
+          src="/images/hair-up-logo.png"
+          alt={brandName}
+          fill
+          className="object-contain object-left"
+          sizes={`${size.logoW}px`}
+          priority
+        />
       </a>
 
       <nav
         className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center"
-        style={{ gap: vw(40) }}
+        style={{ gap: vw(size.navGap) }}
       >
         {items.map((item) => {
           const active = item.is_active_state;
@@ -49,7 +55,9 @@ export function Header({ brandName, items, bookingUrl }: Props) {
               href={item.href}
               className={`nav-link uppercase ${active ? "is-active" : ""}`}
               style={{
-                fontSize: fluidFont(designTokens.font.nav),
+                fontFamily: fontFamilies.logo,
+                fontSize: fluidFont(font.nav),
+                fontWeight: 400,
                 letterSpacing: "0.06em",
                 lineHeight: 1,
               }}
@@ -62,36 +70,24 @@ export function Header({ brandName, items, bookingUrl }: Props) {
 
       <a
         href={href}
-        className="cta-btn ml-auto inline-flex shrink-0 items-center justify-between text-white transition-colors"
+        className="cta-btn ml-auto inline-flex shrink-0 items-center justify-between transition-colors"
         style={{
           boxSizing: "border-box",
-          width: vw(designTokens.size.ctaWidth),
-          height: vw(designTokens.size.ctaHeight),
-          minWidth: 148,
-          minHeight: 36,
-          paddingLeft: vw(18),
-          paddingRight: vw(14),
-          backgroundColor: designTokens.color.ctaBg,
-          color: designTokens.color.ctaText,
+          width: vw(size.ctaWidth),
+          height: vw(size.ctaHeight),
+          paddingLeft: vw(size.ctaPadX),
+          paddingRight: vw(size.ctaPadX),
+          backgroundColor: color.ctaBg,
+          color: color.ctaText,
           fontFamily: fontFamilies.sans,
-          fontSize: fluidFont(designTokens.font.cta),
-          fontWeight: 500,
+          fontSize: fluidFont(font.cta),
+          fontWeight: 400,
           letterSpacing: "-0.01em",
-          borderRadius: designTokens.size.ctaRadius,
+          borderRadius: size.ctaRadius,
         }}
       >
         <span>실시간 예약하기</span>
-        <span
-          aria-hidden
-          style={{
-            fontSize: fluidFont(28),
-            fontWeight: 400,
-            lineHeight: 1,
-            transform: "translateY(-1px)",
-          }}
-        >
-          ›
-        </span>
+        <CtaChevron />
       </a>
     </header>
   );

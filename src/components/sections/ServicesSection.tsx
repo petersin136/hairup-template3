@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { CtaChevron } from "@/components/icons/CtaChevron";
 import { designTokens } from "@/lib/design-tokens";
 import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
@@ -12,21 +13,28 @@ type Props = {
   bookingUrl?: string | null;
 };
 
-function Chevron({ dir }: { dir: "left" | "right" }) {
+/** 시안 슬라이더 갈매기 — 13×23 · 꼭지각≈85° · stroke 2.5 (문자 `<` `>` 금지) */
+function SliderChevron({ dir }: { dir: "left" | "right" }) {
+  const { servicesChevronW: w, servicesChevronH: h } = designTokens.size;
   return (
     <svg
-      width="100%"
-      height="100%"
-      viewBox="0 0 24 24"
+      width={vw(w)}
+      height={vw(h)}
+      viewBox="0 0 14 23"
       fill="none"
       aria-hidden
+      style={{ display: "block", flexShrink: 0 }}
     >
       <path
-        d={dir === "left" ? "M14.5 5.5L8.5 12l6 6.5" : "M9.5 5.5L15.5 12l-6 6.5"}
+        d={
+          dir === "left"
+            ? "M12.5 1.5L1.5 11.5l11 10"
+            : "M1.5 1.5L12.5 11.5l-11 10"
+        }
         stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        strokeWidth="2.5"
+        strokeLinecap="butt"
+        strokeLinejoin="miter"
       />
     </svg>
   );
@@ -40,11 +48,17 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
 
   const count = categories.length;
   const active = categories[index] ?? categories[0];
+  const atStart = index <= 0;
+  const atEnd = index >= count - 1;
 
   const go = useCallback(
     (dir: -1 | 1) => {
       if (!count) return;
-      setIndex((i) => (i + dir + count) % count);
+      setIndex((i) => {
+        const next = i + dir;
+        if (next < 0 || next >= count) return i;
+        return next;
+      });
     },
     [count],
   );
@@ -61,6 +75,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
   if (!active) return null;
 
   const href = active.ctaHref || bookingUrl || "#reservation";
+  const ctaLabel = active.ctaLabel.replace(/\s*>\s*$/, "").trim();
 
   return (
     <section
@@ -76,7 +91,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
       }}
     >
       <div
-        className="mx-auto flex items-stretch justify-center"
+        className="mx-auto flex items-stretch justify-between"
         style={{
           width: "100%",
           maxWidth: vw(
@@ -90,14 +105,16 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           className="flex shrink-0 flex-col self-stretch"
           style={{
             width: vw(size.servicesTextW),
-            minWidth: 280,
+            minWidth: 0,
           }}
         >
           <p
             className="uppercase"
             style={{
               margin: 0,
+              marginBottom: vw(size.servicesEyebrowToTitle),
               color: color.servicesEyebrow,
+              fontFamily: fontFamilies.logo,
               fontSize: fluidFont(font.servicesEyebrow),
               fontWeight: weight.servicesEyebrow,
               letterSpacing: "0.08em",
@@ -110,8 +127,9 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <h2
             style={{
               margin: 0,
-              marginTop: vw(size.servicesEyebrowToTitle),
+              marginBottom: vw(size.servicesTitleToSubtitle),
               color: color.aboutTitle,
+              fontFamily: fontFamilies.logo,
               fontSize: fluidFont(font.servicesTitle),
               fontWeight: weight.servicesTitle,
               letterSpacing: "-0.02em",
@@ -124,7 +142,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <p
             style={{
               margin: 0,
-              marginTop: vw(size.servicesTitleToSubtitle),
+              marginBottom: vw(size.servicesSubtitleToBody),
               color: color.aboutTitle,
               fontSize: fluidFont(font.servicesSubtitle),
               fontWeight: weight.servicesSubtitle,
@@ -138,12 +156,12 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           <p
             style={{
               margin: 0,
-              marginTop: vw(size.servicesSubtitleToBody),
+              marginBottom: vw(size.servicesBodyToList),
               color: color.aboutTitle,
               fontSize: fluidFont(font.servicesBody),
               fontWeight: weight.servicesBody,
               letterSpacing: "-0.01em",
-              lineHeight: 1.65,
+              lineHeight: vw(size.servicesBodyLineHeight),
             }}
           >
             {active.body}
@@ -153,34 +171,39 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             className="list-none"
             style={{
               margin: 0,
-              marginTop: vw(size.servicesBodyToList),
               padding: 0,
               display: "grid",
               gridTemplateColumns: `minmax(0, 1fr) ${vw(size.servicesPriceColW)}`,
               columnGap: vw(24),
               rowGap: vw(size.servicesListItemGap),
-              width: vw(size.servicesListW),
-              maxWidth: "100%",
+              width: "100%",
+              maxWidth: vw(size.servicesListW),
             }}
           >
             {active.items.map((item) => (
-              <li
-                key={item.id}
-                className="contents"
-                style={{
-                  color: color.aboutTitle,
-                  fontSize: fluidFont(font.servicesItem),
-                  fontWeight: weight.servicesItem,
-                  letterSpacing: "-0.01em",
-                  lineHeight: 1.5,
-                }}
-              >
-                <span style={{ minWidth: 0 }}>{item.name}</span>
+              <li key={item.id} className="contents">
                 <span
                   style={{
+                    minWidth: 0,
+                    color: color.aboutTitle,
+                    fontSize: fluidFont(font.servicesItem),
+                    fontWeight: weight.servicesItem,
+                    letterSpacing: "-0.01em",
+                    lineHeight: size.servicesListLineHeight,
+                  }}
+                >
+                  {item.name}
+                </span>
+                <span
+                  style={{
+                    fontFamily: fontFamilies.logo,
+                    fontSize: fluidFont(font.servicesPrice),
+                    fontWeight: weight.servicesPrice,
                     fontVariantNumeric: "tabular-nums",
                     textAlign: "right",
                     whiteSpace: "nowrap",
+                    color: color.aboutTitle,
+                    lineHeight: size.servicesListLineHeight,
                   }}
                 >
                   {item.priceLabel}
@@ -197,102 +220,125 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
               fontSize: fluidFont(font.servicesNote),
               fontWeight: 400,
               letterSpacing: "-0.01em",
-              lineHeight: 1.5,
+              lineHeight: 1,
             }}
           >
             {NOTE}
           </p>
 
-          <a
-            href={href}
-            className="cta-btn inline-flex items-center justify-between text-white transition-colors"
+          <div
             style={{
-              boxSizing: "border-box",
               marginTop: "auto",
-              width: vw(size.servicesCtaW),
-              height: vw(size.servicesCtaH),
-              minWidth: 240,
-              minHeight: 44,
-              paddingLeft: vw(22),
-              paddingRight: vw(18),
-              backgroundColor: color.ctaBg,
-              color: color.ctaText,
-              fontSize: fluidFont(font.servicesCta),
-              fontWeight: weight.servicesCta,
-              letterSpacing: "-0.01em",
-              borderRadius: size.ctaRadius,
-              textDecoration: "none",
+              paddingTop: vw(size.servicesNoteToCta),
             }}
           >
-            <span>{active.ctaLabel}</span>
-            <span
-              aria-hidden
+            <a
+              href={href}
+              className="cta-btn flex items-center transition-colors"
               style={{
-                fontSize: fluidFont(32),
+                boxSizing: "border-box",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                width: vw(size.servicesCtaW),
+                height: vw(size.servicesCtaH),
+                paddingLeft: vw(size.servicesCtaPadX),
+                paddingRight: vw(size.servicesCtaPadX + 12),
+                backgroundColor: color.ctaBg,
+                color: color.servicesCtaText,
+                fontFamily: fontFamilies.sans,
+                fontSize: fluidFont(font.servicesCta),
+                fontWeight: weight.servicesCta,
+                letterSpacing: "-0.01em",
                 lineHeight: 1,
-                fontWeight: 400,
-                transform: "translateY(-1px)",
+                borderRadius: vw(size.servicesCtaRadius),
+                textDecoration: "none",
               }}
             >
-              ›
-            </span>
-          </a>
+              <span style={{ lineHeight: 1, whiteSpace: "nowrap" }}>
+                {ctaLabel}
+              </span>
+              {/* 시안: 글자 좌 / 갈매기 우 — 우측 여백 24 고정 · SVG 7×12 */}
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  right: vw(size.servicesCtaPadX),
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <CtaChevron />
+              </span>
+            </a>
+          </div>
         </div>
 
-        {/* Right: nav above image (outside) */}
+        {/* Right: nav above image — 시안: 화살표 간격 27 · 이미지와 32 · #444 / 40% */}
         <div
           className="flex shrink-0 flex-col"
           style={{
             width: vw(size.servicesImageW),
-            minWidth: 280,
           }}
         >
           <div
             className="ml-auto flex items-center"
             style={{
-              marginBottom: vw(10),
-              height: vw(size.servicesNavSize),
-              columnGap: vw(6),
+              marginBottom: vw(size.servicesNavToImage),
+              height: vw(size.servicesNavH),
+              columnGap: vw(size.servicesNavGap),
             }}
           >
             <button
               type="button"
               aria-label="이전 서비스"
+              aria-disabled={atStart}
+              disabled={atStart}
               onClick={() => go(-1)}
-              className="flex items-center justify-center transition-opacity hover:opacity-60"
               style={{
-                width: vw(32),
-                height: vw(size.servicesNavSize),
-                color: color.aboutTitle,
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
+                boxSizing: "border-box",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: vw(size.servicesChevronW),
+                height: vw(size.servicesNavH),
                 padding: 0,
+                margin: 0,
+                border: "none",
+                background: "transparent",
+                color: color.servicesNav,
+                opacity: atStart ? 0.4 : 1,
+                cursor: atStart ? "default" : "pointer",
               }}
             >
-              <span style={{ width: vw(20), height: vw(20), display: "block" }}>
-                <Chevron dir="left" />
-              </span>
+              <SliderChevron dir="left" />
             </button>
 
             <button
               type="button"
               aria-label="다음 서비스"
+              aria-disabled={atEnd}
+              disabled={atEnd}
               onClick={() => go(1)}
-              className="flex items-center justify-center transition-opacity hover:opacity-60"
               style={{
-                width: vw(32),
-                height: vw(size.servicesNavSize),
-                color: color.aboutTitle,
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
+                boxSizing: "border-box",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: vw(size.servicesChevronW),
+                height: vw(size.servicesNavH),
                 padding: 0,
+                margin: 0,
+                border: "none",
+                background: "transparent",
+                color: color.servicesNav,
+                opacity: atEnd ? 0.4 : 1,
+                cursor: atEnd ? "default" : "pointer",
               }}
             >
-              <span style={{ width: vw(20), height: vw(20), display: "block" }}>
-                <Chevron dir="right" />
-              </span>
+              <SliderChevron dir="right" />
             </button>
           </div>
 
@@ -301,7 +347,6 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             style={{
               width: "100%",
               height: vw(size.servicesImageH),
-              minHeight: 360,
               borderRadius: vw(size.servicesImageRadius),
               backgroundColor: "#000000",
             }}

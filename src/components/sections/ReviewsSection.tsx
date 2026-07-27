@@ -9,41 +9,51 @@ type Props = {
 };
 
 function ReviewCard({ review }: { review: Review }) {
-  const { size, font, weight, color } = designTokens;
+  const { size, font, weight, color, tracking } = designTokens;
   const isDark = review.variant === "dark";
-  const bodyColor = isDark ? color.white : color.aboutTitle;
+  const bodyColor = isDark ? color.reviewsDarkText : color.reviewsLightText;
 
   return (
     <article
       className="flex flex-col text-left"
       style={{
-        aspectRatio: "1 / 1",
+        width: vw(size.reviewsCardSize),
+        height: vw(size.reviewsCardSize),
         backgroundColor: isDark ? color.reviewsDarkBg : color.reviewsLightBg,
         color: bodyColor,
         borderRadius: vw(size.reviewsCardRadius),
-        paddingLeft: vw(size.reviewsCardPadX),
-        paddingRight: vw(size.reviewsCardPadX),
-        paddingTop: vw(size.reviewsCardPadY),
-        paddingBottom: vw(size.reviewsCardPadY),
+        padding: vw(size.reviewsCardPad),
+        boxSizing: "border-box",
       }}
     >
       <p
         style={{
+          margin: 0,
           fontSize: fluidFont(font.reviewsQuote),
           fontWeight: weight.reviewsQuote,
-          lineHeight: 1.65,
+          letterSpacing: tracking.reviewsQuote,
+          lineHeight: vw(size.reviewsQuoteLineHeight),
+          wordBreak: "keep-all",
+          overflowWrap: "normal",
         }}
       >
-        “{review.quote}”
+        {review.quote.split("\n").map((line, i) => (
+          <span key={i}>
+            {i > 0 ? <br /> : null}
+            <span style={{ whiteSpace: "nowrap" }}>{line}</span>
+          </span>
+        ))}
       </p>
 
       <div style={{ marginTop: "auto" }}>
         <p
           style={{
+            margin: 0,
             fontSize: fluidFont(font.reviewsArtist),
             fontWeight: weight.reviewsArtist,
-            lineHeight: 1.35,
-            marginBottom: vw(size.reviewsArtistToService),
+            letterSpacing: tracking.reviewsArtist,
+            lineHeight: vw(size.reviewsSubLineHeight),
+            color: bodyColor,
           }}
         >
           Artist. {review.artistName}
@@ -51,12 +61,13 @@ function ReviewCard({ review }: { review: Review }) {
 
         <p
           style={{
+            margin: 0,
             fontSize: fluidFont(font.reviewsService),
             fontWeight: weight.reviewsService,
-            letterSpacing: "0.04em",
+            letterSpacing: 0,
             textTransform: "uppercase",
-            lineHeight: 1.35,
-            marginBottom: vw(size.reviewsServiceToMeta),
+            lineHeight: vw(size.reviewsSubLineHeight),
+            color: color.reviewsService,
           }}
         >
           {review.serviceLabel}
@@ -64,10 +75,12 @@ function ReviewCard({ review }: { review: Review }) {
 
         <p
           style={{
+            margin: 0,
             fontSize: fluidFont(font.reviewsMeta),
             fontWeight: weight.reviewsMeta,
-            color: isDark ? color.reviewsMetaDark : color.reviewsMetaLight,
-            lineHeight: 1.35,
+            letterSpacing: 0,
+            lineHeight: vw(size.reviewsSubLineHeight),
+            color: color.reviewsMeta,
           }}
         >
           {review.handle} / {review.date}
@@ -84,31 +97,49 @@ export function ReviewsSection({ data }: Props) {
 
   return (
     <>
-      {/* 상단 이미지 — 내비 #review 대상에서 제외 */}
+      {/* 쇼릴 — 섹션 배경 흰색 · 미디어에 검정 프레임 없음 */}
       <div
-        className="w-full bg-white"
+        className="w-full"
         style={{
-          paddingTop: vw(size.reviewsPadTop),
+          backgroundColor: color.reviewsMediaBg,
+          paddingTop: vw(size.reviewsMediaPadY),
+          paddingBottom: vw(size.reviewsMediaPadY),
           paddingLeft: vw(size.reviewsImageSidePadding),
           paddingRight: vw(size.reviewsImageSidePadding),
-          paddingBottom: vw(size.reviewsImageToTitle),
         }}
         aria-hidden
       >
         <div
-          className="relative w-full overflow-hidden"
+          className="relative mx-auto w-full overflow-hidden"
           style={{
+            maxWidth: vw(1392),
             height: vw(size.reviewsImageH),
             borderRadius: vw(size.reviewsImageRadius),
           }}
         >
-          <Image
-            src={data.imageUrl}
-            alt=""
-            fill
-            className="object-cover"
-            sizes="100vw"
-            priority={false}
+          {data.videoUrl ? (
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={data.videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <Image
+              src={data.imageUrl}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority={false}
+              style={{ objectFit: "cover", objectPosition: "center center" }}
+            />
+          )}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{ backgroundColor: color.reviewsMediaOverlay }}
           />
         </div>
       </div>
@@ -124,12 +155,14 @@ export function ReviewsSection({ data }: Props) {
         <h2
           className="text-center"
           style={{
+            margin: 0,
+            marginBottom: vw(size.reviewsTitleToGrid),
             color: color.aboutTitle,
+            fontFamily: fontFamilies.logo,
             fontSize: fluidFont(font.reviewsTitle),
             fontWeight: weight.reviewsTitle,
             letterSpacing: "-0.02em",
             lineHeight: 1.2,
-            marginBottom: vw(size.reviewsTitleToGrid),
             paddingLeft: vw(size.reviewsSidePadding),
             paddingRight: vw(size.reviewsSidePadding),
           }}
@@ -138,11 +171,14 @@ export function ReviewsSection({ data }: Props) {
         </h2>
 
         <div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          className="mx-auto grid justify-center"
           style={{
-            gap: vw(size.reviewsGridGap),
+            width: "100%",
+            boxSizing: "border-box",
             paddingLeft: vw(size.reviewsSidePadding),
             paddingRight: vw(size.reviewsSidePadding),
+            gridTemplateColumns: `repeat(3, ${vw(size.reviewsCardSize)})`,
+            gap: vw(size.reviewsGridGap),
           }}
         >
           {data.items.map((review) => (

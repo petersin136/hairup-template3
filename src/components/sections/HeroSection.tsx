@@ -21,7 +21,8 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
         paddingLeft: vw(size.pageSidePadding),
         paddingRight: vw(size.pageSidePadding),
         paddingTop: size.headerToHeroGap,
-        paddingBottom: vw(size.pageSidePadding),
+        /* Hero→다음 섹션 간격은 아래 marginBottom (시안 160) */
+        marginBottom: vw(size.heroToAboutGap),
         fontFamily: fontFamilies.display,
       }}
     >
@@ -29,10 +30,10 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
         className="relative grid w-full grid-cols-2 overflow-hidden"
         style={{
           height: vw(size.heroHeight),
-          minHeight: 420,
           borderRadius: vw(size.heroRadius),
         }}
       >
+        {/* 좌 696×700 @1440 — (1440-48)/2 */}
         <div className="relative h-full w-full overflow-hidden">
           <Image
             src={leftImageUrl}
@@ -44,21 +45,21 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             className="object-cover object-[center_22%]"
           />
           <div
-            className="absolute inset-x-0 bottom-0 z-10"
+            className="absolute bottom-0 left-0 z-10"
             style={{
-              paddingLeft: vw(size.heroTextPadX),
-              paddingRight: vw(size.heroTextPadX),
-              paddingBottom: vw(size.heroTextPadBottom),
+              paddingLeft: vw(size.heroLeftPadX),
+              paddingBottom: vw(size.heroLeftPadBottom),
             }}
           >
             <p
               className="uppercase text-white"
               style={{
+                fontFamily: fontFamilies.logo,
                 fontSize: fluidFont(font.heroEyebrow),
                 fontWeight: weight.heroEyebrow,
                 letterSpacing: "0.14em",
                 lineHeight: 1.2,
-                marginBottom: vw(18),
+                marginBottom: vw(size.heroEyebrowToTitle),
               }}
             >
               {data.left_eyebrow}
@@ -66,10 +67,11 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             <h1
               className="text-white"
               style={{
+                fontFamily: fontFamilies.logo,
                 fontSize: fluidFont(font.heroTitle),
                 fontWeight: weight.heroTitle,
                 letterSpacing: "-0.02em",
-                lineHeight: 1.15,
+                lineHeight: vw(size.heroTitleLineHeight),
               }}
             >
               {data.left_title_line1}
@@ -90,12 +92,12 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             className="object-cover object-center"
           />
           <div
-            className="absolute inset-x-0 bottom-0 z-10 text-right"
+            className="absolute bottom-0 right-0 z-10 text-right"
             style={{
-              paddingLeft: vw(size.heroTextPadX),
-              paddingRight: vw(size.heroTextPadX),
-              paddingBottom: vw(size.heroTextPadBottom),
+              paddingRight: vw(size.heroRightPadX),
+              paddingBottom: vw(size.heroRightPadBottom),
               color: color.white,
+              fontFamily: fontFamilies.sans,
             }}
           >
             <h2
@@ -104,7 +106,7 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontWeight: weight.heroRightHeadline,
                 letterSpacing: "-0.01em",
                 lineHeight: 1.4,
-                marginBottom: vw(14),
+                marginBottom: vw(size.heroRightTitleToBody),
               }}
             >
               {data.right_headline}
@@ -114,7 +116,7 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontSize: fluidFont(font.heroRightBody),
                 fontWeight: weight.heroRightBody,
                 letterSpacing: "-0.01em",
-                lineHeight: 1.65,
+                lineHeight: vw(size.heroRightBodyLineHeight),
               }}
             >
               {data.right_body_line1}

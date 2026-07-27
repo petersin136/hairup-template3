@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { designTokens } from "@/lib/design-tokens";
 import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
@@ -10,10 +11,39 @@ type Props = {
 export function SiteFooter({ data }: Props) {
   const { size, font, weight, color, tracking } = designTokens;
 
+  const headingStyle = {
+    margin: 0,
+    color: color.footerText,
+    fontFamily: fontFamilies.logo,
+    fontSize: fluidFont(font.footerHeading),
+    fontWeight: weight.footerHeading,
+    lineHeight: 1.2,
+  } as const;
+
+  const bodyEnStyle = {
+    margin: 0,
+    color: color.footerText,
+    fontFamily: fontFamilies.logo,
+    fontSize: fluidFont(font.footerBodyEn),
+    fontWeight: weight.footerBody,
+    lineHeight: 1.4,
+  } as const;
+
+  const bodyKoStyle = {
+    margin: 0,
+    color: color.footerText,
+    fontFamily: fontFamilies.sans,
+    fontSize: fluidFont(font.footerBodyKo),
+    fontWeight: weight.footerBody,
+    lineHeight: 1.5,
+  } as const;
+
   return (
     <footer
       className="relative w-full"
       style={{
+        boxSizing: "border-box",
+        minHeight: vw(size.footerH),
         backgroundColor: color.footerBg,
         color: color.footerText,
         paddingLeft: vw(size.footerSidePadding),
@@ -24,40 +54,42 @@ export function SiteFooter({ data }: Props) {
         zIndex: 0,
       }}
     >
+      {/* 상단: 로고 + Opening Hours + Contact + Follow Us */}
       <div
-        className="grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4"
+        className="flex w-full items-start"
         style={{
           marginBottom: vw(size.footerMainToDivider),
-          columnGap: vw(40),
         }}
       >
-        {/* Brand */}
-        <div>
-          <a
-            href="#home"
-            className="inline-block uppercase"
-            style={{
-              fontFamily: fontFamilies.logo,
-              fontSize: fluidFont(font.footerBrand),
-              fontWeight: weight.footerBrand,
-              letterSpacing: tracking.logo,
-              lineHeight: 1.1,
-              color: color.footerText,
-            }}
-          >
-            {data.brandName}
-          </a>
-        </div>
+        {/* Logo — 시안 175×37 */}
+        <a
+          href="#home"
+          className="relative inline-flex shrink-0 items-center"
+          style={{
+            width: vw(size.footerLogoW),
+            height: vw(size.footerLogoH),
+            marginRight: vw(size.footerLogoToHours),
+          }}
+          aria-label={data.brandName}
+        >
+          <Image
+            src="/images/hair-up-logo-white.png"
+            alt={data.brandName}
+            fill
+            className="object-contain object-left"
+            sizes={`${size.footerLogoW}px`}
+          />
+        </a>
 
-        {/* Opening Hours — 시안: 요일↔시간 타이트, 블록 간격 넓게 */}
-        <div>
+        {/* Opening Hours */}
+        <div
+          className="shrink-0"
+          style={{ marginRight: vw(size.footerColGap) }}
+        >
           <h3
             style={{
-              margin: 0,
+              ...headingStyle,
               marginBottom: vw(size.footerHoursTitleGap),
-              fontSize: fluidFont(font.footerHeading),
-              fontWeight: weight.footerHeading,
-              lineHeight: 1.2,
             }}
           >
             Opening Hours
@@ -69,127 +101,83 @@ export function SiteFooter({ data }: Props) {
               padding: 0,
               display: "flex",
               flexDirection: "column",
-              gap: vw(size.footerHoursGap),
+              gap: vw(size.footerHoursBlockGap),
             }}
           >
             {data.hours.map((row) => (
               <li key={row.days}>
                 <p
                   style={{
-                    margin: 0,
+                    ...bodyEnStyle,
                     marginBottom: vw(size.footerHoursDayToTime),
-                    fontSize: fluidFont(font.footerBody),
-                    fontWeight: 600,
-                    lineHeight: 1.15,
-                    letterSpacing: "0.02em",
                   }}
                 >
                   {row.days}
                 </p>
-                <p
-                  style={{
-                    margin: 0,
-                    fontSize: fluidFont(font.footerBody),
-                    fontWeight: weight.footerBody,
-                    lineHeight: 1.15,
-                  }}
-                >
-                  {row.time}
-                </p>
+                <p style={bodyEnStyle}>{row.time}</p>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Contact */}
+        {/* Address / Phone / E-mail */}
         <div
-          className="flex flex-col"
-          style={{ gap: vw(size.footerContactBlockGap) }}
+          className="flex shrink-0 flex-col"
+          style={{ marginRight: vw(size.footerColGap) }}
         >
-          <div>
+          <div style={{ marginBottom: vw(size.footerContactBlockGap) }}>
             <h3
               style={{
-                margin: 0,
-                marginBottom: vw(size.footerContactLabelToValue),
-                fontSize: fluidFont(font.footerHeading),
-                fontWeight: weight.footerHeading,
-                lineHeight: 1.3,
+                ...headingStyle,
+                marginBottom: vw(size.footerContactTitleGap),
               }}
             >
               Address
             </h3>
-            <p
-              style={{
-                margin: 0,
-                fontSize: fluidFont(font.footerBody),
-                fontWeight: weight.footerBody,
-                lineHeight: 1.5,
-              }}
-            >
-              {data.address}
-            </p>
+            <p style={bodyKoStyle}>{data.address}</p>
           </div>
-          <div>
+
+          <div style={{ marginBottom: vw(size.footerContactBlockGap) }}>
             <h3
               style={{
-                margin: 0,
-                marginBottom: vw(size.footerContactLabelToValue),
-                fontSize: fluidFont(font.footerHeading),
-                fontWeight: weight.footerHeading,
-                lineHeight: 1.3,
+                ...headingStyle,
+                marginBottom: vw(size.footerContactTitleGap),
               }}
             >
               Phone Number
             </h3>
             <a
               href={`tel:${data.phone.replace(/\s/g, "")}`}
-              style={{
-                fontSize: fluidFont(font.footerBody),
-                fontWeight: weight.footerBody,
-                lineHeight: 1.5,
-                color: color.footerText,
-                textDecoration: "none",
-              }}
+              style={{ ...bodyEnStyle, textDecoration: "none" }}
             >
               {data.phone}
             </a>
           </div>
+
           <div>
             <h3
               style={{
-                margin: 0,
-                marginBottom: vw(size.footerContactLabelToValue),
-                fontSize: fluidFont(font.footerHeading),
-                fontWeight: weight.footerHeading,
-                lineHeight: 1.3,
+                ...headingStyle,
+                marginBottom: vw(size.footerContactTitleGap),
               }}
             >
               E-mail
             </h3>
             <a
               href={`mailto:${data.email}`}
-              style={{
-                fontSize: fluidFont(font.footerBody),
-                fontWeight: weight.footerBody,
-                lineHeight: 1.5,
-                color: color.footerText,
-                textDecoration: "none",
-              }}
+              style={{ ...bodyEnStyle, textDecoration: "none" }}
             >
               {data.email}
             </a>
           </div>
         </div>
 
-        {/* Social */}
-        <div>
+        {/* Follow Us */}
+        <div className="shrink-0">
           <h3
             style={{
-              margin: 0,
-              marginBottom: vw(size.footerSocialGap),
-              fontSize: fluidFont(font.footerHeading),
-              fontWeight: weight.footerHeading,
-              lineHeight: 1.3,
+              ...headingStyle,
+              marginBottom: vw(size.footerSocialTitleGap),
             }}
           >
             Follow Us
@@ -201,7 +189,7 @@ export function SiteFooter({ data }: Props) {
               padding: 0,
               display: "flex",
               flexDirection: "column",
-              gap: vw(size.footerSocialGap),
+              gap: vw(size.footerSocialItemGap),
             }}
           >
             {data.socials.map((s) => (
@@ -212,11 +200,8 @@ export function SiteFooter({ data }: Props) {
                   rel="noopener noreferrer"
                   className="uppercase transition-opacity hover:opacity-70"
                   style={{
-                    fontSize: fluidFont(font.footerBody),
-                    fontWeight: weight.footerBody,
+                    ...bodyEnStyle,
                     letterSpacing: "0.04em",
-                    lineHeight: 1.4,
-                    color: color.footerText,
                     textDecoration: "none",
                   }}
                 >
@@ -228,41 +213,51 @@ export function SiteFooter({ data }: Props) {
         </div>
       </div>
 
+      {/* 구분선 + 하단 법적 고지 */}
       <div
         style={{
           borderTop: `1px solid ${color.footerDivider}`,
           paddingTop: vw(size.footerDividerToBottom),
         }}
       >
-        <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+        <div
+          className="flex w-full items-start justify-between"
+          style={{ columnGap: vw(24) }}
+        >
           <p
             style={{
               margin: 0,
               color: color.footerMuted,
+              fontFamily: fontFamilies.sans,
               fontSize: fluidFont(font.footerLegal),
               fontWeight: weight.footerLegal,
+              letterSpacing: tracking.footerLegalKo,
               lineHeight: 1.5,
             }}
           >
             {data.businessLine}
           </p>
+
           <p
-            className="lg:text-right"
             style={{
               margin: 0,
+              flexShrink: 0,
               color: color.footerMuted,
+              fontFamily: fontFamilies.logo,
               fontSize: fluidFont(font.footerLegal),
-              fontWeight: weight.footerLegal,
+              fontWeight: weight.footerLegalEn,
+              letterSpacing: tracking.footerLegalEn,
               lineHeight: 1.5,
+              textAlign: "right",
+              whiteSpace: "nowrap",
             }}
           >
-            {data.creditLine}
+            <span style={{ fontFamily: fontFamilies.sans, fontWeight: 400 }}>
+              ©
+            </span>
+            {` ${data.creditLine.replace(/^©\s*/, "")}`}
             {" | "}
-            <a
-              href={data.adminHref}
-              className="footer-admin-link"
-              style={{ fontWeight: 600 }}
-            >
+            <a href={data.adminHref} className="footer-admin-link">
               {data.adminLabel}
             </a>
           </p>

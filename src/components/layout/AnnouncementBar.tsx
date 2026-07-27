@@ -1,5 +1,6 @@
 import { designTokens } from "@/lib/design-tokens";
 import { fluidFont, vw } from "@/lib/fluid";
+import { fontFamilies } from "@/styles/fonts";
 
 type Props = {
   message: string;
@@ -17,9 +18,9 @@ export function AnnouncementBar({
       className="flex w-full items-center justify-center"
       style={{
         height: vw(designTokens.size.announcementHeight),
-        minHeight: 36,
         backgroundColor: bgColor,
         color: textColor,
+        fontFamily: fontFamilies.sans,
         fontSize: fluidFont(designTokens.font.announcement),
         fontWeight: 400,
         letterSpacing: "-0.01em",

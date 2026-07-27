@@ -137,23 +137,26 @@ function parseInstagramUrl(bio: string | null): string | null {
 }
 
 function resolveTeamMembers(rows: TeamMemberRow[]): TeamMember[] {
-  const positions = designTokens.teamObjectPosition;
+  const crops = designTokens.teamImageCrop;
+  const pathOverride = designTokens.teamImagePathOverride;
 
   return rows.map((row) => {
-    const byOrder = String(row.sort_order) as keyof typeof positions;
-    const objectPosition =
-      positions[byOrder] ??
-      (row.is_featured ? positions.featured : "50% 5%");
+    const byOrder = String(row.sort_order) as keyof typeof crops;
+    const crop =
+      crops[byOrder] ??
+      (row.is_featured ? crops.featured : { position: "50% 8%" });
+    const imagePath =
+      pathOverride[row.sort_order] ?? row.image_path;
 
     return {
       id: row.id,
       name: row.name,
       roleTitle: row.role_title ?? "",
-      imageUrl: getPublicStorageUrl(row.image_path),
+      imageUrl: getPublicStorageUrl(imagePath),
       sort_order: row.sort_order,
       isFeatured: row.is_featured,
       instagramUrl: parseInstagramUrl(row.bio),
-      objectPosition,
+      objectPosition: crop.position,
     };
   });
 }

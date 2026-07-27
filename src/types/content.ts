@@ -186,6 +186,8 @@ export type Review = {
 export type ReviewsContent = {
   title: string;
   imageUrl: string;
+  /** 있으면 상단 미디어를 비디오(autoplay/loop/muted)로 재생 */
+  videoUrl?: string | null;
   items: Review[];
 };
 

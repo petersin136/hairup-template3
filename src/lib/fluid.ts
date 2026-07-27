@@ -1,15 +1,22 @@
 /** 1440 시안 px → 뷰포트 비율 환산 (전폭 반응형) */
 export const DESIGN_WIDTH = 1440;
 
-/** 예: 24 → calc(24 / 1440 * 100vw) */
+/**
+ * 예: 24 → calc(24 / 1440 * 100vw)
+ *
+ * 시안 가이드(전체 레이아웃 및 스케일링 스펙):
+ * - 아트보드 기준 1440px
+ * - 고정 컨테이너로 가두어 대형 화면에서 여백만 늘리는 방식 금지
+ * - 글자·박스·여백이 화면 너비에 비례해 함께 확장/축소
+ */
 export function vw(px: number): string {
   return `calc(${px} / ${DESIGN_WIDTH} * 100vw)`;
 }
 
 /**
- * 폰트: 너무 작아지거나 커지지 않게 clamp
- * 기준은 1440 시안 px
+ * 폰트도 레이아웃과 동일하게 1440 기준 순수 비례 스케일.
+ * (과거 clamp min/max는 대형·소형에서 비율이 깨져 가이드와 충돌 → 제거)
  */
-export function fluidFont(px: number, minRatio = 0.82, maxRatio = 1.2): string {
-  return `clamp(${px * minRatio}px, calc(${px} / ${DESIGN_WIDTH} * 100vw), ${px * maxRatio}px)`;
+export function fluidFont(px: number): string {
+  return vw(px);
 }
