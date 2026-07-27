@@ -32,7 +32,7 @@ export const designTokens = {
     servicesNote: "#919191",
     servicesCtaText: "#F4EEEE",
     /** Reviews 상단 쇼릴 — 상시 #000 15% · 섹션 배경 흰색 */
-    reviewsMediaOverlay: "rgba(0,0,0,0.15)",
+    reviewsMediaOverlay: "rgba(0,0,0,0.28)",
     reviewsMediaBg: "#FFFFFF",
     /** Reviews 카드 — 시안 #3C3530 / #F5F3EF */
     reviewsDarkBg: "#3C3530",

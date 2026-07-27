@@ -208,6 +208,8 @@ function resolveServices(
 }
 
 const REVIEWS_IMAGE_PATH = "260716_HU_TEMPLATE.png";
+const REVIEWS_VIDEO_URL =
+  "https://omzickfboiiiqvqjbwss.supabase.co/storage/v1/object/public/site-assets/7754499-hd_1280_720_30fps.mp4";
 
 function parseReviewBody(raw: string): {
   quote: string;
@@ -541,6 +543,7 @@ export async function getHomePageData() {
     ? {
         title: "Reviews From Customers",
         imageUrl: getPublicStorageUrl(REVIEWS_IMAGE_PATH),
+        videoUrl: REVIEWS_VIDEO_URL,
         items: reviewItems,
       }
     : null;

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ShowreelVideo } from "@/components/sections/ShowreelVideo";
 import { designTokens } from "@/lib/design-tokens";
 import { fluidFont, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
@@ -118,14 +119,7 @@ export function ReviewsSection({ data }: Props) {
           }}
         >
           {data.videoUrl ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src={data.videoUrl}
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
+            <ShowreelVideo src={data.videoUrl} playbackRate={0.7} />
           ) : (
             <Image
               src={data.imageUrl}
