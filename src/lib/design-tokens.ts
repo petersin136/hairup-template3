@@ -84,6 +84,8 @@ export const designTokens = {
     footerText: "#FFFFFF",
     footerMuted: "#7D7D7D",
     footerDivider: "#FFFFFF",
+    /** 모바일 Footer 구분선 — HUM 실측 #616161 */
+    footerDividerMobile: "#616161",
   },
   size: {
     announcementHeight: 45,
@@ -454,6 +456,74 @@ export const designTokens = {
     /** Light */
     footerLegal: 300,
     footerLegalEn: 400,
+  },
+  /**
+   * 모바일 HUM 시안 — 아트보드 375
+   * 01 MENU OPEN 실측 (2026-07-28)
+   * 06 FOOTER 실측 — export 355→375 스케일 (2026-07-28)
+   */
+  mobile: {
+    canvas: 375,
+    maxWidthPx: 767,
+    announcementHeight: 38,
+    announcementFont: 12,
+    headerHeight: 60,
+    sidePadding: 16,
+    logoW: 112,
+    logoH: 22,
+    menuIcon: 24,
+    /** HOME 등 — Poppins Regular 36 · 아이템 pitch ≈65 → gap 30 */
+    navFont: 36,
+    navGap: 30,
+    /** 헤더 하단 → 첫 네비 (시안: HOME y139 − header end 98 ≈ 41) */
+    navPadTop: 41,
+    /** 마지막 네비 → CTA */
+    navToCta: 60,
+    ctaHeight: 56,
+    ctaRadius: 4,
+    ctaFont: 15,
+    ctaPadX: 18,
+    ctaChevronW: 8,
+    ctaChevronH: 14,
+    // —— Footer (HUM 06) ——
+    /** 좌우 여백 — 텍스트 ink left ≈19@355 → 20@375 */
+    footerSidePad: 20,
+    footerPadTop: 60,
+    footerPadBottom: 59,
+    footerLogoW: 144,
+    footerLogoH: 31,
+    /** 로고 하단 → Opening Hours */
+    footerLogoToHours: 62,
+    /** 섹션 간 (body 하단 → 다음 heading) */
+    footerSectionGap: 41,
+    /** heading → body / Opening Hours → MON-FRI */
+    footerHeadingToBody: 20,
+    footerHoursDayToTime: 17,
+    /** time 하단 → 다음 day */
+    footerHoursBlockGap: 27,
+    footerFollowToSocial: 22,
+    footerSocialItemGap: 24,
+    /** YOUTUBE 하단 → divider */
+    footerSocialToDivider: 59,
+    /** divider → legal */
+    footerDividerToLegal: 39,
+    /** biz line1 → line2 */
+    footerLegalBizGap: 11,
+    /** biz2 → copyright */
+    footerLegalToCredit: 22,
+    /** copyright → designed */
+    footerCreditGap: 14,
+    /** designed → ADMIN */
+    footerDesignedToAdmin: 15,
+    footerHeading: 18,
+    footerBodyEn: 14,
+    footerBodyKo: 15,
+    footerLegal: 12,
+    footerHeadingWeight: 700,
+    footerDayWeight: 500,
+    footerBodyWeight: 400,
+    footerSocialWeight: 500,
+    footerLegalWeight: 400,
   },
 } as const;
 

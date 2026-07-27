@@ -149,3 +149,22 @@ body {
 .team-gallery-scroll::-webkit-scrollbar {
   display: none;
 }
+
+/* —— Mobile HUM 시안 (375) —— */
+@media (max-width: 767px) {
+  .announcement-bar {
+    height: calc(38 / 375 * 100vw) !important;
+    font-size: calc(12 / 375 * 100vw) !important;
+  }
+
+  .site-header {
+    height: calc(60 / 375 * 100vw) !important;
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+  }
+
+  .site-logo {
+    width: calc(112 / 375 * 100vw) !important;
+    height: calc(22 / 375 * 100vw) !important;
+  }
+}

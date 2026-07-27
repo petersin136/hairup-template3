@@ -53,6 +53,15 @@ export default async function HomePage() {
         brandName={settings?.brand_name ?? "HAIR UP"}
         items={navItems}
         bookingUrl={settings?.booking_url}
+        announcement={
+          announcement
+            ? {
+                message: announcement.message,
+                bgColor: announcement.bg_color ?? undefined,
+                textColor: announcement.text_color ?? undefined,
+              }
+            : null
+        }
       />
 
       {hero && leftImageUrl && rightImageUrl ? (

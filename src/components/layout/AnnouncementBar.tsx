@@ -15,7 +15,7 @@ export function AnnouncementBar({
 }: Props) {
   return (
     <div
-      className="flex w-full items-center justify-center"
+      className="announcement-bar flex w-full items-center justify-center"
       style={{
         height: vw(designTokens.size.announcementHeight),
         backgroundColor: bgColor,
@@ -26,7 +26,12 @@ export function AnnouncementBar({
         letterSpacing: "-0.01em",
       }}
     >
-      <p className="px-4 text-center leading-none">{message}</p>
+      <p
+        className="text-center leading-none"
+        style={{ paddingLeft: "1em", paddingRight: "1em" }}
+      >
+        {message}
+      </p>
     </div>
   );
 }
