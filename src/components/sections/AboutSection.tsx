@@ -17,11 +17,12 @@ function splitStatValue(value: string): { num: string; suffix: string } {
 
 export function AboutSection({ data }: Props) {
   const { size, font, weight, color } = designTokens;
+  const m = designTokens.mobile;
 
   return (
     <section
       id="about"
-      className="w-full bg-white"
+      className="about-section w-full bg-white"
       style={{
         paddingLeft: vw(size.aboutSidePadding),
         paddingRight: vw(size.aboutSidePadding),
@@ -33,7 +34,7 @@ export function AboutSection({ data }: Props) {
       {/* Header block */}
       <div>
         <p
-          className="uppercase"
+          className="about-eyebrow uppercase"
           style={{
             color: color.aboutEyebrow,
             fontFamily: fontFamilies.logo,
@@ -47,6 +48,7 @@ export function AboutSection({ data }: Props) {
           {data.eyebrow}
         </p>
         <h2
+          className="about-title"
           style={{
             color: color.aboutTitle,
             fontFamily: fontFamilies.logo,
@@ -62,6 +64,7 @@ export function AboutSection({ data }: Props) {
           {data.titleLine2}
         </h2>
         <p
+          className="about-subtitle"
           style={{
             color: color.aboutTitle,
             fontSize: fluidFont(font.aboutSubtitle),
@@ -74,9 +77,9 @@ export function AboutSection({ data }: Props) {
         </p>
       </div>
 
-      {/* Stats — 4 columns · 숫자→32→라인→32→라벨→20→설명 */}
+      {/* Stats — desktop 4열 / 모바일 세로 스택 */}
       <div
-        className="flex w-full"
+        className="about-stats flex w-full"
         style={{
           marginTop: vw(size.aboutStatsGapTop),
           marginBottom: vw(size.aboutStatsGapBottom),
@@ -94,6 +97,7 @@ export function AboutSection({ data }: Props) {
           return (
             <div
               key={stat.id}
+              className="about-stat"
               style={{
                 flex: 1,
                 minWidth: 0,
@@ -101,6 +105,7 @@ export function AboutSection({ data }: Props) {
               }}
             >
               <p
+                className="about-stat-value"
                 style={{
                   color: color.aboutTitle,
                   fontFamily: fontFamilies.logo,
@@ -110,6 +115,7 @@ export function AboutSection({ data }: Props) {
                 }}
               >
                 <span
+                  className="about-stat-num"
                   style={{
                     fontSize: fluidFont(font.aboutStatValue),
                     fontWeight: weight.aboutStatValue,
@@ -119,6 +125,7 @@ export function AboutSection({ data }: Props) {
                 </span>
                 {suffix ? (
                   <span
+                    className="about-stat-suffix"
                     style={{
                       fontSize: fluidFont(font.aboutStatSuffix),
                       fontWeight: weight.aboutStatSuffix,
@@ -129,6 +136,7 @@ export function AboutSection({ data }: Props) {
                 ) : null}
               </p>
               <div
+                className="about-stat-line"
                 style={{
                   height: 1,
                   backgroundColor: color.aboutLine,
@@ -136,6 +144,7 @@ export function AboutSection({ data }: Props) {
                 }}
               />
               <p
+                className="about-stat-label"
                 style={{
                   color: color.aboutTitle,
                   fontFamily: fontFamilies.logo,
@@ -149,6 +158,7 @@ export function AboutSection({ data }: Props) {
                 {stat.label}
               </p>
               <p
+                className="about-stat-desc"
                 style={{
                   color: color.aboutMuted,
                   fontSize: fluidFont(font.aboutStatDesc),
@@ -167,9 +177,10 @@ export function AboutSection({ data }: Props) {
         })}
       </div>
 
-      {/* Text + images */}
-      <div className="flex w-full items-start">
+      {/* Text + images — 데스크톱 유지 · 모바일은 다음 시안에서 상세 조정 */}
+      <div className="about-media-row flex w-full items-start">
         <div
+          className="about-body-col"
           style={{
             width: vw(size.aboutTextCol),
             flexShrink: 0,
@@ -198,7 +209,7 @@ export function AboutSection({ data }: Props) {
               {p.split("\n").map((line, j) => (
                 <span key={j}>
                   {j > 0 ? <br /> : null}
-                  <span style={{ whiteSpace: "nowrap" }}>{line}</span>
+                  <span className="about-body-line">{line}</span>
                 </span>
               ))}
             </p>
@@ -206,7 +217,7 @@ export function AboutSection({ data }: Props) {
         </div>
 
         <div
-          className="relative shrink-0 overflow-hidden"
+          className="about-interior relative shrink-0 overflow-hidden"
           style={{
             width: vw(size.aboutInteriorW),
             height: vw(size.aboutInteriorH),
@@ -226,7 +237,7 @@ export function AboutSection({ data }: Props) {
         </div>
 
         <div
-          className="relative shrink-0 overflow-hidden"
+          className="about-portrait relative shrink-0 overflow-hidden"
           style={{
             width: vw(size.aboutPortraitW),
             height: vw(size.aboutPortraitH),

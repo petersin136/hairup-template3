@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, type Ref } from "react";
 import { designTokens } from "@/lib/design-tokens";
-import { vw } from "@/lib/fluid";
+import { mw, vw } from "@/lib/fluid";
 import type { BrandLogo } from "@/types/content";
 
 type Props = {
@@ -30,7 +30,9 @@ function LogoTrack({
   ariaHidden?: boolean;
 }) {
   const { size } = designTokens;
+  const m = designTokens.mobile;
   const baseH = size.brandLogoHeight;
+  const mobileBaseH = m.brandLogoHeight;
 
   return (
     <ul
@@ -43,12 +45,18 @@ function LogoTrack({
       }}
     >
       {logos.map((logo) => {
-        const heightPx = baseH * logoScale(logo.name);
+        const scale = logoScale(logo.name);
+        const heightPx = baseH * scale;
+        const mobileHeightPx = mobileBaseH * scale;
         return (
           <li
             key={`${ariaHidden ? "b" : "a"}-${logo.id}`}
-            className="flex shrink-0 list-none items-center justify-center"
-            style={{ height: vw(heightPx) }}
+            className="brand-marquee__logo flex shrink-0 list-none items-center justify-center"
+            style={{
+              height: vw(heightPx),
+              // CSS var — 모바일 미디어쿼리에서 mw 높이로 덮어씀
+              ["--brand-logo-h-m" as string]: mw(mobileHeightPx),
+            }}
           >
             {/* SVG: native img keeps vectors crisp (next/image rasterizes) */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -67,6 +75,7 @@ function LogoTrack({
 
 export function BrandTickerSection({ logos }: Props) {
   const { color, size } = designTokens;
+  const m = designTokens.mobile;
   const railRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLUListElement>(null);
 
@@ -104,6 +113,8 @@ export function BrandTickerSection({ logos }: Props) {
       style={{
         backgroundColor: color.brandTickerBg,
         height: vw(size.brandTickerHeight),
+        ["--brand-ticker-h-m" as string]: mw(m.brandTickerHeight),
+        ["--brand-logo-gap-m" as string]: mw(m.brandLogoGap),
       }}
     >
       <div className="brand-marquee__viewport flex h-full items-center">

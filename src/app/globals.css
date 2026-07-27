@@ -167,4 +167,182 @@ body {
     width: calc(112 / 375 * 100vw) !important;
     height: calc(22 / 375 * 100vw) !important;
   }
+
+  .hero-section {
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+    /* About padTop 50이 섹션 간격 담당 */
+    margin-bottom: 0 !important;
+  }
+
+  /* About — HUM 02-1 / 02-2 */
+  .about-section {
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+    padding-top: calc(50 / 375 * 100vw) !important;
+    padding-bottom: calc(80 / 375 * 100vw) !important;
+  }
+
+  .about-eyebrow {
+    color: #8a8a8a !important;
+    font-size: calc(12 / 375 * 100vw) !important;
+    margin-bottom: calc(23 / 375 * 100vw) !important;
+  }
+
+  .about-title {
+    font-size: calc(32 / 375 * 100vw) !important;
+    line-height: calc(46 / 375 * 100vw) !important;
+    margin-bottom: calc(15 / 375 * 100vw) !important;
+  }
+
+  .about-subtitle {
+    color: #8a8a8a !important;
+    font-size: calc(15 / 375 * 100vw) !important;
+    font-weight: 400 !important;
+  }
+
+  .about-stats {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-top: calc(80 / 375 * 100vw) !important;
+    margin-bottom: calc(40 / 375 * 100vw) !important;
+  }
+
+  .about-stat {
+    flex: none !important;
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: calc(60 / 375 * 100vw) !important;
+  }
+
+  .about-stat:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .about-stat-value {
+    margin-bottom: calc(26 / 375 * 100vw) !important;
+  }
+
+  .about-stat-num {
+    font-size: calc(40 / 375 * 100vw) !important;
+  }
+
+  .about-stat-suffix {
+    font-size: calc(28 / 375 * 100vw) !important;
+  }
+
+  .about-stat-line {
+    margin-bottom: calc(26 / 375 * 100vw) !important;
+  }
+
+  .about-stat-label {
+    font-size: calc(17 / 375 * 100vw) !important;
+    font-weight: 500 !important;
+    margin-bottom: calc(21 / 375 * 100vw) !important;
+  }
+
+  .about-stat-desc {
+    color: #8a8a8a !important;
+    font-size: calc(14 / 375 * 100vw) !important;
+    line-height: calc(26 / 375 * 100vw) !important;
+  }
+
+  .about-media-row {
+    flex-direction: column !important;
+  }
+
+  .about-body-col {
+    width: 100% !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    color: #6b6b6b !important;
+    font-size: calc(14 / 375 * 100vw) !important;
+    line-height: calc(25 / 375 * 100vw) !important;
+    order: 2;
+  }
+
+  .about-body-col > p {
+    margin-bottom: calc(27 / 375 * 100vw) !important;
+  }
+
+  .about-body-col > p:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .about-body-line {
+    white-space: normal !important;
+  }
+
+  .about-interior {
+    width: 100% !important;
+    height: calc(400 / 375 * 100vw) !important;
+    border-radius: calc(16 / 375 * 100vw) !important;
+    order: 1;
+    margin-bottom: calc(30 / 375 * 100vw) !important;
+  }
+
+  .about-portrait {
+    display: none !important;
+  }
+
+  /* Brand ticker — HUM 03 */
+  .brand-marquee {
+    height: var(--brand-ticker-h-m) !important;
+  }
+
+  .brand-marquee__track {
+    column-gap: var(--brand-logo-gap-m) !important;
+    padding-right: var(--brand-logo-gap-m) !important;
+  }
+
+  .brand-marquee__logo {
+    height: var(--brand-logo-h-m) !important;
+  }
+
+  /* Team — HUM 04 */
+  .team-section {
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+    padding-top: calc(81 / 375 * 100vw) !important;
+    padding-bottom: calc(80 / 375 * 100vw) !important;
+  }
+
+  .team-title {
+    font-size: calc(32 / 375 * 100vw) !important;
+    margin-bottom: calc(40 / 375 * 100vw) !important;
+  }
+
+  /* Services — HUM 05 */
+  .services-section {
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+    padding-top: calc(80 / 375 * 100vw) !important;
+    padding-bottom: calc(80 / 375 * 100vw) !important;
+  }
+
+  /* Reviews — HUM 06 */
+  .reviews-media {
+    padding-top: calc(80 / 375 * 100vw) !important;
+    padding-bottom: calc(80 / 375 * 100vw) !important;
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
+  }
+
+  .reviews-media__frame {
+    height: calc(430 / 375 * 100vw) !important;
+    border-radius: calc(16 / 375 * 100vw) !important;
+    max-width: none !important;
+  }
+
+  .reviews-section {
+    padding-bottom: calc(80 / 375 * 100vw) !important;
+  }
+
+  .reviews-gallery-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reviews-gallery-scroll {
+    scrollbar-width: none;
+  }
 }

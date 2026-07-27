@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ShowreelVideo } from "@/components/sections/ShowreelVideo";
 import { designTokens } from "@/lib/design-tokens";
-import { fluidFont, vw } from "@/lib/fluid";
+import { fluidFont, mw, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { Review, ReviewsContent } from "@/types/content";
 
@@ -9,31 +9,53 @@ type Props = {
   data: ReviewsContent;
 };
 
-function ReviewCard({ review }: { review: Review }) {
-  const { size, font, weight, color, tracking } = designTokens;
+function ReviewCard({
+  review,
+  sizeCss,
+  padCss,
+  radiusCss,
+  quoteSize,
+  quoteLh,
+  artistSize,
+  serviceSize,
+  metaSize,
+  subLh,
+}: {
+  review: Review;
+  sizeCss: string;
+  padCss: string;
+  radiusCss: string;
+  quoteSize: string;
+  quoteLh: string;
+  artistSize: string;
+  serviceSize: string;
+  metaSize: string;
+  subLh: string;
+}) {
+  const { weight, color, tracking } = designTokens;
   const isDark = review.variant === "dark";
   const bodyColor = isDark ? color.reviewsDarkText : color.reviewsLightText;
 
   return (
     <article
-      className="flex flex-col text-left"
+      className="flex shrink-0 flex-col text-left"
       style={{
-        width: vw(size.reviewsCardSize),
-        height: vw(size.reviewsCardSize),
+        width: sizeCss,
+        height: sizeCss,
         backgroundColor: isDark ? color.reviewsDarkBg : color.reviewsLightBg,
         color: bodyColor,
-        borderRadius: vw(size.reviewsCardRadius),
-        padding: vw(size.reviewsCardPad),
+        borderRadius: radiusCss,
+        padding: padCss,
         boxSizing: "border-box",
       }}
     >
       <p
         style={{
           margin: 0,
-          fontSize: fluidFont(font.reviewsQuote),
+          fontSize: quoteSize,
           fontWeight: weight.reviewsQuote,
           letterSpacing: tracking.reviewsQuote,
-          lineHeight: vw(size.reviewsQuoteLineHeight),
+          lineHeight: quoteLh,
           wordBreak: "keep-all",
           overflowWrap: "normal",
         }}
@@ -50,10 +72,10 @@ function ReviewCard({ review }: { review: Review }) {
         <p
           style={{
             margin: 0,
-            fontSize: fluidFont(font.reviewsArtist),
+            fontSize: artistSize,
             fontWeight: weight.reviewsArtist,
             letterSpacing: tracking.reviewsArtist,
-            lineHeight: vw(size.reviewsSubLineHeight),
+            lineHeight: subLh,
             color: bodyColor,
           }}
         >
@@ -63,11 +85,11 @@ function ReviewCard({ review }: { review: Review }) {
         <p
           style={{
             margin: 0,
-            fontSize: fluidFont(font.reviewsService),
+            fontSize: serviceSize,
             fontWeight: weight.reviewsService,
             letterSpacing: 0,
             textTransform: "uppercase",
-            lineHeight: vw(size.reviewsSubLineHeight),
+            lineHeight: subLh,
             color: color.reviewsService,
           }}
         >
@@ -77,10 +99,10 @@ function ReviewCard({ review }: { review: Review }) {
         <p
           style={{
             margin: 0,
-            fontSize: fluidFont(font.reviewsMeta),
+            fontSize: metaSize,
             fontWeight: weight.reviewsMeta,
             letterSpacing: 0,
-            lineHeight: vw(size.reviewsSubLineHeight),
+            lineHeight: subLh,
             color: color.reviewsMeta,
           }}
         >
@@ -93,14 +115,24 @@ function ReviewCard({ review }: { review: Review }) {
 
 export function ReviewsSection({ data }: Props) {
   const { size, font, weight, color } = designTokens;
+  const m = designTokens.mobile;
 
   if (!data.items.length) return null;
+
+  const titleLines = data.title.includes("\n")
+    ? data.title.split("\n")
+    : data.title.split(/\s+From\s+/i).length === 2
+      ? [
+          data.title.split(/\s+From\s+/i)[0]!,
+          `From ${data.title.split(/\s+From\s+/i)[1]}`,
+        ]
+      : [data.title];
 
   return (
     <>
       {/* 쇼릴 — 섹션 배경 흰색 · 미디어에 검정 프레임 없음 */}
       <div
-        className="w-full"
+        className="reviews-media w-full"
         style={{
           backgroundColor: color.reviewsMediaBg,
           paddingTop: vw(size.reviewsMediaPadY),
@@ -111,7 +143,7 @@ export function ReviewsSection({ data }: Props) {
         aria-hidden
       >
         <div
-          className="relative mx-auto w-full overflow-hidden"
+          className="reviews-media__frame relative mx-auto w-full overflow-hidden"
           style={{
             maxWidth: vw(1392),
             height: vw(size.reviewsImageH),
@@ -140,14 +172,15 @@ export function ReviewsSection({ data }: Props) {
 
       <section
         id="review"
-        className="w-full bg-white"
+        className="reviews-section w-full bg-white"
         style={{
           paddingBottom: vw(size.reviewsPadBottom),
           fontFamily: fontFamilies.sans,
         }}
       >
+        {/* 데스크톱 타이틀 · 그리드 */}
         <h2
-          className="text-center"
+          className="reviews-title-desktop hidden text-center md:block"
           style={{
             margin: 0,
             marginBottom: vw(size.reviewsTitleToGrid),
@@ -165,7 +198,7 @@ export function ReviewsSection({ data }: Props) {
         </h2>
 
         <div
-          className="mx-auto grid justify-center"
+          className="mx-auto hidden justify-center md:grid"
           style={{
             width: "100%",
             boxSizing: "border-box",
@@ -176,7 +209,77 @@ export function ReviewsSection({ data }: Props) {
           }}
         >
           {data.items.map((review) => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard
+              key={review.id}
+              review={review}
+              sizeCss={vw(size.reviewsCardSize)}
+              padCss={vw(size.reviewsCardPad)}
+              radiusCss={vw(size.reviewsCardRadius)}
+              quoteSize={fluidFont(font.reviewsQuote)}
+              quoteLh={vw(size.reviewsQuoteLineHeight)}
+              artistSize={fluidFont(font.reviewsArtist)}
+              serviceSize={fluidFont(font.reviewsService)}
+              metaSize={fluidFont(font.reviewsMeta)}
+              subLh={vw(size.reviewsSubLineHeight)}
+            />
+          ))}
+        </div>
+
+        {/* 모바일 — 좌측 타이틀 · 가로 스크롤 카드 (HUM 06) */}
+        <h2
+          className="reviews-title-mobile md:hidden"
+          style={{
+            margin: 0,
+            marginBottom: mw(m.reviewsTitleToGrid),
+            color: color.aboutTitle,
+            fontFamily: fontFamilies.logo,
+            fontSize: mw(m.reviewsTitle),
+            fontWeight: weight.reviewsTitle,
+            letterSpacing: "-0.02em",
+            lineHeight: mw(m.reviewsTitleLineHeight),
+            paddingLeft: mw(m.reviewsSidePadding),
+            paddingRight: mw(m.reviewsSidePadding),
+            textAlign: "left",
+          }}
+        >
+          {titleLines.map((line, i) => (
+            <span key={line}>
+              {i > 0 ? <br /> : null}
+              {line}
+            </span>
+          ))}
+        </h2>
+
+        <div
+          className="reviews-gallery-scroll flex overflow-x-auto md:hidden"
+          style={{
+            columnGap: mw(m.reviewsCardGap),
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            paddingLeft: mw(m.reviewsSidePadding),
+            paddingRight: mw(m.reviewsSidePadding),
+          }}
+          role="list"
+        >
+          {data.items.map((review) => (
+            <div
+              key={`m-${review.id}`}
+              role="listitem"
+              style={{ scrollSnapAlign: "start" }}
+            >
+              <ReviewCard
+                review={review}
+                sizeCss={mw(m.reviewsCardSize)}
+                padCss={mw(m.reviewsCardPad)}
+                radiusCss={mw(m.reviewsCardRadius)}
+                quoteSize={mw(m.reviewsQuote)}
+                quoteLh={mw(m.reviewsQuoteLineHeight)}
+                artistSize={mw(m.reviewsArtist)}
+                serviceSize={mw(m.reviewsService)}
+                metaSize={mw(m.reviewsMeta)}
+                subLh={mw(m.reviewsSubLineHeight)}
+              />
+            </div>
           ))}
         </div>
       </section>

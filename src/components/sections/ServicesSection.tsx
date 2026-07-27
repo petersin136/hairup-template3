@@ -1,10 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
 import { CtaChevron } from "@/components/icons/CtaChevron";
 import { designTokens } from "@/lib/design-tokens";
-import { fluidFont, vw } from "@/lib/fluid";
+import { fluidFont, mw, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { ServiceCategory } from "@/types/content";
 
@@ -42,9 +48,15 @@ function SliderChevron({ dir }: { dir: "left" | "right" }) {
 
 const NOTE = "※ 기장 및 디자이너에 따라 추가금이 발생할 수 있습니다";
 
+function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+
 export function ServicesSection({ categories, bookingUrl }: Props) {
   const { size, font, weight, color } = designTokens;
+  const m = designTokens.mobile;
   const [index, setIndex] = useState(0);
+  const touchX = useRef<number | null>(null);
 
   const count = categories.length;
   const active = categories[index] ?? categories[0];
@@ -76,11 +88,25 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
 
   const href = active.ctaHref || bookingUrl || "#reservation";
   const ctaLabel = active.ctaLabel.replace(/\s*>\s*$/, "").trim();
+  const badgeLabel = `${pad2(index + 1)} / ${pad2(count)}`;
+
+  const onTouchStart = (e: TouchEvent) => {
+    touchX.current = e.touches[0]?.clientX ?? null;
+  };
+  const onTouchEnd = (e: TouchEvent) => {
+    if (touchX.current == null) return;
+    const x = e.changedTouches[0]?.clientX;
+    if (x == null) return;
+    const dx = x - touchX.current;
+    touchX.current = null;
+    if (dx < -40) go(1);
+    else if (dx > 40) go(-1);
+  };
 
   return (
     <section
       id="services"
-      className="w-full"
+      className="services-section w-full"
       style={{
         backgroundColor: color.servicesBg,
         paddingLeft: vw(size.servicesSidePadding),
@@ -90,8 +116,9 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
         fontFamily: fontFamilies.sans,
       }}
     >
+      {/* 데스크톱 — 좌 카피 / 우 이미지 */}
       <div
-        className="mx-auto flex items-stretch justify-between"
+        className="mx-auto hidden items-stretch justify-between md:flex"
         style={{
           width: "100%",
           maxWidth: vw(
@@ -100,7 +127,6 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           columnGap: vw(size.servicesGap),
         }}
       >
-        {/* Left copy */}
         <div
           className="flex shrink-0 flex-col self-stretch"
           style={{
@@ -258,7 +284,6 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
               <span style={{ lineHeight: 1, whiteSpace: "nowrap" }}>
                 {ctaLabel}
               </span>
-              {/* 시안: 글자 좌 / 갈매기 우 — 우측 여백 24 고정 · SVG 7×12 */}
               <span
                 aria-hidden
                 style={{
@@ -276,7 +301,6 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           </div>
         </div>
 
-        {/* Right: nav above image — 시안: 화살표 간격 27 · 이미지와 32 · #444 / 40% */}
         <div
           className="flex shrink-0 flex-col"
           style={{
@@ -364,6 +388,217 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             ) : null}
           </div>
         </div>
+      </div>
+
+      {/* 모바일 — 세로 스택 · 스와이프 · 시안 HUM 05 */}
+      <div className="flex w-full flex-col md:hidden">
+        <p
+          className="uppercase"
+          style={{
+            margin: 0,
+            marginBottom: mw(m.servicesEyebrowToTitle),
+            color: color.servicesEyebrow,
+            fontFamily: fontFamilies.logo,
+            fontSize: mw(m.servicesEyebrow),
+            fontWeight: weight.servicesEyebrow,
+            letterSpacing: "0.08em",
+            lineHeight: 1.2,
+          }}
+        >
+          {active.eyebrow}
+        </p>
+
+        <h2
+          style={{
+            margin: 0,
+            marginBottom: mw(m.servicesTitleToSubtitle),
+            color: color.aboutTitle,
+            fontFamily: fontFamilies.logo,
+            fontSize: mw(m.servicesTitle),
+            fontWeight: weight.servicesTitle,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+          }}
+        >
+          {active.title}
+        </h2>
+
+        <p
+          style={{
+            margin: 0,
+            marginBottom: mw(m.servicesSubtitleToBody),
+            color: color.aboutTitle,
+            fontSize: mw(m.servicesSubtitle),
+            fontWeight: weight.servicesSubtitle,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.45,
+          }}
+        >
+          {active.subtitle}
+        </p>
+
+        <p
+          style={{
+            margin: 0,
+            marginBottom: mw(m.servicesBodyToImage),
+            color: color.aboutTitle,
+            fontSize: mw(m.servicesBody),
+            fontWeight: weight.servicesBody,
+            letterSpacing: "-0.01em",
+            lineHeight: mw(m.servicesBodyLineHeight),
+          }}
+        >
+          {active.body}
+        </p>
+
+        <div
+          className="relative w-full overflow-hidden"
+          style={{
+            height: mw(m.servicesImageH),
+            borderRadius: mw(m.servicesImageRadius),
+            backgroundColor: "#000000",
+            marginBottom: mw(m.servicesImageToList),
+            touchAction: "pan-y",
+          }}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          role="img"
+          aria-label={`${active.title}, ${badgeLabel}`}
+        >
+          {active.imageUrl ? (
+            <Image
+              key={`m-${active.id}`}
+              src={active.imageUrl}
+              alt={active.title}
+              fill
+              unoptimized
+              sizes="100vw"
+              className="pointer-events-none object-cover object-center"
+              draggable={false}
+            />
+          ) : null}
+
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              right: mw(m.servicesBadgePadR),
+              bottom: mw(m.servicesBadgePadB),
+              paddingLeft: mw(m.servicesBadgePadX),
+              paddingRight: mw(m.servicesBadgePadX),
+              paddingTop: mw(m.servicesBadgePadY),
+              paddingBottom: mw(m.servicesBadgePadY),
+              borderRadius: mw(m.servicesBadgeRadius),
+              backgroundColor: m.servicesBadgeBg,
+              color: "#FFFFFF",
+              fontFamily: fontFamilies.logo,
+              fontSize: mw(m.servicesBadgeFont),
+              fontWeight: 400,
+              letterSpacing: "0.02em",
+              lineHeight: 1,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {badgeLabel}
+          </span>
+        </div>
+
+        <ul
+          className="list-none"
+          style={{
+            margin: 0,
+            padding: 0,
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto",
+            columnGap: mw(16),
+            rowGap: mw(m.servicesListItemGap),
+            width: "100%",
+          }}
+        >
+          {active.items.map((item) => (
+            <li key={`m-${item.id}`} className="contents">
+              <span
+                style={{
+                  minWidth: 0,
+                  color: color.aboutTitle,
+                  fontSize: mw(m.servicesItem),
+                  fontWeight: weight.servicesItem,
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1,
+                }}
+              >
+                {item.name}
+              </span>
+              <span
+                style={{
+                  fontFamily: fontFamilies.logo,
+                  fontSize: mw(m.servicesPrice),
+                  fontWeight: weight.servicesPrice,
+                  fontVariantNumeric: "tabular-nums",
+                  textAlign: "right",
+                  whiteSpace: "nowrap",
+                  color: color.aboutTitle,
+                  lineHeight: 1,
+                }}
+              >
+                {item.priceLabel}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <p
+          style={{
+            margin: 0,
+            marginTop: mw(m.servicesListToNote),
+            marginBottom: mw(m.servicesNoteToCta),
+            color: color.servicesNote,
+            fontSize: mw(m.servicesNote),
+            fontWeight: 400,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.3,
+          }}
+        >
+          {NOTE}
+        </p>
+
+        <a
+          href={href}
+          className="cta-btn relative flex w-full items-center transition-colors"
+          style={{
+            boxSizing: "border-box",
+            height: mw(m.servicesCtaH),
+            paddingLeft: mw(m.servicesCtaPadX),
+            paddingRight: mw(m.servicesCtaPadX),
+            backgroundColor: color.ctaBg,
+            color: color.servicesCtaText,
+            fontFamily: fontFamilies.sans,
+            fontSize: mw(m.servicesCtaFont),
+            fontWeight: weight.servicesCta,
+            letterSpacing: "-0.01em",
+            lineHeight: 1,
+            borderRadius: mw(m.servicesCtaRadius),
+            textDecoration: "none",
+          }}
+        >
+          <span style={{ lineHeight: 1, whiteSpace: "nowrap" }}>{ctaLabel}</span>
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              right: mw(m.servicesCtaPadX),
+              top: "50%",
+              transform: "translateY(-50%)",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <CtaChevron
+              width={mw(m.servicesCtaChevronW)}
+              height={mw(m.servicesCtaChevronH)}
+            />
+          </span>
+        </a>
       </div>
     </section>
   );

@@ -1,13 +1,18 @@
 import { designTokens } from "@/lib/design-tokens";
 import { vw } from "@/lib/fluid";
 
+type Props = {
+  width?: string;
+  height?: string;
+};
+
 /** 시안 CTA 갈매기 — SVG only (문자 ›/`>` 글리프 크기·베이스라인 불일치) */
-export function CtaChevron() {
+export function CtaChevron({ width, height }: Props) {
   const { ctaChevronW: w, ctaChevronH: h } = designTokens.size;
   return (
     <svg
-      width={vw(w)}
-      height={vw(h)}
+      width={width ?? vw(w)}
+      height={height ?? vw(h)}
       viewBox="0 0 12 18"
       fill="none"
       aria-hidden
