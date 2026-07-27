@@ -446,6 +446,8 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             fontWeight: weight.servicesBody,
             letterSpacing: "-0.01em",
             lineHeight: mw(m.servicesBodyLineHeight),
+            /* 1줄/2줄 전환 시 이미지 Y 고정 — 시안 2줄 높이 */
+            minHeight: mw(m.servicesBodyLineHeight * 2),
           }}
         >
           {active.body}

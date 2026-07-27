@@ -253,19 +253,29 @@ export function ReviewsSection({ data }: Props) {
         <div
           className="reviews-gallery-scroll flex overflow-x-auto md:hidden"
           style={{
-            columnGap: mw(m.reviewsCardGap),
             scrollSnapType: "x mandatory",
+            scrollPaddingLeft: mw(m.reviewsSidePadding),
+            scrollPaddingRight: mw(m.reviewsSidePadding),
             WebkitOverflowScrolling: "touch",
-            paddingLeft: mw(m.reviewsSidePadding),
-            paddingRight: mw(m.reviewsSidePadding),
           }}
           role="list"
         >
-          {data.items.map((review) => (
+          {/* overflow 스크롤에서 padding이 무시되는 경우 대비 — 좌우 스페이서 */}
+          <div
+            aria-hidden
+            className="shrink-0"
+            style={{ width: mw(m.reviewsSidePadding) }}
+          />
+          {data.items.map((review, i) => (
             <div
               key={`m-${review.id}`}
               role="listitem"
-              style={{ scrollSnapAlign: "start" }}
+              className="shrink-0"
+              style={{
+                scrollSnapAlign: "start",
+                marginRight:
+                  i < data.items.length - 1 ? mw(m.reviewsCardGap) : 0,
+              }}
             >
               <ReviewCard
                 review={review}
@@ -281,6 +291,11 @@ export function ReviewsSection({ data }: Props) {
               />
             </div>
           ))}
+          <div
+            aria-hidden
+            className="shrink-0"
+            style={{ width: mw(m.reviewsSidePadding) }}
+          />
         </div>
       </section>
     </>
