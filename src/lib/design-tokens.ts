@@ -82,7 +82,7 @@ export const designTokens = {
     /** Footer — 시안 08 */
     footerBg: "#111111",
     footerText: "#FFFFFF",
-    footerMuted: "#7D7D7D",
+    footerMuted: "#686868",
     footerDivider: "#FFFFFF",
     /** 모바일 Footer 구분선 — HUM 실측 #616161 */
     footerDividerMobile: "#616161",
@@ -614,32 +614,32 @@ export const designTokens = {
     /** 좌우 여백 — 텍스트 ink left ≈19@355 → 20@375 */
     footerSidePad: 20,
     footerPadTop: 60,
-    footerPadBottom: 59,
+    footerPadBottom: 58,
     footerLogoW: 144,
     footerLogoH: 31,
     /** 로고 하단 → Opening Hours */
-    footerLogoToHours: 62,
+    footerLogoToHours: 63,
     /** 섹션 간 (body 하단 → 다음 heading) */
-    footerSectionGap: 41,
+    footerSectionGap: 42,
     /** heading → body / Opening Hours → MON-FRI */
     footerHeadingToBody: 20,
-    footerHoursDayToTime: 17,
+    footerHoursDayToTime: 19,
     /** time 하단 → 다음 day */
-    footerHoursBlockGap: 27,
+    footerHoursBlockGap: 29,
     footerFollowToSocial: 22,
-    footerSocialItemGap: 24,
+    footerSocialItemGap: 25,
     /** YOUTUBE 하단 → divider */
-    footerSocialToDivider: 59,
+    footerSocialToDivider: 60,
     /** divider → legal */
     footerDividerToLegal: 39,
     /** biz line1 → line2 */
-    footerLegalBizGap: 11,
+    footerLegalBizGap: 8,
     /** biz2 → copyright */
-    footerLegalToCredit: 22,
+    footerLegalToCredit: 20,
     /** copyright → designed */
-    footerCreditGap: 14,
+    footerCreditGap: 13,
     /** designed → ADMIN */
-    footerDesignedToAdmin: 15,
+    footerDesignedToAdmin: 13,
     footerHeading: 18,
     footerBodyEn: 14,
     footerBodyKo: 15,

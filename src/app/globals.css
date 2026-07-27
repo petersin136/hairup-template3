@@ -28,9 +28,9 @@ body {
   background-color: var(--color-cta-hover) !important;
 }
 
-/* Footer ADMIN — 시안: #7D7D7D → hover #FFFFFF · underline 없음 */
+/* Footer ADMIN — 시안: muted → hover #FFFFFF · underline 없음 */
 .footer-admin-link {
-  color: #7d7d7d;
+  color: #686868;
   text-decoration: none;
   transition: color 0.2s ease;
 }

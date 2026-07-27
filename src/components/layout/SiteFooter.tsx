@@ -531,7 +531,7 @@ export function SiteFooter({ data }: Props) {
                 display: "inline-block",
                 fontFamily: fontFamilies.logo,
                 fontSize: mobileFont(m.footerLegal),
-                fontWeight: m.footerHeadingWeight,
+                fontWeight: m.footerLegalWeight,
                 letterSpacing: tracking.footerLegalEn,
                 lineHeight: 1,
               }}

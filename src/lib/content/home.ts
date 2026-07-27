@@ -252,14 +252,14 @@ function resolveReviews(rows: ReviewRow[]): Review[] {
 }
 
 const FOOTER_HOURS_FALLBACK: FooterHourRow[] = [
-  { days: "MON - FRI", time: "10:00 AM – 08:00 PM" },
+  { days: "MON – FRI", time: "10:00 AM – 08:00 PM" },
   { days: "SAT", time: "10:00 AM – 09:00 PM" },
   { days: "SUN", time: "10:00 AM – 07:00 PM" },
 ];
 
 const FOOTER_FALLBACK = {
   address: "서울특별시 강남구 청담동 123-4, 2층",
-  phone: "02. 1234. 5678",
+  phone: "02.1234.5678",
   email: "info@hairup.com",
   business:
     "(주)헤어업 | 대표자 홍길동 | 사업자등록번호 123-45-67890 | 주소 서울특별시 강남구 청담동 123-4, 2층",
