@@ -383,10 +383,11 @@ export function SiteFooter({ data }: Props) {
                 display: "flex",
                 flexDirection: "column",
                 gap: mw(m.footerHoursBlockGap),
+                lineHeight: 1,
               }}
             >
               {data.hours.map((row) => (
-                <li key={row.days}>
+                <li key={row.days} style={{ lineHeight: 1 }}>
                   <p
                     style={{
                       ...mDay,
@@ -416,7 +417,11 @@ export function SiteFooter({ data }: Props) {
             </h3>
             <a
               href={`tel:${phoneDisplay}`}
-              style={{ ...mBodyEn, textDecoration: "none" }}
+              style={{
+                ...mBodyEn,
+                display: "block",
+                textDecoration: "none",
+              }}
             >
               {phoneDisplay}
             </a>
@@ -429,7 +434,11 @@ export function SiteFooter({ data }: Props) {
             </h3>
             <a
               href={`mailto:${data.email}`}
-              style={{ ...mBodyEn, textDecoration: "none" }}
+              style={{
+                ...mBodyEn,
+                display: "block",
+                textDecoration: "none",
+              }}
             >
               {data.email}
             </a>
@@ -450,10 +459,11 @@ export function SiteFooter({ data }: Props) {
                 display: "flex",
                 flexDirection: "column",
                 gap: mw(m.footerSocialItemGap),
+                lineHeight: 1,
               }}
             >
               {data.socials.map((s) => (
-                <li key={s.id}>
+                <li key={s.id} style={{ lineHeight: 1 }}>
                   <a
                     href={s.href}
                     target="_blank"
@@ -461,6 +471,7 @@ export function SiteFooter({ data }: Props) {
                     className="uppercase transition-opacity hover:opacity-70"
                     style={{
                       ...mBodyEn,
+                      display: "block",
                       fontWeight: m.footerSocialWeight,
                       letterSpacing: "0.04em",
                       textDecoration: "none",
@@ -506,11 +517,18 @@ export function SiteFooter({ data }: Props) {
             </p>
           ) : null}
 
-          <p style={{ margin: 0, marginTop: mw(m.footerDesignedToAdmin) }}>
+          <p
+            style={{
+              margin: 0,
+              marginTop: mw(m.footerDesignedToAdmin),
+              lineHeight: 1,
+            }}
+          >
             <a
               href={data.adminHref}
               className="footer-admin-link"
               style={{
+                display: "inline-block",
                 fontFamily: fontFamilies.logo,
                 fontSize: mobileFont(m.footerLegal),
                 fontWeight: m.footerHeadingWeight,
