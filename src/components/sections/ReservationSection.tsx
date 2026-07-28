@@ -5,11 +5,12 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
 } from "react";
 import { designTokens } from "@/lib/design-tokens";
-import { fluidFont, vw } from "@/lib/fluid";
+import { fluidFont, MOBILE_MAX_WIDTH_PX, mw, vw } from "@/lib/fluid";
 import { fontFamilies } from "@/styles/fonts";
 import type { ServiceCategory } from "@/types/content";
 
@@ -70,14 +71,25 @@ const PRIVACY_LINES = [
 const REFUND_NOTE = "※ 시술 24시간 전까지 100% 환불 가능합니다.";
 const DEPOSIT = 20000;
 
+function subscribeMobile(onStoreChange: () => void) {
+  const mq = window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+function getMobileSnapshot() {
+  return window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches;
+}
+function getServerMobileSnapshot() {
+  return false;
+}
+
 function Chevron({
   dir,
-  size = 14,
+  sizeCss,
   strokeWidth = 1.35,
 }: {
   dir: "left" | "right" | "up" | "down";
-  /** 1440 시안 기준 px */
-  size?: number;
+  sizeCss: string;
   strokeWidth?: number;
 }) {
   /** 시안: 넓은 각도 · 얇은 스트로크 갈매기 */
@@ -95,8 +107,8 @@ function Chevron({
       fill="none"
       aria-hidden
       style={{
-        width: vw(size),
-        height: vw(size),
+        width: sizeCss,
+        height: sizeCss,
         flexShrink: 0,
         display: "block",
       }}
@@ -113,24 +125,32 @@ function Chevron({
 }
 
 /** 필드용 — 시안2: 흰 글씨에 맞춘 ∨, 얇은 스트로크 */
-function FieldChevron({ open }: { open: boolean }) {
+function FieldChevron({
+  open,
+  sizeCss,
+}: {
+  open: boolean;
+  sizeCss: string;
+}) {
   return (
-    <Chevron
-      dir={open ? "up" : "down"}
-      size={designTokens.size.reservationFieldChevron}
-      strokeWidth={2.15}
-    />
+    <Chevron dir={open ? "up" : "down"} sizeCss={sizeCss} strokeWidth={2.15} />
   );
 }
 
 /** 스텝용 — 시안: 90° 라인 갈매기 · 비활성은 버튼 opacity 40% */
-function StepChevron({ dir }: { dir: "left" | "right" }) {
-  const h = designTokens.size.reservationStepChevron;
-  const w = (h * 12) / 20;
+function StepChevron({
+  dir,
+  widthCss,
+  heightCss,
+}: {
+  dir: "left" | "right";
+  widthCss: string;
+  heightCss: string;
+}) {
   return (
     <svg
-      width={vw(w)}
-      height={vw(h)}
+      width={widthCss}
+      height={heightCss}
       viewBox="0 0 12 20"
       fill="none"
       aria-hidden
@@ -145,6 +165,10 @@ function StepChevron({ dir }: { dir: "left" | "right" }) {
       />
     </svg>
   );
+}
+
+function startOfDay(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
 function parsePrice(label: string): number {
@@ -236,12 +260,20 @@ function DropdownItem({
   children,
   active = false,
   onClick,
+  itemH,
+  padX,
+  fontSize,
+  lineHeight,
 }: {
   children: ReactNode;
   active?: boolean;
   onClick: () => void;
+  itemH: string;
+  padX: string;
+  fontSize: string;
+  lineHeight: string;
 }) {
-  const { size, font, weight } = designTokens;
+  const { weight } = designTokens;
   return (
     <button
       type="button"
@@ -254,16 +286,16 @@ function DropdownItem({
         display: "flex",
         alignItems: "center",
         width: "100%",
-        minHeight: vw(size.reservationDropdownItemH),
-        padding: `0 ${vw(size.reservationDropdownPadX)}`,
+        minHeight: itemH,
+        padding: `0 ${padX}`,
         textAlign: "left",
         border: "none",
         cursor: "pointer",
         fontFamily: fontFamilies.sans,
-        fontSize: fluidFont(font.reservationDropdown),
+        fontSize,
         fontWeight: weight.reservationDropdown,
         letterSpacing: "-0.01em",
-        lineHeight: vw(size.reservationDropdownLineHeight),
+        lineHeight,
         boxSizing: "border-box",
       }}
     >
@@ -278,6 +310,42 @@ export function ReservationSection({
   bgUrl,
 }: Props) {
   const { size, font, weight, color, tracking } = designTokens;
+  const m = designTokens.mobile;
+  const isMobile = useSyncExternalStore(
+    subscribeMobile,
+    getMobileSnapshot,
+    getServerMobileSnapshot,
+  );
+
+  /** desktop 1440 px → vw · mobile 375 px → mw */
+  const u = (dPx: number, mPx: number) => (isMobile ? mw(mPx) : vw(dPx));
+  const uf = (dPx: number, mPx: number) =>
+    isMobile ? mw(mPx) : fluidFont(dPx);
+
+  const fieldChevronCss = u(
+    size.reservationFieldChevron,
+    m.reservationFieldChevron,
+  );
+  const stepChevronH = isMobile
+    ? m.reservationStepChevron
+    : size.reservationStepChevron;
+  const stepChevronW = (stepChevronH * 12) / 20;
+  const stepChevronWcss = isMobile ? mw(stepChevronW) : vw(stepChevronW);
+  const stepChevronHcss = isMobile ? mw(stepChevronH) : vw(stepChevronH);
+
+  const ddItemH = u(
+    size.reservationDropdownItemH,
+    m.reservationDropdownItemH,
+  );
+  const ddPadX = u(
+    size.reservationDropdownPadX,
+    m.reservationDropdownPadX,
+  );
+  const ddFont = uf(font.reservationDropdown, m.reservationField);
+  const ddLh = u(
+    size.reservationDropdownLineHeight,
+    m.reservationDropdownItemH,
+  );
 
   const [step, setStep] = useState<1 | 2>(1);
   const [open, setOpen] = useState<OpenMenu>(null);
@@ -376,8 +444,8 @@ export function ReservationSection({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    minHeight: vw(size.reservationFieldH),
-    paddingBottom: vw(14),
+    minHeight: u(size.reservationFieldH, m.reservationFieldH),
+    paddingBottom: u(14, 12),
     /* 열림 시 필드 밑줄 제거 → 드롭다운 박스 상단선만 (이중선 방지) */
     borderBottom: isOpen
       ? "1px solid transparent"
@@ -386,7 +454,7 @@ export function ReservationSection({
     background: "transparent",
     cursor: "pointer",
     fontFamily: fontFamilies.sans,
-    fontSize: fluidFont(font.reservationField),
+    fontSize: uf(font.reservationField, m.reservationField),
     fontWeight: weight.reservationField,
     letterSpacing: "-0.01em",
     textAlign: "left",
@@ -394,47 +462,65 @@ export function ReservationSection({
 
   const underlineInput: CSSProperties = {
     width: "100%",
-    height: vw(size.reservationFieldH),
+    height: u(size.reservationFieldH, m.reservationFieldH),
     background: "transparent",
     border: "none",
     borderBottom: `1px solid ${color.reservationLine}`,
     color: color.reservationText,
-    fontSize: fluidFont(font.reservationField),
+    fontSize: uf(font.reservationField, m.reservationField),
     fontWeight: weight.reservationField,
     fontFamily: fontFamilies.sans,
     outline: "none",
-    paddingBottom: vw(12),
+    paddingBottom: u(12, 10),
   };
 
   const glassBlur = `blur(${size.reservationCalBlur}px) saturate(1.08)`;
 
   const serviceMenuOpen = open === "category" || open === "items";
+  const today = startOfDay(new Date());
+
+  const ddProps = {
+    itemH: ddItemH,
+    padX: ddPadX,
+    fontSize: ddFont,
+    lineHeight: ddLh,
+  };
 
   return (
     <section
       id="reservation"
       aria-label="예약"
-      className="relative w-full"
+      className="reservation-section relative w-full"
       style={{
-        height: vw(size.reservationH),
-        minHeight: 520,
+        height: isMobile ? "auto" : vw(size.reservationH),
+        minHeight: isMobile ? 0 : 520,
         fontFamily: fontFamilies.sans,
         zIndex: menuOpen ? 40 : 1,
         isolation: "isolate",
       }}
     >
-      <div className="flex h-full w-full overflow-visible">
+      <div
+        className="reservation-inner flex w-full overflow-visible"
+        style={{
+          height: isMobile ? "auto" : "100%",
+          flexDirection: isMobile ? "column" : "row",
+        }}
+      >
         {/* Left visual */}
         <div
-          className="relative h-full overflow-hidden"
-          style={{ width: "50%" }}
+          className="reservation-visual relative overflow-hidden"
+          style={{
+            width: isMobile ? "100%" : "50%",
+            height: isMobile ? mw(m.reservationVisualH) : "100%",
+            flexShrink: 0,
+          }}
         >
           <Image
             src={bgUrl}
             alt=""
             fill
             unoptimized
-            sizes="50vw"
+            sizes={isMobile ? "100vw" : "50vw"}
             className="object-cover"
             style={{ objectPosition: "42% 45%", zIndex: 0 }}
             priority={false}
@@ -444,12 +530,12 @@ export function ReservationSection({
             className="absolute inset-0 flex items-center justify-center"
             style={{ zIndex: 1 }}
           >
-            {step === 1 ? (
+            {isMobile || step === 1 ? (
               <div
                 className="flex flex-col"
                 style={{
-                  width: vw(size.reservationCalW),
-                  height: vw(size.reservationCalH),
+                  width: u(size.reservationCalW, m.reservationCalW),
+                  height: u(size.reservationCalH, m.reservationCalH),
                   filter: "drop-shadow(0 16px 36px rgba(0,0,0,0.32))",
                 }}
               >
@@ -457,14 +543,14 @@ export function ReservationSection({
                 <div
                   className="flex shrink-0 items-center justify-center"
                   style={{
-                    height: vw(size.reservationCalHeaderH),
-                    paddingLeft: vw(size.reservationCalPadX),
-                    paddingRight: vw(size.reservationCalPadX),
+                    height: u(size.reservationCalHeaderH, m.reservationCalHeaderH),
+                    paddingLeft: u(size.reservationCalPadX, m.reservationCalPadX),
+                    paddingRight: u(size.reservationCalPadX, m.reservationCalPadX),
                     backgroundColor: color.reservationCalHeader,
                     backdropFilter: glassBlur,
                     WebkitBackdropFilter: glassBlur,
-                    borderTopLeftRadius: vw(size.reservationCalRadius),
-                    borderTopRightRadius: vw(size.reservationCalRadius),
+                    borderTopLeftRadius: u(size.reservationCalRadius, m.reservationCalRadius),
+                    borderTopRightRadius: u(size.reservationCalRadius, m.reservationCalRadius),
                     color: "#FFFFFF",
                   }}
                 >
@@ -495,7 +581,7 @@ export function ReservationSection({
                           className="flex items-center justify-center"
                           style={{
                             boxSizing: "border-box",
-                            width: vw(size.reservationCalArrowW),
+                            width: u(size.reservationCalArrowW, m.reservationCalArrowW),
                             height: "100%",
                             margin: 0,
                             background: "transparent",
@@ -507,13 +593,13 @@ export function ReservationSection({
                             flexShrink: 0,
                           }}
                         >
-                          <Chevron dir="left" size={16} strokeWidth={1.35} />
+                          <Chevron dir="left" sizeCss={u(16, 14)} strokeWidth={1.35} />
                         </button>
 
                         <div
                           className="flex flex-col items-center justify-center"
                           style={{
-                            width: vw(size.reservationCalMonthW),
+                            width: u(size.reservationCalMonthW, m.reservationCalMonthW),
                             flexShrink: 0,
                             gap: vw(2),
                             lineHeight: 1.15,
@@ -523,7 +609,7 @@ export function ReservationSection({
                           <span
                             style={{
                               fontFamily: fontFamilies.logo,
-                              fontSize: fluidFont(font.reservationCalYear),
+                              fontSize: uf(font.reservationCalYear, m.reservationCalYear),
                               fontWeight: weight.reservationCalYear,
                               letterSpacing: tracking.reservationCal,
                             }}
@@ -533,7 +619,7 @@ export function ReservationSection({
                           <span
                             style={{
                               fontFamily: fontFamilies.logo,
-                              fontSize: fluidFont(font.reservationCalMonth),
+                              fontSize: uf(font.reservationCalMonth, m.reservationCalMonth),
                               fontWeight: weight.reservationCalMonth,
                               letterSpacing: tracking.reservationCal,
                               whiteSpace: "nowrap",
@@ -555,7 +641,7 @@ export function ReservationSection({
                           className="flex items-center justify-center"
                           style={{
                             boxSizing: "border-box",
-                            width: vw(size.reservationCalArrowW),
+                            width: u(size.reservationCalArrowW, m.reservationCalArrowW),
                             height: "100%",
                             margin: 0,
                             background: "transparent",
@@ -566,7 +652,7 @@ export function ReservationSection({
                             flexShrink: 0,
                           }}
                         >
-                          <Chevron dir="right" size={16} strokeWidth={1.35} />
+                          <Chevron dir="right" sizeCss={u(16, 14)} strokeWidth={1.35} />
                         </button>
                       </>
                     );
@@ -580,19 +666,19 @@ export function ReservationSection({
                     backgroundColor: color.reservationCalBody,
                     backdropFilter: glassBlur,
                     WebkitBackdropFilter: glassBlur,
-                    borderBottomLeftRadius: vw(size.reservationCalRadius),
-                    borderBottomRightRadius: vw(size.reservationCalRadius),
-                    paddingTop: vw(size.reservationCalPadTop),
-                    paddingBottom: vw(size.reservationCalPadBottom),
-                    paddingLeft: vw(size.reservationCalPadX),
-                    paddingRight: vw(size.reservationCalPadX),
+                    borderBottomLeftRadius: u(size.reservationCalRadius, m.reservationCalRadius),
+                    borderBottomRightRadius: u(size.reservationCalRadius, m.reservationCalRadius),
+                    paddingTop: u(size.reservationCalPadTop, m.reservationCalPadTop),
+                    paddingBottom: u(size.reservationCalPadBottom, m.reservationCalPadBottom),
+                    paddingLeft: u(size.reservationCalPadX, m.reservationCalPadX),
+                    paddingRight: u(size.reservationCalPadX, m.reservationCalPadX),
                     boxSizing: "border-box",
                   }}
                 >
                   <div
                     className="grid shrink-0 grid-cols-7"
                     style={{
-                      marginBottom: vw(size.reservationCalDowToDates),
+                      marginBottom: u(size.reservationCalDowToDates, m.reservationCalDowToDates),
                     }}
                   >
                     {DOW.map((d) => (
@@ -600,9 +686,9 @@ export function ReservationSection({
                         key={d}
                         className="flex items-center justify-center"
                         style={{
-                          height: vw(22),
+                          height: u(22, 18),
                           fontFamily: fontFamilies.logo,
-                          fontSize: fluidFont(font.reservationCalDow),
+                          fontSize: uf(font.reservationCalDow, m.reservationCalDow),
                           fontWeight: 400,
                           letterSpacing: tracking.reservationCal,
                           color:
@@ -627,6 +713,8 @@ export function ReservationSection({
                       const selected =
                         !!selectedDate && sameDay(cell.date, selectedDate);
                       const isSun = cell.date.getDay() === 0;
+                      const isPast = startOfDay(cell.date) < today;
+                      const muted = !cell.inMonth || isPast;
                       return (
                         <button
                           key={`${cell.date.toISOString()}-${i}`}
@@ -641,29 +729,31 @@ export function ReservationSection({
                                 ),
                               );
                             }
+                            if (isPast && cell.inMonth) return;
                             setSelectedDate(cell.date);
                           }}
                           className="mx-auto flex items-center justify-center"
                           style={{
-                            width: vw(size.reservationCalDaySize),
-                            height: vw(size.reservationCalDaySize),
+                            width: u(size.reservationCalDaySize, m.reservationCalDaySize),
+                            height: u(size.reservationCalDaySize, m.reservationCalDaySize),
                             borderRadius: "50%",
                             border: "none",
-                            cursor: "pointer",
+                            cursor: muted && cell.inMonth ? "default" : "pointer",
                             background: selected
                               ? color.reservationSelected
                               : "transparent",
                             color: selected
                               ? "#FFFFFF"
-                              : !cell.inMonth
+                              : muted
                                 ? color.reservationCalMuted
                                 : isSun
                                   ? color.reservationSun
                                   : color.reservationCalText,
                             fontFamily: fontFamilies.logo,
-                            fontSize: fluidFont(font.reservationCalDay),
-                            fontWeight: 400,
+                            fontSize: uf(font.reservationCalDay, m.reservationCalDay),
+                            fontWeight: selected || !muted ? 400 : 400,
                             letterSpacing: tracking.reservationCal,
+                            opacity: muted && !selected ? 0.85 : 1,
                           }}
                         >
                           {cell.day}
@@ -678,23 +768,23 @@ export function ReservationSection({
               <div
                 className="flex flex-col"
                 style={{
-                  width: vw(size.reservationSummaryW),
-                  height: vw(size.reservationSummaryH),
+                  width: u(size.reservationSummaryW, m.reservationSummaryW),
+                  height: u(size.reservationSummaryH, m.reservationSummaryH),
                   filter: "drop-shadow(0 16px 36px rgba(0,0,0,0.28))",
                 }}
               >
                 <div
                   className="flex shrink-0 items-center justify-center"
                   style={{
-                    height: vw(size.reservationSummaryHeaderH),
+                    height: u(size.reservationSummaryHeaderH, m.reservationSummaryHeaderH),
                     backgroundColor: color.reservationSummaryHeader,
                     backdropFilter: glassBlur,
                     WebkitBackdropFilter: glassBlur,
-                    borderTopLeftRadius: vw(size.reservationSummaryRadius),
-                    borderTopRightRadius: vw(size.reservationSummaryRadius),
+                    borderTopLeftRadius: u(size.reservationSummaryRadius, m.reservationSummaryRadius),
+                    borderTopRightRadius: u(size.reservationSummaryRadius, m.reservationSummaryRadius),
                     color: "#FFFFFF",
                     fontFamily: fontFamilies.logo,
-                    fontSize: fluidFont(font.reservationSummaryTitle),
+                    fontSize: uf(font.reservationSummaryTitle, m.reservationSummaryTitle),
                     fontWeight: weight.reservationSummaryTitle,
                     letterSpacing: "0.06em",
                   }}
@@ -707,9 +797,9 @@ export function ReservationSection({
                     backgroundColor: color.reservationSummaryBody,
                     backdropFilter: glassBlur,
                     WebkitBackdropFilter: glassBlur,
-                    borderBottomLeftRadius: vw(size.reservationSummaryRadius),
-                    borderBottomRightRadius: vw(size.reservationSummaryRadius),
-                    padding: `${vw(size.reservationSummaryPadY)} ${vw(size.reservationSummaryPadX)}`,
+                    borderBottomLeftRadius: u(size.reservationSummaryRadius, m.reservationSummaryRadius),
+                    borderBottomRightRadius: u(size.reservationSummaryRadius, m.reservationSummaryRadius),
+                    padding: `${u(size.reservationSummaryPadY, m.reservationSummaryPadY)} ${u(size.reservationSummaryPadX, m.reservationSummaryPadX)}`,
                   }}
                 >
                   {(
@@ -727,16 +817,16 @@ export function ReservationSection({
                       key={label}
                       className="flex items-start justify-between"
                       style={{
-                        marginBottom: vw(size.reservationSummaryRowGap),
+                        marginBottom: u(size.reservationSummaryRowGap, m.reservationSummaryRowGap),
                         gap: vw(16),
-                        lineHeight: vw(size.reservationSummaryRowLh),
+                        lineHeight: u(size.reservationSummaryRowLh, m.reservationSummaryRowLh),
                       }}
                     >
                       <span
                         style={{
                           color: color.reservationSummaryLabel,
                           fontFamily: fontFamilies.logo,
-                          fontSize: fluidFont(font.reservationSummaryLabel),
+                          fontSize: uf(font.reservationSummaryLabel, m.reservationSummaryLabel),
                           fontWeight: weight.reservationSummaryLabel,
                           letterSpacing: "0.02em",
                         }}
@@ -749,7 +839,7 @@ export function ReservationSection({
                           color: color.reservationSummaryValue,
                           fontFamily: fontFamilies.sans,
                           fontWeight: weight.reservationSummaryValue,
-                          fontSize: fluidFont(font.reservationSummaryValue),
+                          fontSize: uf(font.reservationSummaryValue, m.reservationSummaryValue),
                           maxWidth: "62%",
                           letterSpacing: "-0.01em",
                         }}
@@ -763,7 +853,7 @@ export function ReservationSection({
                     style={{
                       borderTop: `1px solid ${color.reservationSummaryDivider}`,
                       marginTop: vw(4),
-                      marginBottom: vw(size.reservationSummaryRowGap),
+                      marginBottom: u(size.reservationSummaryRowGap, m.reservationSummaryRowGap),
                     }}
                   />
 
@@ -781,16 +871,16 @@ export function ReservationSection({
                       key={label}
                       className="flex items-start justify-between"
                       style={{
-                        marginBottom: vw(size.reservationSummaryRowGap),
+                        marginBottom: u(size.reservationSummaryRowGap, m.reservationSummaryRowGap),
                         gap: vw(16),
-                        lineHeight: vw(size.reservationSummaryRowLh),
+                        lineHeight: u(size.reservationSummaryRowLh, m.reservationSummaryRowLh),
                       }}
                     >
                       <span
                         style={{
                           color: color.reservationSummaryLabel,
                           fontFamily: fontFamilies.logo,
-                          fontSize: fluidFont(font.reservationSummaryLabel),
+                          fontSize: uf(font.reservationSummaryLabel, m.reservationSummaryLabel),
                           fontWeight: weight.reservationSummaryLabel,
                           letterSpacing: "0.02em",
                         }}
@@ -805,7 +895,7 @@ export function ReservationSection({
                           fontWeight: bold
                             ? weight.reservationSummaryValueBold
                             : weight.reservationSummaryValue,
-                          fontSize: fluidFont(font.reservationSummaryValue),
+                          fontSize: uf(font.reservationSummaryValue, m.reservationSummaryValue),
                         }}
                       >
                         {value}
@@ -819,7 +909,7 @@ export function ReservationSection({
                       marginTop: "auto",
                       color: color.reservationSummaryNote,
                       fontFamily: fontFamilies.sans,
-                      fontSize: fluidFont(font.reservationSummaryNote),
+                      fontSize: uf(font.reservationSummaryNote, m.reservationSummaryNote),
                       fontWeight: 400,
                       lineHeight: 1.5,
                     }}
@@ -834,137 +924,148 @@ export function ReservationSection({
 
         {/* Right form */}
         <div
-          className="relative flex h-full flex-col overflow-visible"
+          className="reservation-form relative flex flex-col overflow-visible"
           style={{
-            width: "50%",
+            width: isMobile ? "100%" : "50%",
+            height: isMobile ? "auto" : "100%",
             backgroundColor: color.reservationPanelBg,
-            paddingLeft: vw(size.reservationSidePad),
-            paddingRight: vw(size.reservationSidePad),
-            paddingTop: vw(size.reservationTitleTop),
-            paddingBottom: vw(size.reservationPadBottom),
+            paddingLeft: u(size.reservationSidePad, m.reservationSidePad),
+            paddingRight: u(size.reservationSidePad, m.reservationSidePad),
+            paddingTop: u(size.reservationTitleTop, m.reservationPadTop),
+            paddingBottom: u(size.reservationPadBottom, m.reservationPadBottom),
             color: color.reservationText,
             zIndex: 2,
           }}
         >
           <div
             className="flex items-end justify-between"
-            style={{ marginBottom: vw(size.reservationTitleToBody) }}
+            style={{ marginBottom: u(size.reservationTitleToBody, m.reservationTitleToBody) }}
           >
             <h2
               style={{
                 margin: 0,
                 fontFamily: fontFamilies.logo,
-                fontSize: fluidFont(font.reservationTitle),
+                fontSize: uf(font.reservationTitle, m.reservationTitle),
                 fontWeight: weight.reservationTitle,
                 letterSpacing: "-0.02em",
                 lineHeight: 1,
               }}
             >
-              BOOKING
+              {isMobile ? "Booking" : "BOOKING"}
             </h2>
-            <div
-              className="flex items-center"
-              style={{
-                gap: vw(24),
-                paddingBottom: vw(4),
-                lineHeight: 1,
-              }}
-            >
-              {/* 시안: 01 흰색 · / 02 #7D7D7D · Poppins Regular 12 */}
-              <span
+            {!isMobile ? (
+              <div
+                className="flex items-center"
                 style={{
-                  fontFamily: fontFamilies.logo,
-                  fontSize: fluidFont(font.reservationStep),
-                  fontWeight: weight.reservationStep,
-                  letterSpacing: "0.04em",
-                  fontVariantNumeric: "tabular-nums",
+                  gap: vw(24),
+                  paddingBottom: vw(4),
+                  lineHeight: 1,
                 }}
               >
+                {/* 시안: 01 흰색 · / 02 #7D7D7D · Poppins Regular 12 */}
                 <span
                   style={{
-                    color:
-                      step === 1
-                        ? color.reservationText
-                        : color.reservationStepMuted,
+                    fontFamily: fontFamilies.logo,
+                    fontSize: fluidFont(font.reservationStep),
+                    fontWeight: weight.reservationStep,
+                    letterSpacing: "0.04em",
+                    fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  01
+                  <span
+                    style={{
+                      color:
+                        step === 1
+                          ? color.reservationText
+                          : color.reservationStepMuted,
+                    }}
+                  >
+                    01
+                  </span>
+                  <span
+                    style={{
+                      color: color.reservationStepMuted,
+                      margin: `0 ${vw(4)}`,
+                    }}
+                  >
+                    /
+                  </span>
+                  <span
+                    style={{
+                      color:
+                        step === 2
+                          ? color.reservationText
+                          : color.reservationStepMuted,
+                    }}
+                  >
+                    02
+                  </span>
                 </span>
                 <span
-                  style={{
-                    color: color.reservationStepMuted,
-                    margin: `0 ${vw(4)}`,
-                  }}
+                  className="inline-flex items-center"
+                  style={{ gap: vw(26) }}
                 >
-                  /
+                  <button
+                    type="button"
+                    aria-label="이전 단계"
+                    onClick={() => {
+                      setStep(1);
+                      setOpen(null);
+                      setPrivacyOpen(false);
+                    }}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: color.reservationText,
+                      opacity: step === 1 ? 0.4 : 1,
+                      cursor: step === 1 ? "default" : "pointer",
+                      padding: 0,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <StepChevron
+                      dir="left"
+                      widthCss={stepChevronWcss}
+                      heightCss={stepChevronHcss}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="다음 단계"
+                    onClick={() => {
+                      setStep(2);
+                      setOpen(null);
+                    }}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: color.reservationText,
+                      opacity: step === 2 ? 0.4 : 1,
+                      cursor: step === 2 ? "default" : "pointer",
+                      padding: 0,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <StepChevron
+                      dir="right"
+                      widthCss={stepChevronWcss}
+                      heightCss={stepChevronHcss}
+                    />
+                  </button>
                 </span>
-                <span
-                  style={{
-                    color:
-                      step === 2
-                        ? color.reservationText
-                        : color.reservationStepMuted,
-                  }}
-                >
-                  02
-                </span>
-              </span>
-              <span
-                className="inline-flex items-center"
-                style={{ gap: vw(26) }}
-              >
-                <button
-                  type="button"
-                  aria-label="이전 단계"
-                  onClick={() => {
-                    setStep(1);
-                    setOpen(null);
-                    setPrivacyOpen(false);
-                  }}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: color.reservationText,
-                    opacity: step === 1 ? 0.4 : 1,
-                    cursor: step === 1 ? "default" : "pointer",
-                    padding: 0,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <StepChevron dir="left" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="다음 단계"
-                  onClick={() => {
-                    setStep(2);
-                    setOpen(null);
-                  }}
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    color: color.reservationText,
-                    opacity: step === 2 ? 0.4 : 1,
-                    cursor: step === 2 ? "default" : "pointer",
-                    padding: 0,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <StepChevron dir="right" />
-                </button>
-              </span>
-            </div>
+              </div>
+            ) : null}
           </div>
 
-          <div style={{ marginBottom: vw(size.reservationBodyToFields) }}>
+          <div style={{ marginBottom: u(size.reservationBodyToFields, m.reservationBodyToFields) }}>
             <p
               style={{
                 margin: 0,
-                fontSize: fluidFont(font.reservationBody),
+                fontSize: uf(font.reservationBody, m.reservationBody),
                 fontWeight: weight.reservationBody,
-                lineHeight: vw(size.reservationBodyLineHeight),
+                lineHeight: u(size.reservationBodyLineHeight, m.reservationBodyLineHeight),
                 letterSpacing: "-0.01em",
               }}
             >
@@ -987,8 +1088,8 @@ export function ReservationSection({
                   className="flex items-center"
                   style={{
                     gap: vw(10),
-                    fontSize: fluidFont(font.reservationBody),
-                    lineHeight: vw(size.reservationBodyLineHeight),
+                    fontSize: uf(font.reservationBody, m.reservationBody),
+                    lineHeight: u(size.reservationBodyLineHeight, m.reservationBodyLineHeight),
                   }}
                 >
                   <span
@@ -1006,10 +1107,15 @@ export function ReservationSection({
             </ul>
           </div>
 
-          {step === 1 ? (
+          {(isMobile || step === 1) && (
             <div
               className="flex flex-col overflow-visible"
-              style={{ gap: vw(size.reservationFieldGap) }}
+              style={{
+                gap: u(size.reservationFieldGap, m.reservationFieldGap),
+                marginBottom: isMobile
+                  ? u(size.reservationFieldGap, m.reservationFieldGap)
+                  : 0,
+              }}
             >
               {/* Designer */}
               <div className="relative overflow-visible" data-reservation-dd>
@@ -1019,12 +1125,13 @@ export function ReservationSection({
                   onClick={() => toggle("designer")}
                 >
                   <span>{designer?.name ?? "디자이너 선택"}</span>
-                  <FieldChevron open={open === "designer"} />
+                  <FieldChevron open={open === "designer"} sizeCss={fieldChevronCss} />
                 </button>
                 {open === "designer" ? (
                   <DropdownMenu>
                     {designers.map((d, i) => (
                       <DropdownItem
+                        {...ddProps}
                         key={d.id}
                         active={
                           d.id === designerId ||
@@ -1051,14 +1158,14 @@ export function ReservationSection({
                     onClick={openServiceMenu}
                   >
                     <span>시술 메뉴 선택</span>
-                    <FieldChevron open={serviceMenuOpen} />
+                    <FieldChevron open={serviceMenuOpen} sizeCss={fieldChevronCss} />
                   </button>
                 ) : (
                   <>
                     <div
                       style={{
                         color: color.reservationFieldText,
-                        fontSize: fluidFont(font.reservationField),
+                        fontSize: uf(font.reservationField, m.reservationField),
                         fontWeight: weight.reservationField,
                         marginBottom: vw(12),
                         letterSpacing: "-0.01em",
@@ -1077,7 +1184,7 @@ export function ReservationSection({
                           style={{
                             gap: vw(10),
                             color: color.reservationText,
-                            fontSize: fluidFont(font.reservationField),
+                            fontSize: uf(font.reservationField, m.reservationField),
                             letterSpacing: "-0.01em",
                           }}
                         >
@@ -1108,12 +1215,13 @@ export function ReservationSection({
                         onClick={openServiceMenu}
                       >
                         <span>+ 시술 추가</span>
-                        <FieldChevron open={serviceMenuOpen} />
+                        <FieldChevron open={serviceMenuOpen} sizeCss={fieldChevronCss} />
                       </button>
                       {open === "category" ? (
                         <DropdownMenu>
                           {categories.map((c, i) => (
                             <DropdownItem
+                        {...ddProps}
                               key={c.id}
                               active={i === 0}
                               onClick={() => {
@@ -1130,6 +1238,7 @@ export function ReservationSection({
                         <DropdownMenu>
                           {pendingCategory.items.map((item, i) => (
                             <DropdownItem
+                        {...ddProps}
                               key={item.id}
                               active={i === 0}
                               onClick={() =>
@@ -1154,6 +1263,7 @@ export function ReservationSection({
                   <DropdownMenu>
                     {categories.map((c, i) => (
                       <DropdownItem
+                        {...ddProps}
                         key={c.id}
                         active={i === 0}
                         onClick={() => {
@@ -1173,6 +1283,7 @@ export function ReservationSection({
                   <DropdownMenu>
                     {pendingCategory.items.map((item, i) => (
                       <DropdownItem
+                        {...ddProps}
                         key={item.id}
                         active={i === 0}
                         onClick={() =>
@@ -1199,12 +1310,13 @@ export function ReservationSection({
                   onClick={() => toggle("time")}
                 >
                   <span>{time ?? "예약 시간 선택"}</span>
-                  <FieldChevron open={open === "time"} />
+                  <FieldChevron open={open === "time"} sizeCss={fieldChevronCss} />
                 </button>
                 {open === "time" ? (
                   <DropdownMenu>
                     {TIME_SLOTS.map((t, i) => (
                       <DropdownItem
+                        {...ddProps}
                         key={t}
                         active={t === time || (time === null && i === 0)}
                         onClick={() => {
@@ -1219,14 +1331,23 @@ export function ReservationSection({
                 ) : null}
               </div>
             </div>
-          ) : (
+          )}
+
+          {(isMobile || step === 2) && (
             <div
               className="relative flex flex-col overflow-visible"
-              style={{ gap: vw(size.reservationStep2FieldGap), flex: 1 }}
+              style={{
+                gap: u(size.reservationStep2FieldGap, m.reservationStep2FieldGap),
+                flex: isMobile ? undefined : 1,
+              }}
             >
               <div
-                className="grid grid-cols-2"
-                style={{ gap: vw(size.reservationStep2BlockGap) }}
+                className={isMobile ? "flex flex-col" : "grid grid-cols-2"}
+                style={{
+                  gap: isMobile
+                    ? u(size.reservationFieldGap, m.reservationFieldGap)
+                    : u(size.reservationStep2BlockGap, m.reservationStep2BlockGap),
+                }}
               >
                 <label className="block">
                   <span className="sr-only">이름</span>
@@ -1255,7 +1376,7 @@ export function ReservationSection({
                   style={{
                     display: "block",
                     marginBottom: vw(12),
-                    fontSize: fluidFont(font.reservationField),
+                    fontSize: uf(font.reservationField, m.reservationField),
                     fontWeight: weight.reservationField,
                     color: color.reservationText,
                   }}
@@ -1329,7 +1450,7 @@ export function ReservationSection({
                   </span>
                   <Chevron
                     dir={privacyOpen ? "up" : "down"}
-                    size={11}
+                    sizeCss={u(11, 10)}
                     strokeWidth={1.15}
                   />
                 </button>
@@ -1355,27 +1476,176 @@ export function ReservationSection({
                 ) : null}
               </div>
 
+              {/* 모바일 — 예약현황 (시안 HUM 07 form) */}
+              {isMobile ? (
+                <div
+                  style={{
+                    marginTop: mw(m.reservationFieldGap),
+                    marginBottom: mw(8),
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      marginBottom: mw(16),
+                      color: color.reservationPlaceholder,
+                      fontFamily: fontFamilies.sans,
+                      fontSize: mw(m.reservationField),
+                      fontWeight: 400,
+                      letterSpacing: "-0.01em",
+                      lineHeight: 1,
+                    }}
+                  >
+                    예약현황
+                  </p>
+                  {selectedDate && time && designer && services.length > 0 ? (
+                    <div>
+                      {(
+                        [
+                          ["DATE & TIME", dateTimeLabel],
+                          ["ARTIST", `디자이너 ${designer.name}`],
+                          ["MENU", menuLabel],
+                          ["DURATION", durationLabel],
+                        ] as const
+                      ).map(([label, value]) => (
+                        <div
+                          key={label}
+                          className="flex items-start justify-between"
+                          style={{
+                            marginBottom: mw(m.reservationSummaryRowGap),
+                            gap: mw(12),
+                            lineHeight: mw(m.reservationSummaryRowLh),
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: color.reservationText,
+                              fontFamily: fontFamilies.logo,
+                              fontSize: mw(m.reservationSummaryLabel),
+                              fontWeight: weight.reservationSummaryLabel,
+                              letterSpacing: "0.02em",
+                            }}
+                          >
+                            {label}
+                          </span>
+                          <span
+                            style={{
+                              textAlign: "right",
+                              color: color.reservationText,
+                              fontFamily: fontFamilies.sans,
+                              fontWeight: weight.reservationSummaryValue,
+                              fontSize: mw(m.reservationSummaryValue),
+                              maxWidth: "62%",
+                              letterSpacing: "-0.01em",
+                            }}
+                          >
+                            {value}
+                          </span>
+                        </div>
+                      ))}
+                      <div
+                        style={{
+                          borderTop: `1px solid rgba(255,255,255,0.2)`,
+                          marginTop: mw(4),
+                          marginBottom: mw(m.reservationSummaryRowGap),
+                        }}
+                      />
+                      {(
+                        [
+                          ["TOTAL", formatWon(total || 0), false],
+                          [
+                            "DEPOSIT",
+                            `예약금 결제 ${formatWon(DEPOSIT)}`,
+                            true,
+                          ],
+                        ] as const
+                      ).map(([label, value, bold]) => (
+                        <div
+                          key={label}
+                          className="flex items-start justify-between"
+                          style={{
+                            marginBottom: mw(m.reservationSummaryRowGap),
+                            gap: mw(12),
+                            lineHeight: mw(m.reservationSummaryRowLh),
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: color.reservationText,
+                              fontFamily: fontFamilies.logo,
+                              fontSize: mw(m.reservationSummaryLabel),
+                              fontWeight: weight.reservationSummaryLabel,
+                              letterSpacing: "0.02em",
+                            }}
+                          >
+                            {label}
+                          </span>
+                          <span
+                            style={{
+                              textAlign: "right",
+                              color: color.reservationText,
+                              fontFamily: fontFamilies.sans,
+                              fontWeight: bold
+                                ? weight.reservationSummaryValueBold
+                                : weight.reservationSummaryValue,
+                              fontSize: mw(m.reservationSummaryValue),
+                            }}
+                          >
+                            {value}
+                          </span>
+                        </div>
+                      ))}
+                      <p
+                        style={{
+                          margin: 0,
+                          marginTop: mw(8),
+                          color: color.reservationPlaceholder,
+                          fontFamily: fontFamilies.sans,
+                          fontSize: mw(m.reservationSummaryNote),
+                          fontWeight: 400,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {REFUND_NOTE}
+                      </p>
+                    </div>
+                  ) : (
+                    <p
+                      style={{
+                        margin: 0,
+                        color: color.reservationText,
+                        fontFamily: fontFamilies.logo,
+                        fontSize: mw(m.reservationField),
+                        lineHeight: 1,
+                      }}
+                    >
+                      -
+                    </p>
+                  )}
+                </div>
+              ) : null}
+
               <button
                 type="button"
-                className="inline-flex items-center justify-between transition-colors"
+                className="reservation-cta-btn inline-flex items-center justify-between transition-colors"
                 disabled={!privacyAgreed}
                 style={{
                   boxSizing: "border-box",
-                  marginTop: "auto",
-                  width: vw(size.reservationCtaW),
-                  height: vw(size.reservationCtaH),
-                  minWidth: 200,
+                  marginTop: isMobile ? mw(24) : "auto",
+                  width: isMobile ? "100%" : vw(size.reservationCtaW),
+                  height: u(size.reservationCtaH, m.reservationCtaH),
+                  minWidth: isMobile ? 0 : 200,
                   minHeight: 44,
-                  paddingLeft: vw(size.reservationCtaPadX),
-                  paddingRight: vw(size.reservationCtaPadX),
+                  paddingLeft: u(size.reservationCtaPadX, m.reservationCtaPadX),
+                  paddingRight: u(size.reservationCtaPadX, m.reservationCtaPadX),
                   backgroundColor: color.reservationCtaBg,
                   color: color.reservationText,
                   fontFamily: fontFamilies.sans,
-                  fontSize: fluidFont(font.reservationCta),
+                  fontSize: uf(font.reservationCta, m.reservationCtaFont),
                   fontWeight: weight.reservationCta,
                   letterSpacing: "-0.01em",
                   border: "none",
-                  borderRadius: vw(size.reservationCtaRadius),
+                  borderRadius: u(size.reservationCtaRadius, m.reservationCtaRadius),
                   cursor: privacyAgreed ? "pointer" : "not-allowed",
                   opacity: privacyAgreed ? 1 : 0.45,
                 }}
@@ -1392,7 +1662,7 @@ export function ReservationSection({
                 }}
               >
                 <span>예약 확정 및 예약금 결제</span>
-                <Chevron dir="right" size={14} strokeWidth={1.35} />
+                <Chevron dir="right" sizeCss={u(14, 12)} strokeWidth={1.35} />
               </button>
             </div>
           )}

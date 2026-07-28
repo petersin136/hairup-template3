@@ -309,60 +309,74 @@ export function TeamSection({ members }: Props) {
         })}
       </div>
 
-      {/* 모바일 — 가로 스크롤 카드 (시안 HUM 04) */}
+      {/* 모바일 — 가로 스크롤 카드 (리뷰 갤러리와 동일 패턴) */}
       <div
-        className="team-gallery-scroll flex w-full overflow-x-auto md:hidden"
+        className="team-gallery-scroll flex overflow-x-auto md:hidden"
         style={{
-          columnGap: mw(m.teamCardGap),
           scrollSnapType: "x mandatory",
+          scrollPaddingLeft: mw(m.teamSidePadding),
+          scrollPaddingRight: mw(m.teamSidePadding),
           WebkitOverflowScrolling: "touch",
-          // 섹션 패딩 0 + 스크롤 영역에서 좌우 여백 (peek 유지)
-          marginLeft: `calc(-1 * ${mw(m.teamSidePadding)})`,
-          marginRight: `calc(-1 * ${mw(m.teamSidePadding)})`,
-          paddingLeft: mw(m.teamSidePadding),
-          paddingRight: mw(m.teamSidePadding),
         }}
         role="list"
       >
-        {members.map((member) => (
-          <article
+        {/* overflow 스크롤에서 padding이 무시되는 경우 대비 — 좌우 스페이서 */}
+        <div
+          aria-hidden
+          className="shrink-0"
+          style={{ width: mw(m.teamSidePadding) }}
+        />
+        {members.map((member, i) => (
+          <div
             key={`m-${member.id}`}
             role="listitem"
-            className="relative shrink-0 overflow-hidden"
+            className="shrink-0"
             style={{
-              width: mw(m.teamCardW),
-              height: mw(m.teamCardH),
-              borderRadius: mw(m.teamRadius),
               scrollSnapAlign: "start",
+              marginRight: i < members.length - 1 ? mw(m.teamCardGap) : 0,
             }}
-            aria-label={`${member.name}, ${member.roleTitle}`}
           >
-            <Image
-              src={member.imageUrl}
-              alt={member.name}
-              fill
-              unoptimized
-              sizes="85vw"
-              className="object-cover"
+            <article
+              className="relative overflow-hidden"
               style={{
-                objectFit: "cover",
-                objectPosition: member.objectPosition,
+                width: mw(m.teamCardW),
+                height: mw(m.teamCardH),
+                borderRadius: mw(m.teamRadius),
               }}
-            />
+              aria-label={`${member.name}, ${member.roleTitle}`}
+            >
+              <Image
+                src={member.imageUrl}
+                alt={member.name}
+                fill
+                unoptimized
+                sizes="85vw"
+                className="object-cover"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: member.objectPosition,
+                }}
+              />
 
-            <MemberOverlay
-              member={member}
-              padX={mw(m.teamOverlayPadX)}
-              padY={mw(m.teamOverlayPadY)}
-              roleToName={mw(m.teamRoleToName)}
-              roleSize={mw(m.teamRole)}
-              nameSize={mw(m.teamName)}
-              igSize={mw(m.teamInstagramSize)}
-              nameGap={mw(8)}
-              visible
-            />
-          </article>
+              <MemberOverlay
+                member={member}
+                padX={mw(m.teamOverlayPadX)}
+                padY={mw(m.teamOverlayPadY)}
+                roleToName={mw(m.teamRoleToName)}
+                roleSize={mw(m.teamRole)}
+                nameSize={mw(m.teamName)}
+                igSize={mw(m.teamInstagramSize)}
+                nameGap={mw(8)}
+                visible
+              />
+            </article>
+          </div>
         ))}
+        <div
+          aria-hidden
+          className="shrink-0"
+          style={{ width: mw(m.teamSidePadding) }}
+        />
       </div>
     </section>
   );

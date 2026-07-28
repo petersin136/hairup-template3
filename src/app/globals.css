@@ -150,6 +150,10 @@ body {
   display: none;
 }
 
+.team-gallery-scroll {
+  scrollbar-width: none;
+}
+
 /* —— Mobile HUM 시안 (375) —— */
 @media (max-width: 767px) {
   .announcement-bar {
@@ -299,10 +303,10 @@ body {
     height: var(--brand-logo-h-m) !important;
   }
 
-  /* Team — HUM 04 */
+  /* Team — HUM 04 (리뷰와 동일: 섹션 L/R 0, 타이틀·스페이서로 inset) */
   .team-section {
-    padding-left: calc(16 / 375 * 100vw) !important;
-    padding-right: calc(16 / 375 * 100vw) !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     padding-top: calc(81 / 375 * 100vw) !important;
     padding-bottom: calc(80 / 375 * 100vw) !important;
   }
@@ -310,6 +314,8 @@ body {
   .team-title {
     font-size: calc(32 / 375 * 100vw) !important;
     margin-bottom: calc(40 / 375 * 100vw) !important;
+    padding-left: calc(16 / 375 * 100vw) !important;
+    padding-right: calc(16 / 375 * 100vw) !important;
   }
 
   /* Services — HUM 05 */
