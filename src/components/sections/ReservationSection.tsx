@@ -1404,7 +1404,7 @@ export function ReservationSection({
               <div
                 className="relative overflow-visible"
                 data-reservation-dd
-                style={{ marginTop: vw(15) }}
+                style={{ marginTop: u(15, 12) }}
               >
                 <button
                   type="button"
@@ -1421,7 +1421,7 @@ export function ReservationSection({
                 >
                   <span
                     className="inline-flex items-center"
-                    style={{ gap: vw(12) }}
+                    style={{ gap: u(12, 10) }}
                   >
                     <span
                       aria-hidden
@@ -1432,14 +1432,14 @@ export function ReservationSection({
                       }}
                       style={{
                         boxSizing: "border-box",
-                        width: vw(16),
-                        height: vw(16),
-                        border: `1px solid ${color.reservationText}`,
+                        width: u(18, 20),
+                        height: u(18, 20),
+                        border: `1.5px solid ${color.reservationText}`,
                         background: privacyAgreed
                           ? color.reservationCheckBg
                           : "transparent",
                         color: color.reservationCheckMark,
-                        fontSize: fluidFont(11),
+                        fontSize: uf(12, 13),
                         lineHeight: 1,
                         flexShrink: 0,
                       }}
@@ -1456,17 +1456,29 @@ export function ReservationSection({
                 </button>
                 {privacyOpen ? (
                   <DropdownMenu
-                    style={{ padding: `${vw(16)} ${vw(18)}` }}
+                    style={{
+                      /* 아코디언: 아래 예약현황을 밀며 펼침 (절대위치 오버레이 X) */
+                      position: "relative",
+                      left: "auto",
+                      right: "auto",
+                      top: "auto",
+                      marginTop: 0,
+                      padding: `${u(16, 14)} ${u(18, 14)}`,
+                    }}
                   >
-                    {PRIVACY_LINES.map((line) => (
+                    {PRIVACY_LINES.map((line, i) => (
                       <p
                         key={line}
                         style={{
                           margin: 0,
-                          marginBottom: vw(10),
-                          fontSize: fluidFont(12),
+                          marginBottom:
+                            i < PRIVACY_LINES.length - 1 ? u(10, 8) : 0,
+                          fontFamily: fontFamilies.sans,
+                          fontSize: uf(13, 13),
+                          fontWeight: 400,
+                          letterSpacing: "-0.01em",
                           lineHeight: 1.55,
-                          color: "rgba(255,255,255,0.82)",
+                          color: "rgba(255,255,255,0.88)",
                         }}
                       >
                         {line}
