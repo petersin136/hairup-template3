@@ -9,7 +9,8 @@ export const designTokens = {
   color: {
     white: "#FFFFFF",
     black: "#000000",
-    announcementBg: "#3D3630",
+    /** 모바일 시안 실측 · 데스크탑과 동일 계열 */
+    announcementBg: "#3C3530",
     /** GNB — 시안 수정사항: active #000 / inactive #919191 */
     navActive: "#000000",
     navInactive: "#919191",
@@ -31,8 +32,8 @@ export const designTokens = {
     servicesNav: "#444444",
     servicesNote: "#919191",
     servicesCtaText: "#F4EEEE",
-    /** Reviews 상단 쇼릴 — 상시 #000 15% · 섹션 배경 흰색 */
-    reviewsMediaOverlay: "rgba(0,0,0,0.28)",
+    /** Reviews 상단 쇼릴 — 시안 black 15% */
+    reviewsMediaOverlay: "rgba(0,0,0,0.15)",
     reviewsMediaBg: "#FFFFFF",
     /** Reviews 카드 — 시안 #3C3530 / #F5F3EF */
     reviewsDarkBg: "#3C3530",
@@ -82,10 +83,10 @@ export const designTokens = {
     /** Footer — 시안 08 */
     footerBg: "#111111",
     footerText: "#FFFFFF",
-    footerMuted: "#686868",
+    footerMuted: "#7D7D7D",
     footerDivider: "#FFFFFF",
-    /** 모바일 Footer 구분선 — HUM 실측 #616161 */
-    footerDividerMobile: "#616161",
+    /** 모바일 Footer 구분선 — 시안 rgba(255,255,255,0.5) */
+    footerDividerMobile: "rgba(255, 255, 255, 0.5)",
   },
   size: {
     announcementHeight: 45,
@@ -465,151 +466,212 @@ export const designTokens = {
   mobile: {
     canvas: 375,
     maxWidthPx: 767,
+    /** 시안 .Rectangle — H38 · Noto 12 · LH 2.33 · #3C3530 */
     announcementHeight: 38,
     announcementFont: 12,
+    announcementLineHeight: 2.33,
     headerHeight: 60,
     sidePadding: 16,
-    logoW: 112,
-    logoH: 22,
-    menuIcon: 24,
-    /** HOME 등 — Poppins Regular 36 · 아이템 pitch ≈65 → gap 30 */
+    /** 시안 .hair_up_logo — 114×24 */
+    logoW: 114,
+    logoH: 24,
+    /** 시안 .HAMBURGER — 26×19 · border 2px #111 */
+    hamburgerW: 26,
+    hamburgerH: 19,
+    hamburgerStroke: 2,
+    /** 시안 .CLOSE — 24×24 · border 1.5px #111 */
+    closeIcon: 24,
+    closeStroke: 1.5,
+    /** 시안 .MENU — Poppins 36 · LH 1.81 · gap 40 · padTop 60 */
     navFont: 36,
-    navGap: 30,
-    /** 헤더 하단 → 첫 네비 (시안: HOME y139 − header end 98 ≈ 41) */
-    navPadTop: 41,
-    /** 마지막 네비 → CTA */
+    navLineHeight: 1.81,
+    navGap: 40,
+    navPadTop: 60,
+    /** REVIEW 하단 → CTA */
     navToCta: 60,
+    /** 시안 .RECTANGLE_7 — 343×56 · r6 · padX 24 */
+    ctaWidth: 343,
     ctaHeight: 56,
-    ctaRadius: 4,
+    ctaRadius: 6,
     ctaFont: 15,
-    ctaPadX: 18,
-    ctaChevronW: 8,
-    ctaChevronH: 14,
-    // —— Hero (HUM 01-1_HERO) ——
+    ctaPadX: 24,
+    /** 시안 .옆_화살표 — 5×9 · border 2px #F4EEEE */
+    ctaChevronW: 5,
+    ctaChevronH: 9,
+    ctaChevronStroke: 2,
+    ctaChevronColor: "#F4EEEE",
+    // —— Hero (시안 04·05 실측) ——
     heroSidePadding: 16,
     heroGapTop: 0,
-    heroCardH: 400,
+    /** .Rectangle_TOP / .Rectangle_BOTTOM — 344×401 */
+    heroCardW: 344,
+    heroCardH: 401,
     heroCardRadius: 10,
     heroCardGap: 0,
     heroPadX: 20,
     heroPadBottom: 24,
-    heroEyebrow: 12,
-    heroTitle: 32,
-    heroTitleLineHeight: 42,
-    heroEyebrowToTitle: 26,
+    /** .WELCOME_TO_HAIR_UP — Poppins 14 / LH 1.2 · gap 24 */
+    heroEyebrow: 14,
+    heroEyebrowLineHeight: 1.2,
+    heroEyebrowToTitle: 24,
+    /** .Elevate… — Poppins 33 / LH 1.3 */
+    heroTitle: 33,
+    heroTitleLineHeight: 1.3,
+    /** .BOTTOM_TITLE — Noto 18 · gap 16 */
     heroRightHeadline: 18,
-    heroRightBody: 14,
     heroRightTitleToBody: 16,
-    heroRightBodyLineHeight: 25,
-    heroToAboutGap: 50,
-    // —— About (HUM 02-1_ABOUT) — export 344→375 스케일 ——
+    /** .BOTTOM_TEXT — Noto 15 / LH 2.07 */
+    heroRightBody: 15,
+    heroRightBodyLineHeight: 2.07,
+    /** 하단 카드 → ABOUT 텍스트 */
+    heroToAboutGap: 100,
+    // —— About (시안 06 실측) ——
     aboutSidePadding: 16,
-    aboutPadTop: 50,
+    aboutPadTop: 100,
     aboutPadBottom: 40,
-    aboutEyebrow: 12,
-    aboutEyebrowToTitle: 23,
-    aboutTitle: 32,
-    aboutTitleLineHeight: 46,
-    aboutTitleToSubtitle: 15,
-    aboutSubtitle: 15,
+    /** .ABOUT_HAIR_UP — Poppins 14 / LH 1.2 · #111 · gap 24 */
+    aboutEyebrow: 14,
+    aboutEyebrowLineHeight: 1.2,
+    aboutEyebrowToTitle: 24,
+    /** Where Your… — Poppins 33 / LH 1.4 · gap 20 */
+    aboutTitle: 33,
+    aboutTitleLineHeight: 1.4,
+    aboutTitleToSubtitle: 20,
+    /** 감각적인… — Noto 16 / LH 0.83 · #444 */
+    aboutSubtitle: 16,
+    aboutSubtitleLineHeight: 0.83,
+    aboutSubtitleColor: "#444444",
     aboutStatsGapTop: 80,
-    aboutStatValue: 40,
-    aboutStatSuffix: 28,
-    aboutStatNumberToLine: 26,
-    aboutStatLineToLabel: 26,
-    aboutStatLabel: 17,
-    aboutStatLabelToDesc: 21,
-    aboutStatDesc: 14,
-    aboutStatDescLineHeight: 26,
+    /** .stat_number — Poppins 42 / LH 1.79 · #111 */
+    aboutStatValue: 42,
+    aboutStatSuffix: 42,
+    aboutStatValueLineHeight: 1.79,
+    /** number→line 24 · line→title 24 · title→desc 20 · block 60 */
+    aboutStatNumberToLine: 24,
+    aboutStatLineToLabel: 24,
+    aboutStatLineW: 341,
+    aboutStatLabel: 18,
+    aboutStatLabelLineHeight: 1.3,
+    aboutStatLabelToDesc: 20,
+    aboutStatDesc: 15,
+    aboutStatDescLineHeight: 1.67,
+    aboutStatDescColor: "#444444",
     aboutStatBlockGap: 60,
-    aboutMuted: "#8A8A8A",
-    // —— About body (HUM 02-2_ABOUT) ——
-    aboutInteriorH: 400,
-    aboutInteriorRadius: 16,
-    aboutStatsToMedia: 40,
+    aboutMuted: "#444444",
+    // —— About body (시안 08·09) ——
+    /** .About_Rectangle — 344×401 · r10 · #000 */
+    aboutInteriorH: 401,
+    aboutInteriorRadius: 10,
+    aboutStatsToMedia: 80,
     aboutMediaToBody: 30,
-    aboutBody: 14,
-    aboutBodyLineHeight: 25,
-    aboutParagraphGap: 27,
-    aboutBodyColor: "#6B6B6B",
+    /** .About_text — Noto 15 / LH 1.67 · #111 · 문단 gap 25 */
+    aboutBody: 15,
+    aboutBodyLineHeight: 1.67,
+    aboutParagraphGap: 25,
+    aboutBodyColor: "#111111",
+    /** 본문 → brand ticker */
     aboutPadBottomAfterBody: 80,
-    // —— Brand ticker (HUM 03) — H80 · logo gap 50 ——
+    // —— Brand ticker (시안 09) — H80 · #F7F4EF ——
     brandTickerHeight: 80,
+    brandTickerBg: "#F7F4EF",
     /** 광학 스케일 적용 전 베이스 (Kérastase 1.9× ≈ 23) */
     brandLogoHeight: 12,
     brandLogoGap: 50,
-    // —— Team (HUM 04) — 가로 스크롤 카드 ——
+    // —— Team (시안 10) ——
     teamSidePadding: 16,
-    teamPadTop: 81,
+    teamPadTop: 80,
     teamPadBottom: 80,
     teamTitleGap: 40,
-    teamTitle: 32,
+    /** .Professional_Team — Poppins 33 · #111 */
+    teamTitle: 33,
+    /** .Rectangle — 310×400 · r10 */
     teamCardW: 310,
     teamCardH: 400,
     teamCardGap: 16,
-    teamRadius: 16,
+    teamRadius: 10,
     teamOverlayPadX: 20,
-    teamOverlayPadY: 22,
+    teamOverlayPadY: 20,
     teamRoleToName: 10,
+    /** .직책 — Poppins 11 · #F7F4EF */
     teamRole: 11,
-    teamName: 18,
-    teamInstagramSize: 14,
-    // —— Services (HUM 05) ——
+    teamRoleColor: "#F7F4EF",
+    /** .Name — Noto/Poppins 20 · IG 24 · gap 10 */
+    teamName: 20,
+    teamInstagramSize: 24,
+    teamNameToIg: 10,
+    // —— Services (시안 11·12·13) ——
     servicesSidePadding: 16,
     servicesPadTop: 80,
     servicesPadBottom: 80,
-    servicesEyebrow: 12,
-    servicesEyebrowToTitle: 27,
-    servicesTitle: 32,
-    servicesTitleToSubtitle: 27,
+    /** .service_category — Poppins Light 14 · gap 25 */
+    servicesEyebrow: 14,
+    servicesEyebrowToTitle: 25,
+    /** .service_title — Poppins 33 · gap 25 */
+    servicesTitle: 33,
+    servicesTitleToSubtitle: 25,
+    /** .service_desc — Noto 15 / LH 1.67 · medium+regular */
     servicesSubtitle: 15,
-    servicesSubtitleToBody: 13,
-    servicesBody: 14,
-    servicesBodyLineHeight: 25,
-    servicesBodyToImage: 41,
+    servicesSubtitleToBody: 0,
+    servicesBody: 15,
+    servicesBodyLineHeight: 1.67,
+    servicesBodyToImage: 40,
+    /** .service_imgbox — 343×400 · r10 */
+    servicesImageW: 343,
     servicesImageH: 400,
-    servicesImageRadius: 16,
-    servicesImageToList: 41,
-    servicesItem: 14,
-    servicesPrice: 14,
+    servicesImageRadius: 10,
+    servicesImageToList: 40,
+    /** .service_name / .service_price — 15 / LH 1.5 */
+    servicesItem: 15,
+    servicesPrice: 15,
+    servicesItemLineHeight: 1.5,
     servicesListItemGap: 20,
-    servicesListToNote: 30,
-    servicesNote: 12,
-    servicesNoteToCta: 48,
-    servicesCtaH: 70,
-    servicesCtaRadius: 4,
-    servicesCtaPadX: 18,
+    /** .service_notice — 15 · #919191 · gap 25 · note→CTA 40 */
+    servicesListToNote: 25,
+    servicesNote: 15,
+    servicesNoteToCta: 40,
+    /** .btn_booking — 343×72 · r6 · padX 24 · text 15/500 · arrow 6×10 */
+    servicesCtaH: 72,
+    servicesCtaRadius: 6,
+    servicesCtaPadX: 24,
     servicesCtaFont: 15,
-    servicesCtaChevronW: 8,
-    servicesCtaChevronH: 14,
-    /** 이미지 우하단 페이지 배지 */
+    servicesCtaChevronW: 6,
+    servicesCtaChevronH: 10,
+    servicesCtaChevronStroke: 2,
+    /** .page_num — 57×24 · r12 · right/bottom 16 · rgba(17,17,17,0.3) · 12 */
+    servicesBadgeW: 57,
+    servicesBadgeH: 24,
     servicesBadgePadR: 16,
-    servicesBadgePadB: 14,
-    servicesBadgePadX: 10,
-    servicesBadgePadY: 6,
-    servicesBadgeRadius: 20,
-    servicesBadgeFont: 11,
-    servicesBadgeBg: "rgba(0, 0, 0, 0.35)",
-    // —— Reviews (HUM 06) ——
+    servicesBadgePadB: 16,
+    servicesBadgeRadius: 12,
+    servicesBadgeFont: 12,
+    servicesBadgeBg: "rgba(17, 17, 17, 0.3)",
+    // —— Reviews (시안 16·17) ——
     reviewsSidePadding: 16,
     reviewsMediaPadTop: 80,
     reviewsMediaPadBottom: 80,
-    reviewsImageH: 430,
-    reviewsImageRadius: 16,
-    reviewsTitle: 32,
-    reviewsTitleLineHeight: 42,
+    /** .video_container — 343×429 · r10 · overlay 15% */
+    reviewsImageH: 429,
+    reviewsImageRadius: 10,
+    reviewsMediaOverlay: "rgba(0, 0, 0, 0.15)",
+    /** Reviews From Customers — Poppins 33 · gap 40 */
+    reviewsTitle: 33,
+    reviewsTitleLineHeight: 1.2,
     reviewsTitleToGrid: 40,
     reviewsPadBottom: 80,
+    /** cards 310² · r10 · pad 30/20 · gap 16 */
     reviewsCardSize: 310,
     reviewsCardRadius: 10,
-    reviewsCardPad: 28,
+    reviewsCardPadY: 30,
+    reviewsCardPadX: 20,
     reviewsCardGap: 16,
-    reviewsQuote: 15,
-    reviewsQuoteLineHeight: 27,
-    reviewsArtist: 14,
-    reviewsService: 13,
-    reviewsMeta: 13,
-    reviewsSubLineHeight: 22,
+    reviewsQuoteToMeta: 20,
+    /** quote 16/500/LH1.75 · artist 12/500 · service 11/400 · meta 11/300 */
+    reviewsQuote: 16,
+    reviewsQuoteLineHeight: 1.75,
+    reviewsArtist: 12,
+    reviewsService: 11,
+    reviewsMeta: 11,
+    reviewsSubLineHeight: 1.4,
     // —— Reservation / Booking (HUM 07) ——
     /** 비주얼(캘린더) 영역 높이 — 시안 크롭 422 */
     reservationVisualH: 422,
@@ -662,45 +724,48 @@ export const designTokens = {
     reservationCtaRadius: 4,
     reservationCtaPadX: 18,
     reservationCtaFont: 15,
-    // —— Footer (HUM 06) ——
-    /** 좌우 여백 — 텍스트 ink left ≈19@355 → 20@375 */
-    footerSidePad: 20,
+    // —— Footer (시안 18·19) ——
+    footerSidePad: 16,
     footerPadTop: 60,
-    footerPadBottom: 58,
+    footerPadBottom: 60,
+    /** .footer_logo — 144×30 · → Opening Hours 60 */
     footerLogoW: 144,
-    footerLogoH: 31,
-    /** 로고 하단 → Opening Hours */
-    footerLogoToHours: 63,
-    /** 섹션 간 (body 하단 → 다음 heading) */
-    footerSectionGap: 42,
-    /** heading → body / Opening Hours → MON-FRI */
+    footerLogoH: 30,
+    footerLogoToHours: 60,
+    /** 섹션 간 (hours/address/phone/email) 40 */
+    footerSectionGap: 40,
+    /** .footer_info_title → body 20 */
     footerHeadingToBody: 20,
-    footerHoursDayToTime: 19,
-    /** time 하단 → 다음 day */
-    footerHoursBlockGap: 29,
-    footerFollowToSocial: 22,
+    footerHoursDayToTime: 20,
+    /** time → 다음 day 30 */
+    footerHoursBlockGap: 30,
+    footerFollowToSocial: 20,
     footerSocialItemGap: 25,
-    /** YOUTUBE 하단 → divider */
+    /** YOUTUBE → divider 60 */
     footerSocialToDivider: 60,
-    /** divider → legal */
-    footerDividerToLegal: 39,
-    /** biz line1 → line2 */
-    footerLegalBizGap: 8,
-    /** biz2 → copyright */
-    footerLegalToCredit: 20,
-    /** copyright → designed */
-    footerCreditGap: 13,
-    /** designed → ADMIN */
-    footerDesignedToAdmin: 13,
+    /** divider → company 40 */
+    footerDividerToLegal: 40,
+    /** company 내부 줄간격은 LH 1.6 */
+    footerLegalBizGap: 0,
+    /** company → copyright 25 */
+    footerLegalToCredit: 25,
+    /** copyright 블록 줄간격 LH 1.6 */
+    footerCreditGap: 0,
+    footerDesignedToAdmin: 0,
+    footerLegalLineHeight: 1.6,
+    /** .footer_info_title — Poppins 18/500 */
     footerHeading: 18,
-    footerBodyEn: 14,
+    footerHeadingWeight: 500,
+    /** .footer_info_text — 15 */
+    footerBodyEn: 15,
     footerBodyKo: 15,
-    footerLegal: 12,
-    footerHeadingWeight: 700,
-    footerDayWeight: 500,
     footerBodyWeight: 400,
-    footerSocialWeight: 500,
-    footerLegalWeight: 400,
+    footerDayWeight: 400,
+    footerSocialWeight: 400,
+    /** .footer_company_info / copyright — 12 · #7D7D7D · LH 1.6 */
+    footerLegal: 12,
+    footerLegalWeight: 300,
+    footerLegalEnWeight: 400,
   },
 } as const;
 

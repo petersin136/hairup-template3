@@ -57,34 +57,31 @@ export function MobileNavDrawer({
       role="dialog"
       aria-modal="true"
       aria-label="메뉴"
+      style={{ backgroundColor: "#FFFFFF" }}
     >
       {announcement ? (
         <div
-          className="flex w-full shrink-0 items-center justify-center"
+          className="announcement-bar flex w-full shrink-0 items-center justify-center"
           style={{
             height: mw(m.announcementHeight),
             backgroundColor:
-              announcement.bgColor ?? designTokens.color.announcementBg,
-            color: announcement.textColor ?? designTokens.color.white,
+              announcement.bgColor || designTokens.color.announcementBg,
+            color: announcement.textColor || designTokens.color.white,
             fontFamily: fontFamilies.sans,
             fontSize: mw(m.announcementFont),
             fontWeight: 400,
+            lineHeight: m.announcementLineHeight,
             letterSpacing: "-0.01em",
+            textAlign: "center",
           }}
         >
-          <p
-            className="text-center leading-none"
-            style={{
-              paddingLeft: mw(m.sidePadding),
-              paddingRight: mw(m.sidePadding),
-            }}
-          >
+          <p className="announcement-bar__text m-0 text-center">
             {announcement.message}
           </p>
         </div>
       ) : null}
 
-      {/* 헤더 — 로고 + 닫기 */}
+      {/* 헤더 — 로고 114×24 · 닫기 24×24 */}
       <div
         className="flex shrink-0 items-center justify-between"
         style={{
@@ -110,14 +107,20 @@ export function MobileNavDrawer({
           />
         </a>
 
+        {/* 시안 .CLOSE — 24×24 · stroke 1.5 #111 */}
         <button
           type="button"
           aria-label="메뉴 닫기"
           onClick={onClose}
-          className="flex items-center justify-center text-black"
+          className="flex items-center justify-center"
           style={{
-            width: mw(m.menuIcon),
-            height: mw(m.menuIcon),
+            width: mw(m.closeIcon),
+            height: mw(m.closeIcon),
+            padding: 0,
+            border: "none",
+            background: "transparent",
+            color: "#111111",
+            cursor: "pointer",
           }}
         >
           <svg
@@ -128,15 +131,16 @@ export function MobileNavDrawer({
             aria-hidden
           >
             <path
-              d="M5 5l14 14M19 5L5 19"
+              d="M4 4l16 16M20 4L4 20"
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth={m.closeStroke}
               strokeLinecap="butt"
             />
           </svg>
         </button>
       </div>
 
+      {/* 시안 .MENU — padTop 60 · gap 40 · Poppins 36 / LH 1.81 */}
       <nav
         className="flex flex-col"
         style={{
@@ -159,7 +163,7 @@ export function MobileNavDrawer({
                 fontSize: mw(m.navFont),
                 fontWeight: 400,
                 letterSpacing: "0.02em",
-                lineHeight: 1,
+                lineHeight: m.navLineHeight,
                 color: active ? color.navActive : color.navInactive,
               }}
             >
@@ -169,6 +173,7 @@ export function MobileNavDrawer({
         })}
       </nav>
 
+      {/* 시안 CTA — REVIEW→60 · 343×56 · r6 · padX 24 */}
       <div
         style={{
           paddingLeft: mw(m.sidePadding),
@@ -179,9 +184,10 @@ export function MobileNavDrawer({
         <a
           href={bookingUrl}
           onClick={onClose}
-          className="cta-btn inline-flex w-full items-center justify-between transition-colors"
+          className="cta-btn inline-flex items-center justify-between transition-colors"
           style={{
             boxSizing: "border-box",
+            width: mw(m.ctaWidth),
             height: mw(m.ctaHeight),
             paddingLeft: mw(m.ctaPadX),
             paddingRight: mw(m.ctaPadX),
@@ -191,7 +197,7 @@ export function MobileNavDrawer({
             fontSize: mw(m.ctaFont),
             fontWeight: 400,
             letterSpacing: "-0.01em",
-            borderRadius: m.ctaRadius,
+            borderRadius: mw(m.ctaRadius),
           }}
         >
           <span>실시간 예약하기</span>
@@ -202,21 +208,22 @@ export function MobileNavDrawer({
   );
 }
 
+/** 시안 .옆_화살표 — 5×9 · stroke 2 #F4EEEE */
 function MobileCtaChevron() {
   const m = designTokens.mobile;
   return (
     <svg
       width={mw(m.ctaChevronW)}
       height={mw(m.ctaChevronH)}
-      viewBox="0 0 12 18"
+      viewBox={`0 0 ${m.ctaChevronW} ${m.ctaChevronH}`}
       fill="none"
       aria-hidden
       style={{ display: "block", flexShrink: 0 }}
     >
       <path
-        d="M2.5 1.5l7 7.5-7 7.5"
-        stroke="currentColor"
-        strokeWidth="2.4"
+        d={`M1 1l${m.ctaChevronW - 2} ${m.ctaChevronH / 2 - 1}L1 ${m.ctaChevronH - 1}`}
+        stroke={m.ctaChevronColor}
+        strokeWidth={m.ctaChevronStroke}
         strokeLinecap="butt"
         strokeLinejoin="miter"
       />

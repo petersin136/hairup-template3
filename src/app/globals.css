@@ -30,7 +30,7 @@ body {
 
 /* Footer ADMIN — 시안: muted → hover #FFFFFF · underline 없음 */
 .footer-admin-link {
-  color: #686868;
+  color: #7d7d7d;
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -159,6 +159,14 @@ body {
   .announcement-bar {
     height: calc(38 / 375 * 100vw) !important;
     font-size: calc(12 / 375 * 100vw) !important;
+    background-color: #3c3530 !important;
+    line-height: 2.33 !important;
+  }
+
+  .announcement-bar__text {
+    line-height: 2.33 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .site-header {
@@ -168,48 +176,51 @@ body {
   }
 
   .site-logo {
-    width: calc(112 / 375 * 100vw) !important;
-    height: calc(22 / 375 * 100vw) !important;
+    width: calc(114 / 375 * 100vw) !important;
+    height: calc(24 / 375 * 100vw) !important;
   }
 
   .hero-section {
     padding-left: calc(16 / 375 * 100vw) !important;
     padding-right: calc(16 / 375 * 100vw) !important;
-    /* About padTop 50이 섹션 간격 담당 */
+    /* 하단 카드 → ABOUT 간격은 about padTop 100 */
     margin-bottom: 0 !important;
   }
 
-  /* About — HUM 02-1 / 02-2 */
+  /* About — 시안 06 */
   .about-section {
     padding-left: calc(16 / 375 * 100vw) !important;
     padding-right: calc(16 / 375 * 100vw) !important;
-    padding-top: calc(50 / 375 * 100vw) !important;
+    padding-top: calc(100 / 375 * 100vw) !important;
     padding-bottom: calc(80 / 375 * 100vw) !important;
   }
 
   .about-eyebrow {
-    color: #8a8a8a !important;
-    font-size: calc(12 / 375 * 100vw) !important;
-    margin-bottom: calc(23 / 375 * 100vw) !important;
+    color: #111111 !important;
+    font-size: calc(14 / 375 * 100vw) !important;
+    line-height: 1.2 !important;
+    margin-bottom: calc(24 / 375 * 100vw) !important;
   }
 
   .about-title {
-    font-size: calc(32 / 375 * 100vw) !important;
-    line-height: calc(46 / 375 * 100vw) !important;
-    margin-bottom: calc(15 / 375 * 100vw) !important;
+    font-size: calc(33 / 375 * 100vw) !important;
+    line-height: 1.4 !important;
+    margin-bottom: calc(20 / 375 * 100vw) !important;
   }
 
   .about-subtitle {
-    color: #8a8a8a !important;
-    font-size: calc(15 / 375 * 100vw) !important;
+    color: #444444 !important;
+    font-size: calc(16 / 375 * 100vw) !important;
     font-weight: 400 !important;
+    line-height: 0.83 !important;
   }
 
   .about-stats {
     display: flex !important;
     flex-direction: column !important;
     margin-top: calc(80 / 375 * 100vw) !important;
-    margin-bottom: calc(40 / 375 * 100vw) !important;
+    /* stats → interior image */
+    margin-bottom: calc(80 / 375 * 100vw) !important;
   }
 
   .about-stat {
@@ -224,31 +235,35 @@ body {
   }
 
   .about-stat-value {
-    margin-bottom: calc(26 / 375 * 100vw) !important;
+    margin-bottom: calc(24 / 375 * 100vw) !important;
+    line-height: 1.79 !important;
   }
 
-  .about-stat-num {
-    font-size: calc(40 / 375 * 100vw) !important;
-  }
-
+  .about-stat-num,
   .about-stat-suffix {
-    font-size: calc(28 / 375 * 100vw) !important;
+    font-size: calc(42 / 375 * 100vw) !important;
   }
 
   .about-stat-line {
-    margin-bottom: calc(26 / 375 * 100vw) !important;
+    width: 100% !important;
+    margin-bottom: calc(24 / 375 * 100vw) !important;
+    border-top: 1px solid #111111 !important;
+    background: transparent !important;
+    height: 0 !important;
   }
 
   .about-stat-label {
-    font-size: calc(17 / 375 * 100vw) !important;
-    font-weight: 500 !important;
-    margin-bottom: calc(21 / 375 * 100vw) !important;
+    font-size: calc(18 / 375 * 100vw) !important;
+    font-weight: 400 !important;
+    line-height: 1.3 !important;
+    margin-bottom: calc(20 / 375 * 100vw) !important;
+    color: #111111 !important;
   }
 
   .about-stat-desc {
-    color: #8a8a8a !important;
-    font-size: calc(14 / 375 * 100vw) !important;
-    line-height: calc(26 / 375 * 100vw) !important;
+    color: #444444 !important;
+    font-size: calc(15 / 375 * 100vw) !important;
+    line-height: 1.67 !important;
   }
 
   .about-media-row {
@@ -259,14 +274,14 @@ body {
     width: 100% !important;
     margin-right: 0 !important;
     margin-bottom: 0 !important;
-    color: #6b6b6b !important;
-    font-size: calc(14 / 375 * 100vw) !important;
-    line-height: calc(25 / 375 * 100vw) !important;
+    color: #111111 !important;
+    font-size: calc(15 / 375 * 100vw) !important;
+    line-height: 1.67 !important;
     order: 2;
   }
 
   .about-body-col > p {
-    margin-bottom: calc(27 / 375 * 100vw) !important;
+    margin-bottom: calc(25 / 375 * 100vw) !important;
   }
 
   .about-body-col > p:last-child {
@@ -279,8 +294,9 @@ body {
 
   .about-interior {
     width: 100% !important;
-    height: calc(400 / 375 * 100vw) !important;
-    border-radius: calc(16 / 375 * 100vw) !important;
+    height: calc(401 / 375 * 100vw) !important;
+    border-radius: calc(10 / 375 * 100vw) !important;
+    background-color: #000000 !important;
     order: 1;
     margin-bottom: calc(30 / 375 * 100vw) !important;
   }
@@ -289,9 +305,11 @@ body {
     display: none !important;
   }
 
-  /* Brand ticker — HUM 03 */
+  /* Brand ticker — 시안 09 · H80 · #F7F4EF */
   .brand-marquee {
-    height: var(--brand-ticker-h-m) !important;
+    height: calc(80 / 375 * 100vw) !important;
+    background-color: #f7f4ef !important;
+    overflow: hidden !important;
   }
 
   .brand-marquee__track {
@@ -303,22 +321,23 @@ body {
     height: var(--brand-logo-h-m) !important;
   }
 
-  /* Team — HUM 04 (리뷰와 동일: 섹션 L/R 0, 타이틀·스페이서로 inset) */
+  /* Team — 시안 10 */
   .team-section {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    padding-top: calc(81 / 375 * 100vw) !important;
+    padding-top: calc(80 / 375 * 100vw) !important;
     padding-bottom: calc(80 / 375 * 100vw) !important;
   }
 
   .team-title {
-    font-size: calc(32 / 375 * 100vw) !important;
+    font-size: calc(33 / 375 * 100vw) !important;
+    color: #111111 !important;
     margin-bottom: calc(40 / 375 * 100vw) !important;
     padding-left: calc(16 / 375 * 100vw) !important;
     padding-right: calc(16 / 375 * 100vw) !important;
   }
 
-  /* Services — HUM 05 */
+  /* Services — 시안 11·12·13 */
   .services-section {
     padding-left: calc(16 / 375 * 100vw) !important;
     padding-right: calc(16 / 375 * 100vw) !important;
@@ -326,7 +345,7 @@ body {
     padding-bottom: calc(80 / 375 * 100vw) !important;
   }
 
-  /* Reviews — HUM 06 */
+  /* Reviews — 시안 16·17 */
   .reviews-media {
     padding-top: calc(80 / 375 * 100vw) !important;
     padding-bottom: calc(80 / 375 * 100vw) !important;
@@ -335,8 +354,8 @@ body {
   }
 
   .reviews-media__frame {
-    height: calc(430 / 375 * 100vw) !important;
-    border-radius: calc(16 / 375 * 100vw) !important;
+    height: calc(429 / 375 * 100vw) !important;
+    border-radius: calc(10 / 375 * 100vw) !important;
     max-width: none !important;
   }
 

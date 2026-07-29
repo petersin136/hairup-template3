@@ -18,20 +18,16 @@ export function AnnouncementBar({
       className="announcement-bar flex w-full items-center justify-center"
       style={{
         height: vw(designTokens.size.announcementHeight),
-        backgroundColor: bgColor,
-        color: textColor,
+        backgroundColor: bgColor || designTokens.color.announcementBg,
+        color: textColor || designTokens.color.white,
         fontFamily: fontFamilies.sans,
         fontSize: fluidFont(designTokens.font.announcement),
         fontWeight: 400,
         letterSpacing: "-0.01em",
+        textAlign: "center",
       }}
     >
-      <p
-        className="text-center leading-none"
-        style={{ paddingLeft: "1em", paddingRight: "1em" }}
-      >
-        {message}
-      </p>
+      <p className="announcement-bar__text m-0 text-center">{message}</p>
     </div>
   );
 }

@@ -390,7 +390,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
         </div>
       </div>
 
-      {/* 모바일 — 세로 스택 · 스와이프 · 시안 HUM 05 */}
+      {/* 모바일 — 세로 스택 · 스와이프 · 시안 11·12·13 */}
       <div className="flex w-full flex-col md:hidden">
         <p
           className="uppercase"
@@ -412,7 +412,7 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           style={{
             margin: 0,
             marginBottom: mw(m.servicesTitleToSubtitle),
-            color: color.aboutTitle,
+            color: "#111111",
             fontFamily: fontFamilies.logo,
             fontSize: mw(m.servicesTitle),
             fontWeight: weight.servicesTitle,
@@ -423,39 +423,42 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           {active.title}
         </h2>
 
-        <p
+        {/* .service_desc — subtitle medium + body regular · 15 / LH 1.67 */}
+        <div
           style={{
-            margin: 0,
-            marginBottom: mw(m.servicesSubtitleToBody),
-            color: color.aboutTitle,
-            fontSize: mw(m.servicesSubtitle),
-            fontWeight: weight.servicesSubtitle,
-            letterSpacing: "-0.01em",
-            lineHeight: 1.45,
-          }}
-        >
-          {active.subtitle}
-        </p>
-
-        <p
-          style={{
-            margin: 0,
             marginBottom: mw(m.servicesBodyToImage),
-            color: color.aboutTitle,
+            color: "#111111",
+            fontFamily: fontFamilies.sans,
             fontSize: mw(m.servicesBody),
-            fontWeight: weight.servicesBody,
+            lineHeight: m.servicesBodyLineHeight,
             letterSpacing: "-0.01em",
-            lineHeight: mw(m.servicesBodyLineHeight),
-            /* 1줄/2줄 전환 시 이미지 Y 고정 — 시안 2줄 높이 */
-            minHeight: mw(m.servicesBodyLineHeight * 2),
           }}
         >
-          {active.body}
-        </p>
+          <p
+            style={{
+              margin: 0,
+              marginBottom: mw(m.servicesSubtitleToBody),
+              fontWeight: weight.servicesSubtitle,
+            }}
+          >
+            {active.subtitle}
+          </p>
+          <p
+            style={{
+              margin: 0,
+              fontWeight: weight.servicesBody,
+              /* 1줄/2줄 전환 시 이미지 Y 고정 — 시안 2줄 높이 */
+              minHeight: `calc(${mw(m.servicesBody)} * ${m.servicesBodyLineHeight} * 2)`,
+            }}
+          >
+            {active.body}
+          </p>
+        </div>
 
         <div
           className="relative w-full overflow-hidden"
           style={{
+            width: "100%",
             height: mw(m.servicesImageH),
             borderRadius: mw(m.servicesImageRadius),
             backgroundColor: "#000000",
@@ -480,16 +483,17 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             />
           ) : null}
 
+          {/* .page_num — 57×24 · r12 · Poppins 12 */}
           <span
             aria-hidden
+            className="inline-flex items-center justify-center"
             style={{
               position: "absolute",
               right: mw(m.servicesBadgePadR),
               bottom: mw(m.servicesBadgePadB),
-              paddingLeft: mw(m.servicesBadgePadX),
-              paddingRight: mw(m.servicesBadgePadX),
-              paddingTop: mw(m.servicesBadgePadY),
-              paddingBottom: mw(m.servicesBadgePadY),
+              boxSizing: "border-box",
+              width: mw(m.servicesBadgeW),
+              height: mw(m.servicesBadgeH),
               borderRadius: mw(m.servicesBadgeRadius),
               backgroundColor: m.servicesBadgeBg,
               color: "#FFFFFF",
@@ -522,11 +526,12 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
               <span
                 style={{
                   minWidth: 0,
-                  color: color.aboutTitle,
+                  color: "#111111",
+                  fontFamily: fontFamilies.sans,
                   fontSize: mw(m.servicesItem),
                   fontWeight: weight.servicesItem,
                   letterSpacing: "-0.01em",
-                  lineHeight: 1,
+                  lineHeight: m.servicesItemLineHeight,
                 }}
               >
                 {item.name}
@@ -539,8 +544,8 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
                   fontVariantNumeric: "tabular-nums",
                   textAlign: "right",
                   whiteSpace: "nowrap",
-                  color: color.aboutTitle,
-                  lineHeight: 1,
+                  color: "#111111",
+                  lineHeight: m.servicesItemLineHeight,
                 }}
               >
                 {item.priceLabel}
@@ -555,10 +560,11 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
             marginTop: mw(m.servicesListToNote),
             marginBottom: mw(m.servicesNoteToCta),
             color: color.servicesNote,
+            fontFamily: fontFamilies.sans,
             fontSize: mw(m.servicesNote),
             fontWeight: 400,
             letterSpacing: "-0.01em",
-            lineHeight: 1.3,
+            lineHeight: 1.5,
           }}
         >
           {NOTE}
@@ -566,9 +572,10 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
 
         <a
           href={href}
-          className="cta-btn relative flex w-full items-center transition-colors"
+          className="cta-btn relative flex w-full items-center justify-between transition-colors"
           style={{
             boxSizing: "border-box",
+            width: "100%",
             height: mw(m.servicesCtaH),
             paddingLeft: mw(m.servicesCtaPadX),
             paddingRight: mw(m.servicesCtaPadX),
@@ -584,22 +591,11 @@ export function ServicesSection({ categories, bookingUrl }: Props) {
           }}
         >
           <span style={{ lineHeight: 1, whiteSpace: "nowrap" }}>{ctaLabel}</span>
-          <span
-            aria-hidden
-            style={{
-              position: "absolute",
-              right: mw(m.servicesCtaPadX),
-              top: "50%",
-              transform: "translateY(-50%)",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <CtaChevron
-              width={mw(m.servicesCtaChevronW)}
-              height={mw(m.servicesCtaChevronH)}
-            />
-          </span>
+          <CtaChevron
+            width={mw(m.servicesCtaChevronW)}
+            height={mw(m.servicesCtaChevronH)}
+            strokeWidth={m.servicesCtaChevronStroke}
+          />
         </a>
       </div>
     </section>

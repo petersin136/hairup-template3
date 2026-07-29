@@ -127,17 +127,20 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
         </div>
       </div>
 
-      {/* 모바일 — 상하 스택 · 시안 HUM_01-1_HERO */}
+      {/* 모바일 — 상하 스택 · 시안 04 TOP / 05 BOTTOM */}
       <div
         className="hero-mobile flex w-full flex-col md:hidden"
         style={{
           rowGap: mw(m.heroCardGap),
         }}
       >
+        {/* .Rectangle_TOP — 344×401 · #000 */}
         <div
           className="relative w-full overflow-hidden"
           style={{
+            width: "100%",
             height: mw(m.heroCardH),
+            backgroundColor: "#000000",
             borderTopLeftRadius: mw(m.heroCardRadius),
             borderTopRightRadius: mw(m.heroCardRadius),
             borderBottomLeftRadius: 0,
@@ -154,14 +157,6 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             className="object-cover object-[center_22%]"
           />
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0"
-            style={{
-              height: "45%",
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)",
-            }}
-          />
-          <div
             className="absolute bottom-0 left-0 z-10"
             style={{
               paddingLeft: mw(m.heroPadX),
@@ -175,8 +170,9 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontSize: mw(m.heroEyebrow),
                 fontWeight: weight.heroEyebrow,
                 letterSpacing: "0.12em",
-                lineHeight: 1.2,
+                lineHeight: m.heroEyebrowLineHeight,
                 marginBottom: mw(m.heroEyebrowToTitle),
+                color: "#FFFFFF",
               }}
             >
               {data.left_eyebrow}
@@ -188,7 +184,9 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontSize: mw(m.heroTitle),
                 fontWeight: weight.heroTitle,
                 letterSpacing: "-0.02em",
-                lineHeight: mw(m.heroTitleLineHeight),
+                lineHeight: m.heroTitleLineHeight,
+                color: "#FFFFFF",
+                textAlign: "left",
               }}
             >
               {data.left_title_line1}
@@ -198,10 +196,13 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
           </div>
         </div>
 
+        {/* .Rectangle_BOTTOM — 344×401 · #181818 */}
         <div
           className="relative w-full overflow-hidden"
           style={{
+            width: "100%",
             height: mw(m.heroCardH),
+            backgroundColor: "#181818",
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
             borderBottomLeftRadius: mw(m.heroCardRadius),
@@ -218,20 +219,12 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
             className="object-cover object-center"
           />
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0"
-            style={{
-              height: "50%",
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 55%, transparent 100%)",
-            }}
-          />
-          <div
             className="absolute bottom-0 left-0 z-10 text-left"
             style={{
               paddingLeft: mw(m.heroPadX),
               paddingRight: mw(m.heroPadX),
               paddingBottom: mw(m.heroPadBottom),
-              color: color.white,
+              color: "#FFFFFF",
               fontFamily: fontFamilies.sans,
             }}
           >
@@ -240,8 +233,10 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontSize: mw(m.heroRightHeadline),
                 fontWeight: weight.heroRightHeadline,
                 letterSpacing: "-0.01em",
-                lineHeight: 1.35,
+                lineHeight: 1.4,
                 marginBottom: mw(m.heroRightTitleToBody),
+                color: "#FFFFFF",
+                textAlign: "left",
               }}
             >
               {data.right_headline}
@@ -251,8 +246,10 @@ export function HeroSection({ data, leftImageUrl, rightImageUrl }: Props) {
                 fontSize: mw(m.heroRightBody),
                 fontWeight: weight.heroRightBody,
                 letterSpacing: "-0.01em",
-                lineHeight: mw(m.heroRightBodyLineHeight),
+                lineHeight: m.heroRightBodyLineHeight,
                 wordBreak: "keep-all",
+                color: "#FFFFFF",
+                textAlign: "left",
               }}
             >
               {data.right_body_line1}

@@ -107,28 +107,34 @@ export function Header({
           <CtaChevron />
         </a>
 
+        {/* 시안 .HAMBURGER — 26×19 · stroke 2 #111 */}
         <button
           type="button"
-          className="ml-auto flex items-center justify-center text-black md:hidden"
+          className="ml-auto flex items-center justify-center md:hidden"
           aria-label="메뉴 열기"
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen(true)}
           style={{
-            width: mw(m.menuIcon),
-            height: mw(m.menuIcon),
+            width: mw(m.hamburgerW),
+            height: mw(m.hamburgerH),
+            padding: 0,
+            border: "none",
+            background: "transparent",
+            color: "#111111",
+            cursor: "pointer",
           }}
         >
           <svg
-            viewBox="0 0 24 24"
+            viewBox={`0 0 ${m.hamburgerW} ${m.hamburgerH}`}
             width="100%"
             height="100%"
             fill="none"
             aria-hidden
           >
             <path
-              d="M3 6h18M3 12h18M3 18h18"
+              d={`M0 1h${m.hamburgerW}M0 ${m.hamburgerH / 2}h${m.hamburgerW}M0 ${m.hamburgerH - 1}h${m.hamburgerW}`}
               stroke="currentColor"
-              strokeWidth="1.6"
+              strokeWidth={m.hamburgerStroke}
               strokeLinecap="butt"
             />
           </svg>

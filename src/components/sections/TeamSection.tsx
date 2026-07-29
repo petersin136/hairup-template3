@@ -169,6 +169,7 @@ function MemberOverlay({
             letterSpacing: tracking.teamRole,
             lineHeight: 1.2,
             whiteSpace: "nowrap",
+            color: designTokens.mobile.teamRoleColor,
           }}
         >
           {member.roleTitle}
@@ -366,7 +367,7 @@ export function TeamSection({ members }: Props) {
                 roleSize={mw(m.teamRole)}
                 nameSize={mw(m.teamName)}
                 igSize={mw(m.teamInstagramSize)}
-                nameGap={mw(8)}
+                nameGap={mw(m.teamNameToIg)}
                 visible
               />
             </article>

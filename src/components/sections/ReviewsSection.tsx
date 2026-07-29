@@ -20,21 +20,29 @@ function ReviewCard({
   serviceSize,
   metaSize,
   subLh,
+  quoteGap,
 }: {
   review: Review;
   sizeCss: string;
   padCss: string;
   radiusCss: string;
   quoteSize: string;
-  quoteLh: string;
+  quoteLh: string | number;
   artistSize: string;
   serviceSize: string;
   metaSize: string;
-  subLh: string;
+  subLh: string | number;
+  quoteGap?: string;
 }) {
   const { weight, color, tracking } = designTokens;
   const isDark = review.variant === "dark";
   const bodyColor = isDark ? color.reviewsDarkText : color.reviewsLightText;
+  const serviceColor = isDark
+    ? "rgba(255, 255, 255, 0.7)"
+    : "rgba(60, 53, 48, 0.7)";
+  const metaColor = isDark
+    ? "rgba(255, 255, 255, 0.4)"
+    : "rgba(60, 53, 48, 0.4)";
 
   return (
     <article
@@ -52,6 +60,8 @@ function ReviewCard({
       <p
         style={{
           margin: 0,
+          marginBottom: quoteGap,
+          fontFamily: fontFamilies.sans,
           fontSize: quoteSize,
           fontWeight: weight.reviewsQuote,
           letterSpacing: tracking.reviewsQuote,
@@ -72,6 +82,7 @@ function ReviewCard({
         <p
           style={{
             margin: 0,
+            fontFamily: fontFamilies.sans,
             fontSize: artistSize,
             fontWeight: weight.reviewsArtist,
             letterSpacing: tracking.reviewsArtist,
@@ -85,12 +96,13 @@ function ReviewCard({
         <p
           style={{
             margin: 0,
+            fontFamily: fontFamilies.sans,
             fontSize: serviceSize,
             fontWeight: weight.reviewsService,
             letterSpacing: 0,
             textTransform: "uppercase",
             lineHeight: subLh,
-            color: color.reviewsService,
+            color: serviceColor,
           }}
         >
           {review.serviceLabel}
@@ -99,11 +111,12 @@ function ReviewCard({
         <p
           style={{
             margin: 0,
+            fontFamily: fontFamilies.sans,
             fontSize: metaSize,
             fontWeight: weight.reviewsMeta,
             letterSpacing: 0,
             lineHeight: subLh,
-            color: color.reviewsMeta,
+            color: metaColor,
           }}
         >
           {review.handle} / {review.date}
@@ -128,9 +141,11 @@ export function ReviewsSection({ data }: Props) {
         ]
       : [data.title];
 
+  const mobileCardPad = `${mw(m.reviewsCardPadY)} ${mw(m.reviewsCardPadX)}`;
+
   return (
     <>
-      {/* 쇼릴 — 섹션 배경 흰색 · 미디어에 검정 프레임 없음 */}
+      {/* 쇼릴 — 시안 .video_container */}
       <div
         className="reviews-media w-full"
         style={{
@@ -225,18 +240,18 @@ export function ReviewsSection({ data }: Props) {
           ))}
         </div>
 
-        {/* 모바일 — 좌측 타이틀 · 가로 스크롤 카드 (HUM 06) */}
+        {/* 모바일 — 시안 17 */}
         <h2
           className="reviews-title-mobile md:hidden"
           style={{
             margin: 0,
             marginBottom: mw(m.reviewsTitleToGrid),
-            color: color.aboutTitle,
+            color: "#111111",
             fontFamily: fontFamilies.logo,
             fontSize: mw(m.reviewsTitle),
             fontWeight: weight.reviewsTitle,
             letterSpacing: "-0.02em",
-            lineHeight: mw(m.reviewsTitleLineHeight),
+            lineHeight: m.reviewsTitleLineHeight,
             paddingLeft: mw(m.reviewsSidePadding),
             paddingRight: mw(m.reviewsSidePadding),
             textAlign: "left",
@@ -260,7 +275,6 @@ export function ReviewsSection({ data }: Props) {
           }}
           role="list"
         >
-          {/* overflow 스크롤에서 padding이 무시되는 경우 대비 — 좌우 스페이서 */}
           <div
             aria-hidden
             className="shrink-0"
@@ -280,14 +294,15 @@ export function ReviewsSection({ data }: Props) {
               <ReviewCard
                 review={review}
                 sizeCss={mw(m.reviewsCardSize)}
-                padCss={mw(m.reviewsCardPad)}
+                padCss={mobileCardPad}
                 radiusCss={mw(m.reviewsCardRadius)}
                 quoteSize={mw(m.reviewsQuote)}
-                quoteLh={mw(m.reviewsQuoteLineHeight)}
+                quoteLh={m.reviewsQuoteLineHeight}
                 artistSize={mw(m.reviewsArtist)}
                 serviceSize={mw(m.reviewsService)}
                 metaSize={mw(m.reviewsMeta)}
-                subLh={mw(m.reviewsSubLineHeight)}
+                subLh={m.reviewsSubLineHeight}
+                quoteGap={mw(m.reviewsQuoteToMeta)}
               />
             </div>
           ))}

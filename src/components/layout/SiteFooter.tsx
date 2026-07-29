@@ -65,7 +65,7 @@ export function SiteFooter({ data }: Props) {
     fontFamily: fontFamilies.logo,
     fontSize: mobileFont(m.footerHeading),
     fontWeight: m.footerHeadingWeight,
-    lineHeight: 1,
+    lineHeight: 1.2,
   } as const;
 
   const mBodyEn = {
@@ -74,7 +74,7 @@ export function SiteFooter({ data }: Props) {
     fontFamily: fontFamilies.logo,
     fontSize: mobileFont(m.footerBodyEn),
     fontWeight: m.footerBodyWeight,
-    lineHeight: 1,
+    lineHeight: 1.4,
   } as const;
 
   const mDay = {
@@ -88,7 +88,7 @@ export function SiteFooter({ data }: Props) {
     fontFamily: fontFamilies.sans,
     fontSize: mobileFont(m.footerBodyKo),
     fontWeight: m.footerBodyWeight,
-    lineHeight: 1,
+    lineHeight: 1.5,
   } as const;
 
   const mLegal = {
@@ -98,12 +98,13 @@ export function SiteFooter({ data }: Props) {
     fontSize: mobileFont(m.footerLegal),
     fontWeight: m.footerLegalWeight,
     letterSpacing: tracking.footerLegalKo,
-    lineHeight: 1,
+    lineHeight: m.footerLegalLineHeight,
   } as const;
 
   const mLegalEn = {
     ...mLegal,
     fontFamily: fontFamilies.logo,
+    fontWeight: m.footerLegalEnWeight,
     letterSpacing: tracking.footerLegalEn,
   } as const;
 
@@ -485,7 +486,7 @@ export function SiteFooter({ data }: Props) {
           </div>
         </div>
 
-        {/* Divider + legal */}
+        {/* Divider + legal — 시안 19 */}
         <div
           style={{
             marginTop: mw(m.footerSocialToDivider),
@@ -493,52 +494,43 @@ export function SiteFooter({ data }: Props) {
             paddingTop: mw(m.footerDividerToLegal),
           }}
         >
-          <p style={mLegal}>{biz1}</p>
-          {biz2 ? (
-            <p style={{ ...mLegal, marginTop: mw(m.footerLegalBizGap) }}>
-              {biz2}
-            </p>
-          ) : null}
+          <div style={mLegal}>
+            <p style={{ ...mLegal, margin: 0 }}>{biz1}</p>
+            {biz2 ? <p style={{ ...mLegal, margin: 0 }}>{biz2}</p> : null}
+          </div>
 
-          <p
+          <div
             style={{
-              ...mLegalEn,
               marginTop: mw(m.footerLegalToCredit),
             }}
           >
-            <span style={{ fontFamily: fontFamilies.sans, fontWeight: 400 }}>
-              ©
-            </span>
-            {` ${credit1.replace(/^©\s*/, "")}`}
-          </p>
-          {credit2 ? (
-            <p style={{ ...mLegalEn, marginTop: mw(m.footerCreditGap) }}>
-              {credit2}
+            <p style={{ ...mLegalEn, margin: 0 }}>
+              <span style={{ fontFamily: fontFamilies.sans, fontWeight: 400 }}>
+                ©
+              </span>
+              {` ${credit1.replace(/^©\s*/, "")}`}
             </p>
-          ) : null}
-
-          <p
-            style={{
-              margin: 0,
-              marginTop: mw(m.footerDesignedToAdmin),
-              lineHeight: 1,
-            }}
-          >
-            <a
-              href={data.adminHref}
-              className="footer-admin-link"
-              style={{
-                display: "inline-block",
-                fontFamily: fontFamilies.logo,
-                fontSize: mobileFont(m.footerLegal),
-                fontWeight: m.footerLegalWeight,
-                letterSpacing: tracking.footerLegalEn,
-                lineHeight: 1,
-              }}
-            >
-              {data.adminLabel}
-            </a>
-          </p>
+            {credit2 ? (
+              <p style={{ ...mLegalEn, margin: 0 }}>{credit2}</p>
+            ) : null}
+            <p style={{ ...mLegalEn, margin: 0 }}>
+              <a
+                href={data.adminHref}
+                className="footer-admin-link"
+                style={{
+                  display: "inline-block",
+                  fontFamily: fontFamilies.logo,
+                  fontSize: mobileFont(m.footerLegal),
+                  fontWeight: m.footerLegalEnWeight,
+                  letterSpacing: tracking.footerLegalEn,
+                  lineHeight: m.footerLegalLineHeight,
+                  color: color.footerMuted,
+                }}
+              >
+                {data.adminLabel}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>
